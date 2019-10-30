@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/auth_card.dart';
+import '../widgets/login_card.dart';
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -82,7 +82,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                        AuthCard(),
+                        LoginCard(),
                         Icon(Icons.directions_transit),
                       ],
                     )

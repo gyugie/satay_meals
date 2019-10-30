@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 
 enum AuthMode {Signup, Login}
 
-class AuthCard extends StatefulWidget {
-    const AuthCard({
+class LoginCard extends StatefulWidget {
+    const LoginCard({
     Key key,
   }) : super(key: key);
 
   @override
-  _AuthCardState createState() => _AuthCardState();
+  _LoginCardState createState() => _LoginCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _LoginCardState extends State<LoginCard> {
   AuthMode _authMode                    = AuthMode.Login;
   final GlobalKey<FormState> _formKey   = GlobalKey();
 
