@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-enum AuthMode {Signup, Login}
 
 class LoginCard extends StatefulWidget {
     const LoginCard({
@@ -12,13 +11,12 @@ class LoginCard extends StatefulWidget {
 }
 
 class _LoginCardState extends State<LoginCard> {
-  AuthMode _authMode                    = AuthMode.Login;
-  final GlobalKey<FormState> _formKey   = GlobalKey();
+  final GlobalKey<FormState> _formSignin   = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     return Container(
+      height: 900,
       decoration: new BoxDecoration(
         color: Colors.grey.withOpacity(0.6),
           borderRadius: new BorderRadius.circular(12.0),
@@ -28,7 +26,7 @@ class _LoginCardState extends State<LoginCard> {
         child:  Column(
         children: <Widget>[
           Form(
-            key: _formKey,
+            key: _formSignin,
             child: Column(
               children: <Widget>[
                 SizedBox(height: 10),

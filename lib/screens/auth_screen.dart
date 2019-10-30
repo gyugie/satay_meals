@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/signup_card.dart';
 import '../widgets/login_card.dart';
+
+enum AuthMode { Signin, Signup}
 
 class AuthScreen extends StatefulWidget {
   @override
@@ -8,12 +11,35 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin{
   TabController _tabController;
+  AuthMode _authMode  = AuthMode.Signin;
+  var _flexForCard    = 2;
 
   @override
   void initState() {
     super.initState();
     _tabController = new TabController(length: 2, vsync: this);
+    _tabController.animateTo(5, curve: Curves.easeInOut);
   }
+
+  
+  void _switchAuthMode(){
+    if(_authMode == AuthMode.Signin){
+      setState(() {
+        _authMode     = AuthMode.Signup;
+        _flexForCard  = 2;
+      });
+    } else {
+      setState(() {
+        _authMode       = AuthMode.Signin;
+         _flexForCard   = 5;
+      });
+    }
+  }
+
+  _onDragStart(BuildContext context, DragStartDetails start){
+   
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +89,12 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                           color: Colors.white
                         ),
                         controller: _tabController,
+                        onTap: (index){
+                          _switchAuthMode();
+                        },
                         tabs:[
                           Tab(
-                            child:  Text('Sign in')
+                            child: Text('Sign in'),
                           ),
                           Tab(
                             child: Text('Sign up'),
@@ -74,22 +103,27 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                       ),
                    ),
                  ),
+                 
                  Flexible(
-                  flex: deviceSize.width > 600 ? 3 : 2,
+                  flex: deviceSize.width > 600 ? 3 : _flexForCard,
                    child: Container(
                      padding: EdgeInsets.only(top: 20),
                      width: deviceSize.width * 0.8,
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                        LoginCard(),
-                        Icon(Icons.directions_transit),
-                      ],
-                    )
-                   ),
-                 ),
-                
-                
+                          GestureDetector(
+                            child: LoginCard(),
+                            onHorizontalDragStart: (DragStartDetails start) => _onDragStart(context, start),
+                          ),
+                          GestureDetector(
+                            child: SignUp(),
+                            onHorizontalDragStart: (DragStartDetails start) => _onDragStart(context, start),
+                          ),
+                        ],
+                      )
+                    ),
+                  ),
               
                 ],
               ),
