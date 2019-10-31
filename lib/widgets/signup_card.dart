@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/http_exception.dart';
+import '../providers/auth.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -6,7 +9,58 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
-  final GlobalKey<FormState> _formSignup = GlobalKey();
+  final GlobalKey<FormState> _formSignup  = GlobalKey();
+  final _passwordController               = TextEditingController();
+  var _isLoading                          = false;
+   Map<String, String> _newUser          = {
+                                              'username': '',
+                                              'email':'',
+                                              'password':'',
+                                              'phone':''
+                                            };
+
+  void _showAlertDialog(String title, String message){
+     showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Close', style: TextStyle(color: Colors.red)),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      )
+    );
+  }
+
+ Future<void> _submitSignup() async {
+   if(!_formSignup.currentState.validate()){
+     return;
+   }
+
+   _formSignup.currentState.save();
+   setState(() {
+     _isLoading = true;
+   });
+
+   try{
+      await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], int.parse(_newUser['phone']));
+      _showAlertDialog('Register success...', 'You have account for login now');
+   } on HttpException catch (err) {
+      _showAlertDialog('Authenticated failed', err.toString());  
+   } catch (err){
+     _showAlertDialog('Something is wrong', err.toString());
+   }
+
+   setState(() {
+     _isLoading = false;
+   });
+ }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,15 +84,25 @@ class _SignUpState extends State<SignUp> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
-                  hintText: 'Username',
+                  errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  errorStyle: TextStyle(color: Colors.orange),
+                  hintText: "Username",
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
                     Icons.person,
                     color: Colors.white,
                   ),
                 ),
-                validator: null,
-                onSaved: null,
+                validator: (value){
+                  if(value.isEmpty || value == ''){
+                    return "Username is required...!";
+                  }
+                },
+                onSaved: (value){
+                  _newUser['username'] = value;
+                },
               ),
 
               SizedBox(height:10),
@@ -52,6 +116,10 @@ class _SignUpState extends State<SignUp> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
+                   errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  errorStyle: TextStyle(color: Colors.orange),
                   hintText: 'E-mail',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
@@ -59,8 +127,14 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white,
                   ),
                 ),
-                validator: null,
-                onSaved: null,
+                validator: (value){
+                  if(value.isEmpty || !value.contains('@')){
+                    return 'Invalid email';
+                  }
+                },
+                onSaved: (value){
+                  _newUser['email'] = value;
+                },
               ),
 
               SizedBox(height: 10),
@@ -75,6 +149,10 @@ class _SignUpState extends State<SignUp> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
+                   errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  errorStyle: TextStyle(color: Colors.orange),
                   hintText: 'Password',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
@@ -82,8 +160,14 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white,
                   ),
                 ),
-                validator: null,
-                onSaved: null,
+                validator: (value){
+                  if(value.isEmpty || value.length < 6){
+                    return 'Password is too short';
+                  }
+                },
+                onSaved: (value){
+                  _newUser['password'] = value;
+                },
               ),
 
               SizedBox(height: 10),
@@ -98,6 +182,10 @@ class _SignUpState extends State<SignUp> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
+                   errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  errorStyle: TextStyle(color: Colors.orange),
                   hintText: 'Confirm Password',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
@@ -105,14 +193,19 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white,
                   ),
                 ),
-                validator: null,
-                onSaved: null,
+                controller: _passwordController,
+                validator: (value){
+                  if(value != _passwordController.text){
+                    return "Password do not match";
+                  } else if (value.isEmpty){
+                    return 'Password required!';
+                  }
+                },
               ),
 
               SizedBox(height: 10),
 
               TextFormField(
-                obscureText: true,
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
@@ -121,6 +214,10 @@ class _SignUpState extends State<SignUp> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
                   ),
+                   errorBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  errorStyle: TextStyle(color: Colors.orange),
                   hintText: 'Phone number',
                   hintStyle: TextStyle(color: Colors.white),
                   prefixIcon: Icon(
@@ -128,24 +225,32 @@ class _SignUpState extends State<SignUp> {
                     color: Colors.white,
                   ),
                 ),
-                validator: null,
-                onSaved: null,
+                keyboardType: TextInputType.number,
+                validator: (value){
+                  if(value.isEmpty){
+                    return 'Phone number is required';
+                  }
+                },
+                onSaved: (value){
+                  _newUser['phone'] = value;
+                },
               ),
 
               SizedBox(height: 20),
-                
-                RaisedButton(
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(18.0),
-                  ),
-                  color: Colors.white,
-                  child: Text("Register".toUpperCase(),
-                      style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                  onPressed: () {},
+              _isLoading ?
+              CircularProgressIndicator() :
+              RaisedButton(
+                shape: new RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0),
                 ),
+                color: Colors.white,
+                child: Text("Register".toUpperCase(),
+                    style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+                  ),
+                onPressed: _submitSignup,
+              ),
 
-                 SizedBox(height: 20),
+                SizedBox(height: 20),
 
                 Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 

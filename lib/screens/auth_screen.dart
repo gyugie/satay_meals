@@ -13,17 +13,18 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   TabController _tabController;
   AuthMode _authMode  = AuthMode.Signin;
   var _flexForCard    = 2;
-
   @override
   void initState() {
     super.initState();
-    _tabController = new TabController(length: 2, vsync: this);
-    _tabController.animateTo(5, curve: Curves.easeInOut);
+    _tabController = new TabController(initialIndex: 0 ,length: 2, vsync: this);
+    _tabController.animateTo(0, curve: Curves.easeOutCirc, duration: Duration(milliseconds: 10000));
+
   }
 
   
-  void _switchAuthMode(){
-    if(_authMode == AuthMode.Signin){
+  void _switchAuthMode(int number){
+    // 0 for Signin && 1 for Signup
+    if(number == 0){
       setState(() {
         _authMode     = AuthMode.Signup;
         _flexForCard  = 2;
@@ -34,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
          _flexForCard   = 5;
       });
     }
+
   }
 
   _onDragStart(BuildContext context, DragStartDetails start){
@@ -90,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                         ),
                         controller: _tabController,
                         onTap: (index){
-                          _switchAuthMode();
+                          _switchAuthMode(index);
                         },
                         tabs:[
                           Tab(

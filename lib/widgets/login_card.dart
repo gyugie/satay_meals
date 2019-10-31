@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:provider/provider.dart';
+import '../providers/auth.dart';
 class LoginCard extends StatefulWidget {
     const LoginCard({
     Key key,
@@ -12,7 +12,8 @@ class LoginCard extends StatefulWidget {
 
 class _LoginCardState extends State<LoginCard> {
   final GlobalKey<FormState> _formSignin   = GlobalKey();
-
+ 
+ 
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,7 +74,7 @@ class _LoginCardState extends State<LoginCard> {
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(1.0),
                       child: Icon(
-                        Icons.lock_outline,
+                        Icons.lock,
                         color: Colors.white,
                       ),
                     ),
@@ -93,7 +94,9 @@ class _LoginCardState extends State<LoginCard> {
                   child: Text("Login".toUpperCase(),
                       style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<Auth>(context).login();
+                  },
                 ),
 
                  SizedBox(height: 20),
