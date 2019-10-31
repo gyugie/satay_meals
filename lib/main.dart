@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/splash_screen.dart';
+import './screens/home_screen.dart';
 import './providers/auth.dart';
 import './screens/auth_screen.dart';
 
@@ -15,17 +17,22 @@ class MyApp extends StatelessWidget {
           value: Auth(),
         )
       ],
-      child: MaterialApp(
+      child: Consumer<Auth>(
+        builder: (ctx, authData, child) => MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           primaryColor: Colors.black
         ),
-        home: AuthScreen(),
+        home: authData.isAuth ? HomeScreen() : FutureBuilder(
+          future: authData.tryToAutoLogin(),
+          builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
+        ),
         routes: {
 
         },
       ),
+      )
     );
   }
 }

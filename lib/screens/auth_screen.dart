@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../widgets/signin_card.dart';
 import '../widgets/signup_card.dart';
-import '../widgets/login_card.dart';
 
 enum AuthMode { Signin, Signup}
 
@@ -115,7 +115,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                         controller: _tabController,
                         children: [
                           GestureDetector(
-                            child: LoginCard(),
+                            child: SignInCard(),
                             onHorizontalDragStart: (DragStartDetails start) => _onDragStart(context, start),
                           ),
                           GestureDetector(

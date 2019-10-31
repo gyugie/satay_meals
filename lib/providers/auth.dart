@@ -1,6 +1,7 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'dart:async';
 import 'dart:convert';
 import './http_exception.dart';
 
@@ -8,6 +9,7 @@ class Auth with ChangeNotifier{
   String _token;
   DateTime _expiredToken;
   String _userId;
+  String _role;
   Timer _timer;
 
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
@@ -15,12 +17,14 @@ class Auth with ChangeNotifier{
                       "Accept": "application/json",
                       "Content-Type": "application/x-www-form-urlencoded"
                     };
+
+                    
   bool get isAuth {
     return token != null;
   }
 
   String get token {
-    if(_token != null && _userId != null && _expiredToken.isAfter(DateTime.now())){
+    if(_token != null && _userId != null && _expiredToken != null ){
       return _token;
     }
 
@@ -51,20 +55,92 @@ class Auth with ChangeNotifier{
     }
   }
 
-  Future<void> login() async {
+  Future<void> login(String username, String password) async {
 
-  final response = await http.post(
-          baseAPI + '/API_Consumer/register', 
+      try{
+        final response = await http.post(
+          baseAPI + '/API_Account/login', 
           headers: headersAPI,
           body: {
-            'username': 'gyugie',
-            'password': 'password',
-            'email'   : 'mugypleci@gmail.com',
-            'phone'   : '089666528074'
+            'username': username,
+            'password': password,
           },
         );
-      print(json.decode(response.body));
+
+      final responseData = json.decode(response.body);
+      
+
+      if(responseData['verified'] == false ){
+        throw HttpException('Account is not active, please check on youre email for verified account');
+      } else if(responseData['success'] == false) {
+         throw HttpException(responseData['message']);
+      }
+
+      //set session on local storage
+      _token  = responseData['data']['token'];
+      _userId = responseData['data']['id'];
+      _role   = responseData['data']['type']; 
+      _expiredToken = DateTime.now().add(Duration(seconds: 3600)); // 1 day
+
+      notifyListeners();
+      _autoLogout();
+      final prefs     = await SharedPreferences.getInstance();
+      final userData  = json.encode({
+        'token' : _token,
+        'userId': _userId,
+        'role': _role,
+        'expiredToken' : _expiredToken.toIso8601String()
+      });
+
+      prefs.setString('userData', userData);
+
+      } catch (err){
+        throw err;
+      }
+
   }
+
+  Future<void> tryToAutoLogin() async {
+    final prefs         = await SharedPreferences.getInstance();
+    final extractData   = json.decode(prefs.getString('userData')) as Map<String, Object>;
+    final expiredDate   = DateTime.parse(extractData['expiredToken']);
+
+    if(expiredDate.isBefore(DateTime.now())){
+      return false;
+    }
+
+    _token        = extractData['token'];
+    _userId       = extractData['userId'];
+    _role         = extractData['role'];
+    _expiredToken = expiredDate;
+
+    notifyListeners(); 
+    return true;
+  }
+
+  Future<void> logout() async {
+    _token        = null;
+    _userId       = null;
+    _expiredToken = null;
+    if(_timer != null){
+      _timer.cancel();
+      _timer = null;
+    }
+
+    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('userData');
+
+  }
+
+  Future<void> _autoLogout(){
+   if(_timer != null){
+     _timer.cancel();
+   }
+
+   final timeExpired = _expiredToken.difference(DateTime.now()).inSeconds;
+   _timer = Timer(Duration(seconds: timeExpired), logout);
+ }
 
 
 }

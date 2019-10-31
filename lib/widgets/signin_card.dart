@@ -1,19 +1,66 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/providers/http_exception.dart';
 import '../providers/auth.dart';
-class LoginCard extends StatefulWidget {
-    const LoginCard({
+
+
+class SignInCard extends StatefulWidget {
+    const SignInCard({
     Key key,
   }) : super(key: key);
 
   @override
-  _LoginCardState createState() => _LoginCardState();
+  _SignInCardState createState() => _SignInCardState();
 }
 
-class _LoginCardState extends State<LoginCard> {
+class _SignInCardState extends State<SignInCard> {
   final GlobalKey<FormState> _formSignin   = GlobalKey();
- 
- 
+  var _isLoading                = false;
+  Map<String, String> _authData = {
+    'usernmae':'',
+    'password':''
+  };
+
+  void _showAlertDialog(String title, String message){
+     showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Close', style: TextStyle(color: Colors.red)),
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+          )
+        ],
+      )
+    );
+  }
+
+  Future<void> _submitLogin() async {
+    if(!_formSignin.currentState.validate()){
+      return;
+    }
+    _formSignin.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+
+    try{
+      await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password']);
+    } on HttpException catch (err){
+      _showAlertDialog('Authenticated failed!', err.toString());
+    } catch (err) {
+      _showAlertDialog('Something is wrong!', err.toString());
+    }
+
+     setState(() {
+      _isLoading = false;
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,6 +87,10 @@ class _LoginCardState extends State<LoginCard> {
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
                     ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.orange),
+                    ),
+                    errorStyle: TextStyle(color: Colors.orange),
                     hintText: 'Username',
                     hintStyle: TextStyle(color: Colors.white),
                     filled: true,
@@ -52,8 +103,14 @@ class _LoginCardState extends State<LoginCard> {
                     ),
                     focusColor: Colors.white,
                   ),
-                  validator: null,
-                  onSaved: null,
+                  validator: (value){
+                    if(value.isEmpty){
+                      return "Username is required";
+                    }
+                  },
+                  onSaved: (value){
+                    _authData['username'] = value;
+                  },
                 ),
 
                 SizedBox(height: 10),
@@ -68,6 +125,10 @@ class _LoginCardState extends State<LoginCard> {
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
                     ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.orange),
+                    ),
+                    errorStyle: TextStyle(color: Colors.orange),
                     hintText: 'Password',
                     hintStyle: TextStyle(color: Colors.white),
                     filled: true,
@@ -80,12 +141,20 @@ class _LoginCardState extends State<LoginCard> {
                     ),
                     focusColor: Colors.white,
                   ),
-                  validator: null,
-                  onSaved: null,
+                  validator: (value){
+                    if(value.isEmpty && value.length < 5){
+                      return 'Password is too short';
+                    }
+                  },
+                  onSaved: (value){
+                    _authData['password'] = value;
+                  },
                 ),
 
                 SizedBox(height: 20),
-                
+                _isLoading ?
+                CircularProgressIndicator()
+                :
                 RaisedButton(
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(18.0),
@@ -94,9 +163,7 @@ class _LoginCardState extends State<LoginCard> {
                   child: Text("Login".toUpperCase(),
                       style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
                     ),
-                  onPressed: () {
-                    Provider.of<Auth>(context).login();
-                  },
+                  onPressed: _submitLogin,
                 ),
 
                  SizedBox(height: 20),
