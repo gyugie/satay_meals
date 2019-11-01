@@ -88,7 +88,7 @@ class Auth with ChangeNotifier{
       _token  = responseData['data']['token'];
       _userId = responseData['data']['id'];
       _role   = responseData['data']['type']; 
-      _expiredToken = DateTime.now().add(Duration(seconds: 3600)); // 1 day
+      _expiredToken = DateTime.now().add(Duration(seconds: 43200)); // 1/2 day
 
       notifyListeners();
       _autoLogout();

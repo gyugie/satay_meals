@@ -6,7 +6,8 @@ class DrawerSide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
+   final getToken = Provider.of<Auth>(context).token;
+   print(getToken);
     return Drawer(
       child: Consumer<Auth>(
           builder: (ctx, authData, child) => ListView(
