@@ -22,7 +22,25 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          primaryColor: Colors.black
+          primaryColor: Colors.black,
+          textTheme: TextTheme(
+            headline: TextStyle(
+              fontFamily: 'Play',
+              fontSize: 24,
+              color: Colors.white,
+            ),
+            title: TextStyle(
+              fontFamily: 'Play',
+              fontSize: 16,
+              color: Colors.white,
+            ),
+            subtitle: TextStyle(
+              fontFamily: 'Play',
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+            
+          )
         ),
         home: authData.isAuth ? HomeScreen() : FutureBuilder(
           future: authData.tryToAutoLogin(),

@@ -31,6 +31,14 @@ class Auth with ChangeNotifier{
     return null;
   }
 
+  String get role {
+    if(_token != null && _userId != null && _expiredToken != null ){
+      return _role;
+    }
+
+    return null;
+  }
+
   Future<void> signUp(String username, String email, String password, int phone) async {
     try{
       final response = await http.post(
@@ -141,6 +149,5 @@ class Auth with ChangeNotifier{
    final timeExpired = _expiredToken.difference(DateTime.now()).inSeconds;
    _timer = Timer(Duration(seconds: timeExpired), logout);
  }
-
 
 }
