@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './providers/products.dart';
 import './screens/splash_screen.dart';
 import './screens/home_screen.dart';
 import './providers/auth.dart';
@@ -15,6 +16,11 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(
           value: Auth(),
+        ),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          builder: (ctx, auth, cachedProduct) => Products(
+            cachedProduct == null ? [] : cachedProduct.products
+          ), initialBuilder: (BuildContext context) {},
         )
       ],
       child: Consumer<Auth>(
@@ -23,6 +29,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           primaryColor: Colors.black,
+          accentColor: Colors.grey.withOpacity(0.3),
           textTheme: TextTheme(
             headline: TextStyle(
               fontFamily: 'Play',
@@ -31,7 +38,7 @@ class MyApp extends StatelessWidget {
             ),
             title: TextStyle(
               fontFamily: 'Play',
-              fontSize: 16,
+              fontSize: 20,
               color: Colors.white,
             ),
             subtitle: TextStyle(
@@ -39,6 +46,12 @@ class MyApp extends StatelessWidget {
               fontSize: 16,
               color: Colors.grey,
             ),
+            display1: TextStyle(
+              fontFamily: 'Play',
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white
+            )
             
           )
         ),
