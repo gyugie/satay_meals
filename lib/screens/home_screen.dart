@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../screens/product_list.dart';
+import '../widgets/product_item.dart';
 import '../widgets/drawer.dart';
-
+import '../providers/auth.dart';
 class HomeScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    final userRole = Provider.of<Auth>(context, listen: false).role;
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -19,7 +24,16 @@ class HomeScreen extends StatelessWidget {
        ),
        child: DrawerSide(),
       ),
-      body: Text('helow', style: TextStyle(color: Colors.red)),
+      backgroundColor: Theme.of(context).primaryColor,
+      body: 
+      /**
+       * showing screen in accordance with the user role
+       * consumer ProductList(),
+       * courier OrderList(),
+       * vendor OrderList(),
+       */
+      
+      (userRole == 'consumer' ) ? ProductList() : (userRole == 'courier') ? null : ProductList()
     );
   }
 }
