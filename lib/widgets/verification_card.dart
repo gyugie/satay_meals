@@ -1,8 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/http_exception.dart';
+import '../providers/auth.dart';
 
-class VerifivationCard extends StatelessWidget {
-  static const routeName = '/verification';
-  var _controller = TextEditingController();
+
+class VerificationCard extends StatefulWidget {
+  @override
+  _VerificationCardState createState() => _VerificationCardState();
+}
+
+class _VerificationCardState extends State<VerificationCard> {
+  var _controllerVerification               = TextEditingController();
+  final GlobalKey<FormState> _formVerified  = GlobalKey();
+  var _isLoding                             = false; 
+
+
+  _showAlertDialog(String title, String message, bool isVerification){
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title, style: TextStyle(color: Colors.red)),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Close', style: TextStyle(color: Colors.red)),
+            onPressed: () => Navigator.pop(context),
+          ),
+          isVerification 
+          ?
+          FlatButton(
+            child: Text('OK!', style: TextStyle(color: Colors.red)),
+            onPressed: (){
+              Navigator.pop(context);
+               Navigator.pop(context, true);
+               
+            },
+          )
+          :
+          null
+          
+        ],
+      )
+    );
+  }
+
+  void _submitActivation() async {
+    final validation = _formVerified.currentState.validate();
+
+    if(!validation){
+      return;
+    }
+
+    _formVerified.currentState.save();
+    setState(() {
+      _isLoding = true;
+    });
+  
+    try{
+      await Provider.of<Auth>(context, listen: false).verificationCode(_controllerVerification.text);
+       _showAlertDialog('Verification Success', 'Congratulation verification is success, you have login now', true);
+    } on HttpException catch (err){
+      _showAlertDialog('Verification Failed', err.toString(), false);
+    } catch (err){
+     _showAlertDialog('An error occured', err.toString(), false);
+    }
+
+    setState(() {
+      _isLoding = false;
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +82,6 @@ class VerifivationCard extends StatelessWidget {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -31,8 +98,10 @@ class VerifivationCard extends StatelessWidget {
                     fontWeight: FontWeight.bold)
                   ),
                 SizedBox(height: 50),
-                TextFormField(
-                    controller: _controller,
+                Form(
+                  key: _formVerified,
+                  child: TextFormField(
+                    controller: _controllerVerification,
                     style: TextStyle(color: Colors.white, fontSize: 24),
                     textAlign: TextAlign.center,
                     decoration: new InputDecoration(
@@ -51,46 +120,49 @@ class VerifivationCard extends StatelessWidget {
                       filled: true,
                       focusColor: Colors.white,
                       suffixIcon: IconButton(
-                        onPressed: () => _controller.clear(),
+                        onPressed: () => _controllerVerification.clear(),
                         icon: Icon(Icons.highlight_off, color: Colors.grey,),
                       ),
                     ),
                     validator: (value){
                       if(value.isEmpty){
-                        return "Username is required";
+                        return "Activation code is required";
                       }
                     },
                     onSaved: (value){
+                     
                     },
                   ),
-                  SizedBox(height: 20),
-                  Text('Please enter the verification code you recieve \n by email', style: TextStyle(
-                    color: Colors.green[200], 
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold
-                    ),
-                    textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                Text('Please enter the verification code you recieve \n by email', style: TextStyle(
+                  color: Colors.green[200], 
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold
                   ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: FlatButton(
-                      color: Colors.green[300],
-                      textColor: Colors.white,
-                      disabledColor: Colors.grey,
-                      disabledTextColor: Colors.black,
-                      padding: EdgeInsets.all(8.0),
-                      splashColor: Colors.blueAccent,
-                      onPressed: () {
-                        /*...*/
-                      },
-                      child: Text(
-                        "Verification",
-                        style: TextStyle(color: Colors.white,fontSize: 20.0),
-                      ),
-                    )
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 20),
+                _isLoding 
+                ?
+                CircularProgressIndicator()
+                :
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: FlatButton(
+                    color: Colors.green[300],
+                    textColor: Colors.white,
+                    disabledColor: Colors.grey,
+                    disabledTextColor: Colors.black,
+                    padding: EdgeInsets.all(8.0),
+                    splashColor: Colors.blueAccent,
+                    onPressed: _submitActivation,
+                    child: Text(
+                      "Verification",
+                      style: TextStyle(color: Colors.white,fontSize: 20.0),
+                    ),
                   )
-                
+                )
 
             ],
           ),

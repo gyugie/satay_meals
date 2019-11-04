@@ -63,7 +63,6 @@ class MyApp extends StatelessWidget {
           builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
         ),
         routes: {
-          VerifivationCard.routeName : (ctx) => VerifivationCard()
         },
       ),
       )

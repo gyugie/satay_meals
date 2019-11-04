@@ -31,22 +31,23 @@ class _SignInCardState extends State<SignInCard> {
         actions: <Widget>[
           FlatButton(
             child: Text('Close', style: TextStyle(color: Colors.red)),
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.pop(context),
           ),
           isVerification 
           ?
           FlatButton(
             child: Text('Verification now!', style: TextStyle(color: Colors.red)),
             onPressed: (){
-              Navigator
-              .of(context)
-              .pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => VerifivationCard()));
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => VerificationCard()),
+                );
             },
           )
           :
           null
+          
         ],
       )
     );
@@ -63,6 +64,7 @@ class _SignInCardState extends State<SignInCard> {
 
     try{
       await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password']);
+
     } on HttpException catch (err){
       if(err.toString().contains('Account is not active')){
          _showAlertDialog('Authenticated failed!', err.toString(), true);
@@ -77,6 +79,7 @@ class _SignInCardState extends State<SignInCard> {
       _isLoading = false;
     });
 
+    
   }
 
   @override

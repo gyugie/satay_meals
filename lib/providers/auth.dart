@@ -77,13 +77,15 @@ class Auth with ChangeNotifier{
 
       final responseData = json.decode(response.body);
       
-
+     
       if(responseData['verified'] == false ){
+        _userId = responseData['data']['id'];
+        _role   = responseData['data']['type']; 
+       
         throw HttpException('Account is not active, please check on youre email for verified account');
       } else if(responseData['success'] == false) {
          throw HttpException(responseData['message']);
       }
-
       //set session on local storage
       _token  = responseData['data']['token'];
       _userId = responseData['data']['id'];
@@ -126,6 +128,28 @@ class Auth with ChangeNotifier{
     return true;
   }
 
+  Future<void> verificationCode(String codeActivation) async {
+    try{
+      final response = await http.post(
+        baseAPI + '/API_Account/verified',
+        body: {
+          'id': _userId,
+          'type': _role,
+          'verified': codeActivation
+        }
+      );
+
+    final responseData = json.decode(response.body);
+     
+     if(responseData['success'] == false){
+       throw HttpException(responseData['message']);
+     }
+
+    } catch (err){
+      throw err;
+    }
+  }
+
   Future<void> logout() async {
     _token        = null;
     _userId       = null;
@@ -141,7 +165,7 @@ class Auth with ChangeNotifier{
 
   }
 
-  Future<void> _autoLogout(){
+   _autoLogout(){
    if(_timer != null){
      _timer.cancel();
    }
