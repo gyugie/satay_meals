@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/providers/http_exception.dart';
+import '../providers/http_exception.dart';
+import '../widgets/verification_card.dart';
 import '../providers/auth.dart';
 
 
@@ -21,11 +22,11 @@ class _SignInCardState extends State<SignInCard> {
     'password':''
   };
 
-  void _showAlertDialog(String title, String message){
+  void _showAlertDialog(String title, String message, bool isVerification){
      showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(title),
+        title: Text(title, style: TextStyle(color: Colors.red)),
         content: Text(message),
         actions: <Widget>[
           FlatButton(
@@ -33,7 +34,19 @@ class _SignInCardState extends State<SignInCard> {
             onPressed: (){
               Navigator.of(context).pop();
             },
+          ),
+          isVerification 
+          ?
+          FlatButton(
+            child: Text('Verification now!', style: TextStyle(color: Colors.red)),
+            onPressed: (){
+              Navigator
+              .of(context)
+              .pushReplacement(new MaterialPageRoute(builder: (BuildContext context) => VerifivationCard()));
+            },
           )
+          :
+          null
         ],
       )
     );
@@ -51,9 +64,13 @@ class _SignInCardState extends State<SignInCard> {
     try{
       await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password']);
     } on HttpException catch (err){
-      _showAlertDialog('Authenticated failed!', err.toString());
+      if(err.toString().contains('Account is not active')){
+         _showAlertDialog('Authenticated failed!', err.toString(), true);
+      } else {
+        _showAlertDialog('Authenticated failed!', err.toString(), false);
+      }
     } catch (err) {
-      _showAlertDialog('Something is wrong!', err.toString());
+      _showAlertDialog('Something is wrong!', err.toString(), false);
     }
 
      setState(() {
@@ -61,6 +78,7 @@ class _SignInCardState extends State<SignInCard> {
     });
 
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(

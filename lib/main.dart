@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './widgets/verification_card.dart';
 import './providers/products.dart';
 import './screens/splash_screen.dart';
 import './screens/home_screen.dart';
@@ -10,6 +11,7 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           primaryColor: Colors.black,
+          // brightness: Brightness.dark,
           accentColor: Colors.grey.withOpacity(0.3),
           textTheme: TextTheme(
             headline: TextStyle(
@@ -60,7 +63,7 @@ class MyApp extends StatelessWidget {
           builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
         ),
         routes: {
-
+          VerifivationCard.routeName : (ctx) => VerifivationCard()
         },
       ),
       )
