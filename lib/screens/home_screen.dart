@@ -3,11 +3,38 @@ import 'package:provider/provider.dart';
 import '../screens/product_list.dart';
 import '../widgets/drawer.dart';
 import '../providers/auth.dart';
-class HomeScreen extends StatelessWidget {
+import '../providers/products.dart';
+
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  var _isInit = true;
+  var _isLoading = false;
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+
+    if(_isInit){
+       _isLoading = true;
+       Provider.of<Products>(context).fetchFoods().then( (_){
+         setState(() {
+           _isLoading = false;
+         });
+       });
+    }
+
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     final userRole = Provider.of<Auth>(context, listen: false).role;
+
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -32,7 +59,19 @@ class HomeScreen extends StatelessWidget {
        * vendor OrderList(),
        */
       
-      (userRole == 'consumer' ) ? ProductList() : (userRole == 'courier') ? null : ProductList()
+      _isLoading 
+      ? 
+      Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+      : 
+        (userRole == 'consumer' ) 
+        ? 
+        ProductList() 
+        : 
+        (userRole == 'courier') 
+        ? 
+        null 
+        : 
+        ProductList()
     );
   }
 }

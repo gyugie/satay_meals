@@ -39,6 +39,15 @@ class Auth with ChangeNotifier{
     return null;
   }
 
+  String get userId {
+    if(_token != null && _userId != null && _expiredToken != null ){
+      return _userId;
+    }
+
+    return null;
+  }
+
+
   Future<void> signUp(String username, String email, String password, int phone) async {
     try{
       final response = await http.post(

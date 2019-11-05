@@ -23,7 +23,7 @@ class _SignUpState extends State<SignUp> {
      showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(title),
+        title: Text(title, style: TextStyle(color: Colors.red)),
         content: Text(message),
         actions: <Widget>[
           FlatButton(

@@ -13,6 +13,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   TabController _tabController;
   AuthMode _authMode  = AuthMode.Signin;
   var _flexForCard    = 2;
+
+
   @override
   void initState() {
     super.initState();
@@ -41,7 +43,6 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   _onDragStart(BuildContext context, DragStartDetails start){
    
   }
-
 
   @override
   Widget build(BuildContext context) {
