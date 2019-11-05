@@ -84,8 +84,6 @@ class Products with ChangeNotifier{
 
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
   final headersAPI  = {
-                      // "Accept": "application/json",
-                      // "Content-Type": "application/x-www-form-urlencoded",
                       'Content-Type': 'application/json'
                     };
 
@@ -94,7 +92,6 @@ class Products with ChangeNotifier{
   }
 
   Future<void> fetchFoods() async {
-    
     try{
         headersAPI['token'] = _authToken;
         final List<Product> loadedProducts = [];

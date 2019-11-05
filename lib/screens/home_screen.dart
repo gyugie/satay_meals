@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   var _isInit = true;
   var _isLoading = false;
   @override
@@ -59,19 +60,26 @@ class _HomeScreenState extends State<HomeScreen> {
        * vendor OrderList(),
        */
       
-      _isLoading 
-      ? 
-      Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
-      : 
-        (userRole == 'consumer' ) 
-        ? 
-        ProductList() 
-        : 
-        (userRole == 'courier') 
-        ? 
-        null 
-        : 
-        ProductList()
+      RefreshIndicator(
+        key: _refreshIndicatorKey,
+        color: Colors.green,
+        onRefresh: () {
+          return Provider.of<Products>(context).fetchFoods();
+        },
+        child: _isLoading 
+                ? 
+                Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+                : 
+                  (userRole == 'consumer' ) 
+                  ? 
+                  ProductList() 
+                  : 
+                  (userRole == 'courier') 
+                  ? 
+                  null 
+                  : 
+                  ProductList(), 
+      )
     );
   }
 }
