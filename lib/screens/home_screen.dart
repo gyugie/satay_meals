@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../screens/product_list.dart';
+import '../widgets/product_list.dart';
 import '../widgets/drawer.dart';
 import '../providers/auth.dart';
 import '../providers/products.dart';
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
         key: _refreshIndicatorKey,
         color: Colors.green,
         onRefresh: () {
-          return Provider.of<Products>(context).fetchFoods();
+           return Provider.of<Products>(context).fetchFoods();
         },
         child: _isLoading 
                 ? 

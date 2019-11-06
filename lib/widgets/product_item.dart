@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/order_screen.dart';
 import '../providers/products.dart';
 
 class ProductItem extends StatelessWidget {
@@ -49,7 +50,7 @@ class ProductItem extends StatelessWidget {
                     ),
                     child: Text('Order'.toUpperCase(), style: Theme.of(context).textTheme.title),
                     onPressed: (){
-
+                      Navigator.of(context).pushNamed(OrderScreen.routeName);
                     },
                   )
                 ),
@@ -86,7 +87,7 @@ class ProductItem extends StatelessWidget {
                     ),
                     child: Text('Order'.toUpperCase(), style: Theme.of(context).textTheme.title),
                     onPressed: (){
-
+                        Navigator.of(context).pushNamed(OrderScreen.routeName);
                     },
                   )
                 ),
