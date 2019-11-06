@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/checkout_screen.dart';
 import './screens/order_screen.dart';
-import './widgets/verification_card.dart';
 import './providers/products.dart';
 import './screens/splash_screen.dart';
 import './screens/home_screen.dart';
@@ -67,7 +67,8 @@ class MyApp extends StatelessWidget {
           builder: (ctx, authSnapshot) => authSnapshot.connectionState == ConnectionState.waiting ? SplashScreen() : AuthScreen(),
         ),
         routes: {
-          OrderScreen.routeName : (ctx) => OrderScreen()
+          OrderScreen.routeName : (ctx) => OrderScreen(),
+          CheckoutScreen.routeName : (ctx) => CheckoutScreen()
         },
       ),
       )

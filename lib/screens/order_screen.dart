@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:satay_meals/widgets/order_item.dart';
-import 'package:satay_meals/widgets/order_list.dart';
+import '../screens/checkout_screen.dart';
+import '../widgets/order_list.dart';
 
 class OrderScreen extends StatefulWidget {
   static const routeName = '/order-screen';
@@ -38,7 +38,9 @@ class _OrderScreenState extends State<OrderScreen> {
           backgroundColor: Colors.green,
           label: Text('Checkout RM 122.0', style: Theme.of(context).textTheme.headline),
           
-          onPressed: (){},
+          onPressed: (){
+            Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
