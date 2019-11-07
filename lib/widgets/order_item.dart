@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../providers/cart_item.dart';
 
 class OrderItem extends StatefulWidget {
   final String id;
@@ -21,25 +22,26 @@ class OrderItem extends StatefulWidget {
 }
 
 class _OrderItemState extends State<OrderItem> {
-  var _quantityValue  = TextEditingController();
-  Map<String, String> _itemOrders = {};
+  final _quantityController   = TextEditingController();
 
-  void addItemOrder(String foodsId, String foodsName, int foodsQuantity, double foodsPrice){
-    if(!_itemOrders.containsKey(foodsId)){
-      _itemOrders.putIfAbsent(foodsId, (){
-       ({ 
-         'id': foodsId,
-        'name': foodsName,
-        'quantity': foodsQuantity,
-        'price': foodsPrice});
-      });
-    } else {
+  @override
+  void initState() {
+    super.initState();
 
-    }
+    _quantityController.hasListeners;
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the widget tree.
+    // This also removes the _printLatestValue listener.
+    _quantityController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final foods = Provider.of<CartItem>(context);
     return Card(
       child: Center(
       child: ListTile(
@@ -52,6 +54,17 @@ class _OrderItemState extends State<OrderItem> {
             IconButton(
               icon: Icon(Icons.remove),
               onPressed: (){
+                var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
+                var reduceValue     = int.parse(_quantityValue) - 1; 
+
+                if(reduceValue >= 1){
+
+                  setState(() {
+                  _quantityController.text = reduceValue.toString();
+                  });
+                
+                  foods.reduceQuantity(widget.id);
+                }
 
               },
             ),
@@ -60,8 +73,8 @@ class _OrderItemState extends State<OrderItem> {
               height: 50,
               color: Colors.black,
               child: Center(
-                child: TextFormField(
-                  controller: _quantityValue,
+                child: new TextField(
+                  controller: _quantityController,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   style: TextStyle(color: Colors.white, fontSize: 20),
@@ -70,8 +83,12 @@ class _OrderItemState extends State<OrderItem> {
                     hintText: '0',
                     border: InputBorder.none
                   ),
-                  onFieldSubmitted: (value){
-                    
+                  onChanged: (value){
+                    if(value.isEmpty || value == ''){
+                      foods.removingSingleItem(widget.id);
+                    }
+
+                    foods.addItem(widget.id, widget.price, int.parse(value));
                   },
                 ),
               ),
@@ -79,7 +96,12 @@ class _OrderItemState extends State<OrderItem> {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: (){
-                
+                var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
+                var addValue        = int.parse(_quantityValue) + 1; 
+                setState(() {
+                  _quantityController.text = addValue.toString();
+                });
+               foods.addItem(widget.id, widget.price, addValue);
               },
             )
           ],

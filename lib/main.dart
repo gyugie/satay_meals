@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './providers/cart_item.dart';
 import './screens/payment_screen.dart';
 import './screens/checkout_screen.dart';
 import './screens/order_screen.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
             auth.userId,
             cachedProduct == null ? [] : cachedProduct.products
           ), initialBuilder: (BuildContext context) {},
+        ),
+        ChangeNotifierProvider.value(
+          value: CartItem(),
         )
       ],
       child: Consumer<Auth>(

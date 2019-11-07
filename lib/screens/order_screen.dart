@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../screens/checkout_screen.dart';
 import '../widgets/order_list.dart';
+import '../providers/cart_item.dart';
 
 class OrderScreen extends StatefulWidget {
   static const routeName = '/order-screen';
@@ -11,6 +13,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
+  final totalRM = Provider.of<CartItem>(context).getTotal;
   final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -36,8 +39,7 @@ class _OrderScreenState extends State<OrderScreen> {
         width: deviceSize.width * 0.9,
         child: FloatingActionButton.extended(
           backgroundColor: Colors.green,
-          label: Text('Checkout RM 122.0', style: Theme.of(context).textTheme.headline),
-          
+          label: Text('Checkout RM ${totalRM.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
           onPressed: (){
             Navigator.of(context).pushNamed(CheckoutScreen.routeName);
           },
