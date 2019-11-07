@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/payment_screen.dart';
 import './screens/checkout_screen.dart';
 import './screens/order_screen.dart';
 import './providers/products.dart';
@@ -68,7 +69,8 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           OrderScreen.routeName : (ctx) => OrderScreen(),
-          CheckoutScreen.routeName : (ctx) => CheckoutScreen()
+          CheckoutScreen.routeName : (ctx) => CheckoutScreen(),
+          PaymentScreen.routeName : (ctx) => PaymentScreen()
         },
       ),
       )

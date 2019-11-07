@@ -26,7 +26,7 @@ class ProductItem extends StatelessWidget {
           flex: 2,
           child: Container(
             height: deviceSize.height * 0.30,
-            child: Image.network('${imageUrl}', fit: BoxFit.cover,),
+            child: Image.network(imageUrl, fit: BoxFit.cover,),
           ),
         ),
         Expanded(
@@ -37,7 +37,7 @@ class ProductItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('${productName}', style: Theme.of(context).textTheme.display1),
+                Text(productName, style: Theme.of(context).textTheme.display1),
                 SizedBox(height: 5),
                 Text('RM ${productPrice}', style: Theme.of(context).textTheme.title),
                 SizedBox(height: 5),
@@ -74,7 +74,7 @@ class ProductItem extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text('${productName}', style: Theme.of(context).textTheme.display1),
+                Text(productName, style: Theme.of(context).textTheme.display1),
                 SizedBox(height: 5),
                 Text('RM ${productPrice}', style: Theme.of(context).textTheme.title),
                 SizedBox(height: 5),
@@ -99,7 +99,7 @@ class ProductItem extends StatelessWidget {
           flex: 2,
           child: Container(
             height: deviceSize.height * 0.30,
-            child: Image.network('${imageUrl}', fit: BoxFit.cover,),
+            child: Image.network(imageUrl, fit: BoxFit.cover,),
           ),
         ),
       ],

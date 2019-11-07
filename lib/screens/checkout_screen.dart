@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+
+import '../screens/payment_screen.dart';
+
 class CheckoutScreen extends StatefulWidget {
   static const routeName = '/checkout-screen';
   
@@ -61,7 +64,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: horizontalTitleAlignment,
           children: <Widget>[
-            const Text('Seach box'),
+            const Text('Checkout'),
           ],
         ),
       ),
@@ -247,8 +250,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           backgroundColor: Colors.green,
           icon: Icon(Icons.attach_money, color: Colors.white,),
           label: Text('Buy', style: Theme.of(context).textTheme.headline),
-          
           onPressed: (){
+            Navigator.of(context).pushNamed(PaymentScreen.routeName);
           },
         ),
       ),

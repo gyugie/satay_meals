@@ -6,7 +6,6 @@ import '../providers/products.dart';
 class OrderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
     final products  = Provider.of<Products>(context).products;
 
     return ListView.builder(
