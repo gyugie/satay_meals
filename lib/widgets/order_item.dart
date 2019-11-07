@@ -88,7 +88,7 @@ class _OrderItemState extends State<OrderItem> {
                       foods.removingSingleItem(widget.id);
                     }
 
-                    foods.addItem(widget.id, widget.price, int.parse(value));
+                    foods.addItem(widget.id, widget.name, widget.price, int.parse(value));
                   },
                 ),
               ),
@@ -101,7 +101,7 @@ class _OrderItemState extends State<OrderItem> {
                 setState(() {
                   _quantityController.text = addValue.toString();
                 });
-               foods.addItem(widget.id, widget.price, addValue);
+               foods.addItem(widget.id, widget.name, widget.price, addValue);
               },
             )
           ],

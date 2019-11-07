@@ -13,7 +13,7 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
-  final totalRM = Provider.of<CartItem>(context).getTotal;
+  final cartItem = Provider.of<CartItem>(context);
   final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -37,13 +37,17 @@ class _OrderScreenState extends State<OrderScreen> {
       ),
       floatingActionButton: Container(
         width: deviceSize.width * 0.9,
-        child: FloatingActionButton.extended(
-          backgroundColor: Colors.green,
-          label: Text('Checkout RM ${totalRM.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
-          onPressed: (){
-            Navigator.of(context).pushNamed(CheckoutScreen.routeName);
-          },
-        ),
+        child: AnimatedOpacity(
+          opacity: cartItem.item.length > 0 ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 1000),
+          child: FloatingActionButton.extended(
+            backgroundColor: Colors.green,
+            label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
+            onPressed: (){
+              Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+            },
+          ),
+        )
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

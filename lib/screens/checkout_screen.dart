@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:io';
 
 import '../screens/payment_screen.dart';
+import '../providers/cart_item.dart';
 
 class CheckoutScreen extends StatefulWidget {
   static const routeName = '/checkout-screen';
@@ -12,12 +14,11 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> 
   with SingleTickerProviderStateMixin {
-  static final GlobalKey<ScaffoldState> scaffoldKey =
-  new GlobalKey<ScaffoldState>();
-
+  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _searchQuery;
   bool _isSearching = false;
   String searchQuery = "Search query";
+  double _setHeigtItemList = 0.1;
 
   @override
   void initState() {
@@ -121,7 +122,28 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final deviceSize      = MediaQuery.of(context).size;
+    final itemCart        = Provider.of<CartItem>(context); 
+    final int itemLength  = itemCart.item.length;
+
+    if(itemLength < 5){
+      _setHeigtItemList = 0.1;
+    } else if (itemLength <= 10) {
+      _setHeigtItemList = 0.15;
+    } else if (itemLength <= 15) {
+      _setHeigtItemList = 0.30;
+    } else if (itemLength <= 20) {
+      _setHeigtItemList = 0.40;
+    } else if (itemLength <= 25) {
+      _setHeigtItemList = 0.45;
+    } else if (itemLength <= 30) {
+      _setHeigtItemList = 0.50;
+    } else if (itemLength <= 35) {
+      _setHeigtItemList = 0.60;
+    } else {
+      _setHeigtItemList = 0.65;
+    }
+
     return new Scaffold(
       key: scaffoldKey,
       appBar: new AppBar(
@@ -160,7 +182,6 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Address', style: Theme.of(context).textTheme.title),
-                        Text('Edit', style: Theme.of(context).textTheme.title)
                       ],
                     ),
                     Divider(color: Colors.grey[100]),
@@ -205,35 +226,38 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                       ],
                     ),
                     Divider(color: Colors.grey[100]),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('10 X Chicken', style: TextStyle(fontSize: 16)),
-                        Text('RM 12.0', style: TextStyle(fontSize: 16)),
-                      ],
+
+                    /**
+                     * List Order Item
+                     */
+                    Container(
+                      height: deviceSize.height * _setHeigtItemList,
+                      child: ListView.builder(
+                        itemCount: itemLength,
+                        itemBuilder: (BuildContext context, index) {
+                        return new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
+                              Text('RM ${itemCart.item.values.toList()[index].subTotal}', style: TextStyle(fontSize: 16)),
+                            ],
+                          );
+                        }
+                      ),
                     ),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('10 X Chicken', style: TextStyle(fontSize: 16)),
-                        Text('RM 12.0', style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('10 X Chicken', style: TextStyle(fontSize: 16)),
-                        Text('RM 12.0', style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
+                   
+                    /**
+                     * Total Item
+                     */
                     Divider(color: Colors.grey[100]),
                     new Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total', style: Theme.of(context).textTheme.title),
-                        Text('RM 12.0', style: TextStyle(fontSize: 18)),
+                        Text('RM ${itemCart.getTotal}', style: TextStyle(fontSize: 18)),
                       ],
                     ),
+                    
                   ],
                 )
               )

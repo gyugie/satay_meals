@@ -2,10 +2,12 @@ import 'package:flutter/widgets.dart';
 
 class Item {
   final String product_id;
+  final String name;
   final double price;
+  final double subTotal;
   final int quantity;
 
-  Item({this.product_id, this.price, this.quantity});
+  Item({ this.product_id, this.name, this.price, this.quantity, this.subTotal});
 }
 
 class CartItem with ChangeNotifier {
@@ -23,16 +25,20 @@ class CartItem with ChangeNotifier {
 
     return total;
   }
-  /**
-   * Adding item & update item if axist item
-   */
-  void addItem(String foodId, double foodPrice, int quantity){
+
+/**
+ * Adding item & update item if axist item
+ */
+  void addItem(String foodId, String foodName, double foodPrice, int quantity){
     if(!_items.containsKey(foodId)){
 
-      _items.putIfAbsent(foodId, () => Item(
+      _items.putIfAbsent(
+        foodId, () => Item(
             product_id: foodId,
+            name: foodName,
             price: foodPrice,
-            quantity: quantity
+            quantity: quantity,
+            subTotal: quantity * foodPrice
           ));
 
     } else {
@@ -40,12 +46,14 @@ class CartItem with ChangeNotifier {
       _items.update(
         foodId, (existingItem) => Item(
             product_id: existingItem.product_id,
+            name: existingItem.name,
             price: existingItem.price,
-            quantity: quantity
+            quantity: quantity,
+            subTotal: quantity * foodPrice
           ));
          
     } 
-
+   
     notifyListeners();
   
   }
@@ -64,8 +72,10 @@ class CartItem with ChangeNotifier {
         foodId, 
         (existingItem) => Item(
           product_id: existingItem.product_id,
+          name: existingItem.name,
           price: existingItem.price,
-          quantity: existingItem.quantity - 1
+          quantity: existingItem.quantity - 1,
+          subTotal: (existingItem.quantity - 1) * existingItem.price
         ));
       } else {
         removingSingleItem(foodId);
