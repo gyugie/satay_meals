@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './providers/user.dart';
 import './providers/cart_item.dart';
 import './screens/payment_screen.dart';
 import './screens/checkout_screen.dart';
@@ -21,6 +22,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(
           value: Auth(),
+        ),
+        ChangeNotifierProvider.value(
+          value: User(),
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
           builder: (ctx, auth, cachedProduct) => Products(
