@@ -298,9 +298,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           icon: Icon(Icons.attach_money, color: Colors.white,),
           label: Text('Buy', style: Theme.of(context).textTheme.headline),
           onPressed: (){
-            Provider.of<ItemOrders>(context, listen: false).addOrder(authUser.userId, 'jl BKM Barat no 123', userLocation['latitude'].toString(), userLocation['longitude'].toString(), 08999628074, itemCart.getTotal, itemCart.item.values.toList());
+            // Provider.of<ItemOrders>(context, listen: false).addOrder(authUser.userId, 'jl BKM Barat no 123', userLocation['latitude'].toString(), userLocation['longitude'].toString(), 08999628074, itemCart.getTotal, itemCart.item.values.toList());
            
-            // Navigator.of(context).pushNamed(PaymentScreen.routeName);
           },
         ),
       ),

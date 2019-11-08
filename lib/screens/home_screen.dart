@@ -5,6 +5,7 @@ import '../widgets/product_list.dart';
 import '../widgets/drawer.dart';
 import '../providers/auth.dart';
 import '../providers/products.dart';
+import '../providers/user.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -17,15 +18,32 @@ class _HomeScreenState extends State<HomeScreen> {
   var _isInit = true;
   var _isLoading = false;
 
+  Future<bool> myTypedFuture() async {
+    await Future.delayed(Duration(seconds: 3));
+    print('Delay complete for Future 1');
+    return true;
+  }
+
+   Future<bool> myTypedFuture2() async {
+    await Future.delayed(Duration(seconds: 2));
+    print('Delay complete for Future 2');
+    return true;
+  }
+
   @override
   void didChangeDependencies() {
     if(_isInit){
        _isLoading = true;
-       Provider.of<Products>(context).fetchFoods().then( (_){
-         setState(() {
-           _isLoading = false;
+     
+         Future.wait([
+           Provider.of<Products>(context).fetchFoods(),
+           Provider.of<User>(context).getMyWallet()
+         ]).then( (List value) {
+            setState(() {
+              _isLoading = false;
+            });
          });
-       });
+       
     }
 
     _isInit = false;
@@ -35,13 +53,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userRole = Provider.of<Auth>(context, listen: false).role;
+    final myWallet = Provider.of<User>(context, listen: false).myWallet;
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
+            userRole == 'consumer' || userRole == 'vendor' 
+            ? 
             Padding(
               padding: EdgeInsets.all(15),
-              child: Text('RM 9.244.3', style: Theme.of(context).textTheme.headline),
+              child: Text('RM ${myWallet}', style: Theme.of(context).textTheme.headline),
             )
+            :
+            null
         ],
       ),
       drawer: Theme(
