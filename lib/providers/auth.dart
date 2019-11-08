@@ -183,4 +183,6 @@ class Auth with ChangeNotifier{
    _timer = Timer(Duration(seconds: timeExpired), logout);
  }
 
+  
+
 }

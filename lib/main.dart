@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './providers/orders.dart';
 import './providers/user.dart';
 import './providers/cart_item.dart';
 import './screens/payment_screen.dart';
@@ -32,10 +33,15 @@ class MyApp extends StatelessWidget {
             auth.role,
             auth.userId,
             cachedProduct == null ? [] : cachedProduct.products
-          ), initialBuilder: (BuildContext context) {},
+          ), initialBuilder: (BuildContext context) {return;},
         ),
         ChangeNotifierProvider.value(
           value: CartItem(),
+        ),
+        ChangeNotifierProxyProvider<Auth, ItemOrders>(
+          builder: (ctx, auth, chachedOrder) => ItemOrders(
+            auth.token
+          ), initialBuilder: (BuildContext context) { return;},
         )
       ],
       child: Consumer<Auth>(

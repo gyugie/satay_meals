@@ -11,10 +11,21 @@ class OrderScreen extends StatefulWidget {
 }
 
 class _OrderScreenState extends State<OrderScreen> {
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      Provider.of<CartItem>(context).clearCartItem();
+    }  
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
-  final cartItem = Provider.of<CartItem>(context);
-  final deviceSize = MediaQuery.of(context).size;
+  final cartItem    = Provider.of<CartItem>(context);
+  final deviceSize  = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Text('Order', style: Theme.of(context).textTheme.headline),

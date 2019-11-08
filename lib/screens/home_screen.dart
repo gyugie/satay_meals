@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../widgets/product_list.dart';
 import '../widgets/drawer.dart';
 import '../providers/auth.dart';
@@ -15,10 +16,9 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   var _isInit = true;
   var _isLoading = false;
+
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-
     if(_isInit){
        _isLoading = true;
        Provider.of<Products>(context).fetchFoods().then( (_){
@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final userRole = Provider.of<Auth>(context, listen: false).role;
-
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -82,4 +81,6 @@ class _HomeScreenState extends State<HomeScreen> {
       )
     );
   }
+
+  
 }

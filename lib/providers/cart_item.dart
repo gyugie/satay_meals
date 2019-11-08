@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 
 class Item {
-  final String product_id;
+  final String productId;
   final String name;
   final double price;
   final double subTotal;
   final int quantity;
 
-  Item({ this.product_id, this.name, this.price, this.quantity, this.subTotal});
+  Item({ this.productId, this.name, this.price, this.quantity, this.subTotal});
 }
 
 class CartItem with ChangeNotifier {
@@ -26,15 +26,15 @@ class CartItem with ChangeNotifier {
     return total;
   }
 
-/**
- * Adding item & update item if axist item
- */
+//
+// Adding item & update item if axist item
+//
   void addItem(String foodId, String foodName, double foodPrice, int quantity){
     if(!_items.containsKey(foodId)){
 
       _items.putIfAbsent(
         foodId, () => Item(
-            product_id: foodId,
+            productId: foodId,
             name: foodName,
             price: foodPrice,
             quantity: quantity,
@@ -45,7 +45,7 @@ class CartItem with ChangeNotifier {
 
       _items.update(
         foodId, (existingItem) => Item(
-            product_id: existingItem.product_id,
+            productId: existingItem.productId,
             name: existingItem.name,
             price: existingItem.price,
             quantity: quantity,
@@ -58,10 +58,10 @@ class CartItem with ChangeNotifier {
   
   }
 
-/**
- * Reduce quantity
- * @param id
- */
+ //
+ // Reduce quantity
+ // @param id
+ //
   void reduceQuantity(String foodId){
     if(!_items.containsKey(foodId) && _items[foodId].quantity < 1){
       return;
@@ -71,7 +71,7 @@ class CartItem with ChangeNotifier {
       _items.update(
         foodId, 
         (existingItem) => Item(
-          product_id: existingItem.product_id,
+          productId: existingItem.productId,
           name: existingItem.name,
           price: existingItem.price,
           quantity: existingItem.quantity - 1,
@@ -85,11 +85,10 @@ class CartItem with ChangeNotifier {
 
   }
 
-/**
- * 
- * quantity 0 deleting item
- * @param String id
- */
+  //
+  // quantity 0 deleting item
+  // @param String id
+  //
   void removingSingleItem(String foodId){
 
     if(!_items.containsKey(foodId)){
@@ -98,6 +97,15 @@ class CartItem with ChangeNotifier {
     
     _items.remove(foodId);
     notifyListeners();
+  }
+
+  /**
+   * Clear Cart item
+   */
+
+  void clearCartItem(){
+    _items = {};
+    print(_items.length);
   }
 
 }

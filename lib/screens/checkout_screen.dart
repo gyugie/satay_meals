@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/providers/auth.dart';
 import 'dart:io';
 
 import '../screens/payment_screen.dart';
 import '../providers/cart_item.dart';
+import '../providers/user.dart';
+import '../providers/orders.dart';
 
 class CheckoutScreen extends StatefulWidget {
   static const routeName = '/checkout-screen';
@@ -19,11 +22,17 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   bool _isSearching = false;
   String searchQuery = "Search query";
   double _setHeigtItemList = 0.1;
+  var _isLoading = true;
+  var _isInit     = true;
+  Map<String, double> userLocation;
 
   @override
   void initState() {
+    
     super.initState();
     _searchQuery = new TextEditingController();
+   
+   
   }
 
   void _startSearch() {
@@ -121,9 +130,23 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   }
 
   @override
+  void didChangeDependencies() {
+    if(_isInit){
+      // for get location latitude longitude
+      Provider.of<User>(context).getLocation().then((value){
+          userLocation = value;
+      });
+
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final deviceSize      = MediaQuery.of(context).size;
     final itemCart        = Provider.of<CartItem>(context); 
+    final authUser        = Provider.of<Auth>(context);
+    final deviceSize      = MediaQuery.of(context).size;
     final int itemLength  = itemCart.item.length;
 
     if(itemLength < 5){
@@ -239,7 +262,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
-                              Text('RM ${itemCart.item.values.toList()[index].subTotal}', style: TextStyle(fontSize: 16)),
+                              Text('RM ${itemCart.item.values.toList()[index].subTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 16)),
                             ],
                           );
                         }
@@ -254,7 +277,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Total', style: Theme.of(context).textTheme.title),
-                        Text('RM ${itemCart.getTotal}', style: TextStyle(fontSize: 18)),
+                        Text('RM ${itemCart.getTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 18)),
                       ],
                     ),
                     
@@ -275,7 +298,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           icon: Icon(Icons.attach_money, color: Colors.white,),
           label: Text('Buy', style: Theme.of(context).textTheme.headline),
           onPressed: (){
-            Navigator.of(context).pushNamed(PaymentScreen.routeName);
+            Provider.of<ItemOrders>(context, listen: false).addOrder(authUser.userId, 'jl BKM Barat no 123', userLocation['latitude'].toString(), userLocation['longitude'].toString(), 08999628074, itemCart.getTotal, itemCart.item.values.toList());
+           
+            // Navigator.of(context).pushNamed(PaymentScreen.routeName);
           },
         ),
       ),
