@@ -27,7 +27,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   var _isLoading                                    = false;
   var _isInit                                       = true;
   Map<String, double> userLocation;
-  var _disabledButton                                = false;
+  var _disabledButton                               = false;
+  TextEditingController _phoneController            = new TextEditingController();
+  String _userPhone                                 = '0899628974';
 
   @override
   void initState() {
@@ -152,7 +154,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
     final deviceSize      = MediaQuery.of(context).size;
     final int itemLength  = itemCart.item.length;
-    
+
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
@@ -229,11 +231,18 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('Phone number', style: Theme.of(context).textTheme.title),
-                        Text('Edit', style: Theme.of(context).textTheme.title)
+                        SizedBox(
+                          width: 70,
+                          height: 20,
+                          child: FlatButton(
+                            child: Text('Edit', style: Theme.of(context).textTheme.title),
+                            onPressed: _showDialogPhone,
+                          ),
+                        )
                       ],
                     ),
                     Divider(color: Colors.grey[100]),
-                    Text('0899628974'),
+                    Text(_userPhone ),
                   ],
                 )
               )
@@ -309,7 +318,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
               '', 
               userLocation['latitude'].toString(), 
               userLocation['longitude'].toString(),
-              '',
+              _userPhone,
               myWallet, 
               itemCart.getTotal,
               itemCart.item.values.toList()
@@ -395,7 +404,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                        
                         try{
                           //processing order
-                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, 08999628074, totalPayment, items);
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment, items);
                           _showAlertDialog('Confirmation', 'Payment success', false);
 
                           setState(() {
@@ -438,9 +447,49 @@ class _CheckoutScreenState extends State<CheckoutScreen>
               
             },
           )
-         
         ],
       )
+    );
+  }
+
+  Widget _showDialogPhone()  {
+     showDialog<String>(
+      context: context,
+      child: new AlertDialog(
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                controller: _phoneController,
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                style: new TextStyle(color: Colors.white),
+                decoration: new InputDecoration(
+                    labelText: 'Phone Number', 
+                    hintText: '+60 XXXX',
+                    labelStyle: TextStyle(color: Colors.white, fontSize: 20)
+                ),
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: const Text('CANCEL', style: TextStyle(color: Colors.orange)),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: const Text('Ok', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                  Navigator.pop(context);
+                  setState(() {
+                    _userPhone = _phoneController.text;
+                  });
+              })
+        ],
+      ),
     );
   }
 }
