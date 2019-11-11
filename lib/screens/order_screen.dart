@@ -38,7 +38,7 @@ class _OrderScreenState extends State<OrderScreen> {
             ? 
             Padding(
               padding: EdgeInsets.all(15),
-              child: Text('RM ${myWallet}', style: Theme.of(context).textTheme.headline),
+              child: Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
             )
             :
             null

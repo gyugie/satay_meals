@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:satay_meals/providers/auth.dart';
@@ -19,20 +21,18 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   with SingleTickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController _searchQuery;
-  bool _isSearching = false;
-  String searchQuery = "Search query";
-  double _setHeigtItemList = 0.1;
-  var _isLoading = true;
-  var _isInit     = true;
+  bool _isSearching                                 = false;
+  String searchQuery                                = "Search query";
+  double _setHeigtItemList                          = 0.1;
+  var _isLoading                                    = false;
+  var _isInit                                       = true;
   Map<String, double> userLocation;
+  var _disabledButton                                = false;
 
   @override
   void initState() {
-    
     super.initState();
     _searchQuery = new TextEditingController();
-   
-   
   }
 
   void _startSearch() {
@@ -129,6 +129,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     ];
   }
 
+  
+
   @override
   void didChangeDependencies() {
     if(_isInit){
@@ -144,11 +146,13 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
   @override
   Widget build(BuildContext context) {
-    final itemCart        = Provider.of<CartItem>(context); 
-    final authUser        = Provider.of<Auth>(context);
+    final itemCart        = Provider.of<CartItem>(context, listen: false); 
+    final authUser        = Provider.of<Auth>(context, listen: false);
+    final myWallet        = Provider.of<User>(context).myWallet;
+
     final deviceSize      = MediaQuery.of(context).size;
     final int itemLength  = itemCart.item.length;
-
+    
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
@@ -294,16 +298,149 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       floatingActionButton: Container(
         width: deviceSize.width * 0.9,
         child: FloatingActionButton.extended(
-          backgroundColor: Colors.green,
+
+          backgroundColor: _disabledButton ? Colors.grey : Colors.green,
           icon: Icon(Icons.attach_money, color: Colors.white,),
           label: Text('Buy', style: Theme.of(context).textTheme.headline),
-          onPressed: (){
-            // Provider.of<ItemOrders>(context, listen: false).addOrder(authUser.userId, 'jl BKM Barat no 123', userLocation['latitude'].toString(), userLocation['longitude'].toString(), 08999628074, itemCart.getTotal, itemCart.item.values.toList());
-           
+          onPressed: _disabledButton ? null : (){
+
+           _confirmModalBottom(
+              authUser.userId, 
+              '', 
+              userLocation['latitude'].toString(), 
+              userLocation['longitude'].toString(),
+              '',
+              myWallet, 
+              itemCart.getTotal,
+              itemCart.item.values.toList()
+             );
+          
           },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  Widget _confirmModalBottom(
+    String userId, 
+    String address, 
+    String latitude,
+    String longitude,
+    String phone,
+    double myWallet, 
+    double totalPayment,
+    List<Item> items
+    ){
+
+    double balanceUser = myWallet - totalPayment;
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: false,
+      builder: (builder){
+        return new Container(
+          height: MediaQuery.of(context).size.height * 0.35,
+          child: Container(
+            decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: new BorderRadius.only(
+            topLeft: const Radius.circular(30.0),
+            topRight: const Radius.circular(30.0))),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: 3,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('My Wallet', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${myWallet.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Total Payment', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${totalPayment.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                  ],
+                ),
+                SizedBox(height: 5),
+                Divider(color: Colors.grey),
+                SizedBox(height: 5),
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Balance', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${balanceUser.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                  ],
+                ),
+                SizedBox(height: 15),
+                Text('(payment will be deducated from your wallet)', style: TextStyle(color: Colors.grey)),
+                SizedBox(height: 15),
+
+                ButtonTheme(
+                  minWidth: MediaQuery.of(context).size.width * 0.9,
+                  height: 45,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                  buttonColor: Colors.green,
+                  child: RaisedButton(
+                    child: Text("Confrim", style: Theme.of(context).textTheme.title),
+                    onPressed: () async {
+                       
+                        try{
+                          //processing order
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, 08999628074, totalPayment, items);
+                          _showAlertDialog('Confirmation', 'Payment success', false);
+
+                          setState(() {
+                            _disabledButton = true;
+                          });
+
+                          //clear cart item;
+                          Provider.of<CartItem>(context, listen: false).clearCartItem();
+
+                        } on HttpException catch(err){
+                          _showAlertDialog('Something wrong!', err.toString(), true);
+                        }catch (err){
+                          _showAlertDialog('An error occured!', err, true);
+                        }
+                        
+                    },    
+                  ),
+                ),
+              ],
+            )
+          ),
+        );
+      }
+    );
+  }
+
+  Widget _showAlertDialog(String title, String message, bool warning){
+     showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(title, style: TextStyle(color: warning ? Colors.red : Colors.white)),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Close', style: TextStyle(color: Colors.orange)),
+            onPressed: (){
+                 
+                Navigator.pop(context);
+                Navigator.pop(context);
+              
+            },
+          )
+         
+        ],
+      )
     );
   }
 }

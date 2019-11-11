@@ -18,24 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   var _isInit = true;
   var _isLoading = false;
 
-  Future<bool> myTypedFuture() async {
-    await Future.delayed(Duration(seconds: 3));
-    print('Delay complete for Future 1');
-    return true;
-  }
-
-   Future<bool> myTypedFuture2() async {
-    await Future.delayed(Duration(seconds: 2));
-    print('Delay complete for Future 2');
-    return true;
-  }
-
-  @override
-  void didChangeDependencies() {
-    if(_isInit){
-       _isLoading = true;
-     
-         Future.wait([
+  Future<void> _loadDataHome() async {
+     Future.wait([
            Provider.of<Products>(context).fetchFoods(),
            Provider.of<User>(context).getMyWallet()
          ]).then( (List value) {
@@ -43,7 +27,13 @@ class _HomeScreenState extends State<HomeScreen> {
               _isLoading = false;
             });
          });
-       
+  }  
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+        _isLoading = true;
+        _loadDataHome();
     }
 
     _isInit = false;
@@ -61,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ? 
             Padding(
               padding: EdgeInsets.all(15),
-              child: Text('RM ${myWallet}', style: Theme.of(context).textTheme.headline),
+              child: Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
             )
             :
             null
@@ -85,9 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
       RefreshIndicator(
         key: _refreshIndicatorKey,
         color: Colors.green,
-        onRefresh: () {
-           return Provider.of<Products>(context).fetchFoods();
-        },
+        onRefresh: _loadDataHome,
         child: _isLoading 
                 ? 
                 Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))

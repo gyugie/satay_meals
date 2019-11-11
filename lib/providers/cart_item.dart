@@ -105,7 +105,6 @@ class CartItem with ChangeNotifier {
 
   void clearCartItem(){
     _items = {};
-    print(_items.length);
   }
 
 }

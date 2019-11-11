@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'package:satay_meals/providers/http_exception.dart';
 import 'dart:convert';
 import './cart_item.dart';
 
@@ -71,6 +72,10 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
 
 
     final responseData = json.decode(response.body);
+    if(responseData['success'] == false){
+      throw HttpException(responseData['message']);
+    }
+
     print(responseData);
   } catch (err){
     throw err;
