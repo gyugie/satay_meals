@@ -63,6 +63,9 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
               createdAt: historyOrders[index].createdAt,
               statusOrder: historyOrders[index].statusOrder,
               total: historyOrders[index].total,
+              tableName: historyOrders[index].tableName,
+              vendor: historyOrders[index].vendor,
+              rider: historyOrders[index].rider,
             ),
           ),
         )

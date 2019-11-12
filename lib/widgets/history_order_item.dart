@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/detail_order_screen.dart';
 
 
 enum FilterOptions {
@@ -13,6 +14,9 @@ class HistoryItem extends StatefulWidget {
   final String statusOrder;
   final String total;
   final String createdAt;
+  final String tableName;
+  final String vendor;
+  final String rider;
 
   HistoryItem({
     @required this.noTransaction,
@@ -20,6 +24,9 @@ class HistoryItem extends StatefulWidget {
     @required this.statusOrder,
     @required this.createdAt,
     @required this.total,
+    @required this.tableName,
+    this.vendor,
+    this.rider
   });
 
   @override
@@ -97,8 +104,18 @@ class _HistoryItemState extends State<HistoryItem> {
                           child: PopupMenuButton(
                             elevation: 30,
                             onSelected: (FilterOptions selectedValue){
-                              
-                          
+                              if(selectedValue == FilterOptions.Detail)
+                              //push data with arguments
+                               Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailOrder(
+                                        orderId: widget.orderId,
+                                        tableName: widget.tableName,
+                                        vendor: widget.vendor,
+                                        rider: widget.rider,
+                                    )),
+                                );
                             },
                             icon: Icon(
                               Icons.more_vert,

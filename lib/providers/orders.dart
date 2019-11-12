@@ -41,6 +41,7 @@ class HistoryOrder with ChangeNotifier {
   final String createdAt;
   final String vendor;
   final String rider;
+  final String tableName;
 
   HistoryOrder({
     @required this.noTransaction,
@@ -48,8 +49,9 @@ class HistoryOrder with ChangeNotifier {
     @required this.statusOrder,
     @required this.createdAt,
     @required this.total,
+    @required this.tableName,
     this.vendor,
-    this.rider
+    this.rider,
   });
 }
 
@@ -136,13 +138,13 @@ Future<void> getHistoryOrders() async {
         total: responseData['data'][i]['total'],
         createdAt: responseData['data'][i]['createdAt'],
         rider: responseData['data'][i]['rider'],
-        vendor: responseData['data'][i]['vendor']
+        vendor: responseData['data'][i]['vendor'],
+        tableName: responseData['data'][i]['table_name']
       ));
 
       _historyOrders = loadedHistoryOrders;
       notifyListeners();
     }
-    print('responseData');
 
 
   } catch (err){

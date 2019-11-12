@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/detail_order_screen.dart';
 import './screens/history_order_screen.dart';
 import './providers/orders.dart';
 import './providers/user.dart';
@@ -79,6 +80,11 @@ class MyApp extends StatelessWidget {
               fontFamily: 'Play',
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              color: Colors.white
+            ),
+            body1: TextStyle(
+              fontFamily: 'Play',
+              fontSize: 16,
               color: Colors.white
             )
             
