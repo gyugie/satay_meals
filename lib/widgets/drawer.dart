@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
 
 class DrawerSide extends StatelessWidget {
@@ -82,7 +83,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.replay_10, color: Colors.white),
               title: Text('History Orders', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                Navigator.of(context).pushNamed(HistoryOrdersScreen.routeName);
               },
             ),
         // Divider(color: Colors.white),

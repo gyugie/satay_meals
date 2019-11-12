@@ -114,7 +114,6 @@ class _SignInCardState extends State<SignInCard> {
                     errorStyle: TextStyle(color: Colors.orange),
                     hintText: 'Username',
                     hintStyle: TextStyle(color: Colors.white),
-                    filled: true,
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(1.0),
                       child: Icon(
@@ -152,7 +151,6 @@ class _SignInCardState extends State<SignInCard> {
                     errorStyle: TextStyle(color: Colors.orange),
                     hintText: 'Password',
                     hintStyle: TextStyle(color: Colors.white),
-                    filled: true,
                     prefixIcon: Padding(
                       padding: EdgeInsets.all(1.0),
                       child: Icon(

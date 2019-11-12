@@ -403,6 +403,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                     onPressed: () async {
                        
                         try{
+
                           //processing order
                           await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment, items);
                           _showAlertDialog('Confirmation', 'Payment success', false);
@@ -411,7 +412,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                             _disabledButton = true;
                           });
 
-                          //clear cart item;
+                          //clear cart item
                           Provider.of<CartItem>(context, listen: false).clearCartItem();
 
                         } on HttpException catch(err){
