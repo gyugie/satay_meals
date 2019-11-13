@@ -40,7 +40,7 @@ class _HistoryItemState extends State<HistoryItem> {
   Widget build(BuildContext context) {
     final deviceSize        = MediaQuery.of(context).size;
     final orientation       = MediaQuery.of(context).orientation;
-
+    
     switch (widget.statusOrder) {
       case 'Cancelled':
             setLabelColors = Colors.red;

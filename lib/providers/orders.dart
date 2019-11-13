@@ -55,6 +55,8 @@ class HistoryOrder with ChangeNotifier {
   });
 }
 
+
+
 class ItemOrders with ChangeNotifier {
 final String _authToken;
 final String _role;
@@ -112,7 +114,6 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
 }
 
 Future<void> getHistoryOrders() async {
-
   try{
     headersAPI['token'] = _authToken;
     final List<HistoryOrder> loadedHistoryOrders  = [];
@@ -139,9 +140,8 @@ Future<void> getHistoryOrders() async {
         createdAt: responseData['data'][i]['createdAt'],
         rider: responseData['data'][i]['rider'],
         vendor: responseData['data'][i]['vendor'],
-        tableName: responseData['data'][i]['table_name']
+        tableName: responseData['data'][i]['name_table']
       ));
-
       _historyOrders = loadedHistoryOrders;
       notifyListeners();
     }
@@ -153,7 +153,35 @@ Future<void> getHistoryOrders() async {
 
 }
 
+Future<void> getDetailOrder(String id, String tableName) async {
+  var results;
 
+  try{
+    
+    headersAPI['token'] = _authToken;
+    final response = await http.post(
+      baseAPI + '/API_Account/OrderDetail',
+      headers: headersAPI,
+      body: {
+        'id' : id,
+        'type': _role,
+        'table_name': tableName
+      }
+    );
+
+    final responseData = json.decode(response.body);
+   if(responseData['success'] == false){
+      throw HttpException(responseData['message']);
+    } 
+
+    results = response.body;
+  
+  } catch (err){
+    throw err;
+  }
+
+  return results;
+}
 
 }
 

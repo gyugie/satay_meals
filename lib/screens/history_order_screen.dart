@@ -15,9 +15,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
     var _isLoading = false;
 
   Future<void> _loadHistoryOrder() async {
-    setState(() {
-      _isLoading = true;
-    });
+   
 
      try{
       await Provider.of<ItemOrders>(context).getHistoryOrders();
@@ -26,14 +24,16 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
      }
 
      setState(() {
-      _isLoading = false;
-    });
+       _isLoading = false;
+     });
   }
   @override
   void didChangeDependencies() {
     if(_isInit){
+    _isLoading = true;
      _loadHistoryOrder();
     }
+    
     _isInit = false;
     super.didChangeDependencies();
   }
