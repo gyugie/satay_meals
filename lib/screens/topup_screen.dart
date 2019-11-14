@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:satay_meals/widgets/payment_package_item.dart';
 import '../widgets/drawer.dart';
 
 class TopupScreen extends StatelessWidget {
@@ -22,12 +23,18 @@ class TopupScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
+        
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(left: 20, top: 20),
+                child: Text('Your Ballance', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+              ),
               Container(
                 padding: EdgeInsets.all(20),
                 height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
-                width:  orientation == Orientation.portrait ? double.infinity : mediaSize.width * 0.5,
+                width: orientation == Orientation.portrait ? double.infinity :  mediaSize.width * 0.5,
                 child: Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -63,6 +70,23 @@ class TopupScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+              ),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(left: 20),
+                child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+              ),
+              SizedBox(height: 20),
+              // for list payment card
+              Container(
+                height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
+                width: double.infinity,
+                color: Colors.white.withOpacity(0.1),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: 3,
+                  itemBuilder: (ctx, index) => PaymentPackage()
+                )
               )
             ],
           ),
