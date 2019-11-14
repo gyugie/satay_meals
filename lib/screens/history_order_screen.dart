@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../providers/orders.dart';
 import '../widgets/history_order_item.dart';
+import '../widgets/drawer.dart';
 
 class HistoryOrdersScreen extends StatefulWidget {
   static const routeName = '/history-orders';
@@ -45,6 +46,12 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('History Oder', style: Theme.of(context).textTheme.title),
+      ),
+      drawer: Theme(
+       data: Theme.of(context).copyWith(
+         canvasColor: Colors.transparent
+       ),
+       child: DrawerSide(),
       ),
       body: Container(
         padding: EdgeInsets.all(10),

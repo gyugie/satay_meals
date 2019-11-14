@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/topup_screen.dart';
 import './screens/history_order_screen.dart';
 import './providers/orders.dart';
 import './providers/user.dart';
@@ -98,6 +99,7 @@ class MyApp extends StatelessWidget {
           CheckoutScreen.routeName : (ctx) => CheckoutScreen(),
           PaymentScreen.routeName : (ctx) => PaymentScreen(),
           HistoryOrdersScreen.routeName : (ctx) => HistoryOrdersScreen(),
+          TopupScreen.routeName : (ctx) => TopupScreen()
         },
       ),
       )

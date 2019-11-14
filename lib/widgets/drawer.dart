@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/topup_screen.dart';
 import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
 
@@ -67,7 +68,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.credit_card, color: Colors.white),
               title: Text('Top Up', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                Navigator.of(context).pushReplacementNamed(TopupScreen.routeName);
               },
             ),
         // Divider(color: Colors.white),
@@ -75,7 +76,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.redeem, color: Colors.white),
               title: Text('Pending Top Up', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                
               },
             ),
         // Divider(color: Colors.white),
@@ -83,7 +84,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.replay_10, color: Colors.white),
               title: Text('History Orders', style: Theme.of(context).textTheme.title),
               onTap: (){
-                Navigator.of(context).pushNamed(HistoryOrdersScreen.routeName);
+                Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
               },
             ),
         // Divider(color: Colors.white),

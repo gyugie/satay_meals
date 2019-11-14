@@ -26,7 +26,6 @@ class DetailOrder extends StatefulWidget {
 }
 
 class _DetailOrderState extends State<DetailOrder> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   double _setHeigtItemList  = 0.1;
   var _isInit               = true;
   var _isLoading            = false;
