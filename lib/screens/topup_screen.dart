@@ -135,6 +135,14 @@ class _TopupScreenState extends State<TopupScreen> {
                     status: false,
                   )
                 )
+              ),
+              SizedBox(height: 10),
+              Center(
+                child: Text(
+                  'Currency fluctuation, bank or convenience fee and  applicable  taxes charge by both the seller and payment gateway may increase your final amount.\n Check payment gateway terms and conditions. \n \n By tapping Buy, you accept the following terms of service \n', 
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                  ),
               )
             ],
           ),
