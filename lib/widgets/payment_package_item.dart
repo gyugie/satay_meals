@@ -60,14 +60,14 @@ class PaymentPackage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(
-                  width: 100,
+                  width: 110,
                   child: FlatButton(
                     color: Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text('Buy', style: Theme.of(context).textTheme.title),
-                    onPressed: (){
+                    child: Text('${status ? 'Pending' : 'Buy'}', style: Theme.of(context).textTheme.title),
+                    onPressed: status ? null : (){
                       
                     },
                   )
