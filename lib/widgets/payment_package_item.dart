@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class PaymentPackage extends StatelessWidget {
+  final String id;
+  final String package;
+  final double price;
+  final double amount;
+  final bool status;
+
+  PaymentPackage({this.id, this.package, this.price, this.amount, this.status = false});
+
   @override
   Widget build(BuildContext context) {
     final mediaSize   = MediaQuery.of(context).size;
@@ -36,12 +43,12 @@ class PaymentPackage extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(20))
                   ),
                   child: Center(
-                    child: Text('C43', style: Theme.of(context).textTheme.title),
+                    child: Text('${package}', style: Theme.of(context).textTheme.title),
                   ),
                 )
               ],
             ),
-            Text('RM 12.0000.12 ', style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,),
+            Text('RM ${amount.toStringAsFixed(2)} ', style: TextStyle(color: Colors.white, fontSize: 30), textAlign: TextAlign.center,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -49,7 +56,7 @@ class PaymentPackage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text('Price : ', style: TextStyle(color: Colors.white, fontSize: 20)),
-                    Text('   RM 12.00 ', style: TextStyle(color: Colors.white, fontSize: 20)),
+                    Text('   RM ${price.toStringAsFixed(2)} ', style: TextStyle(color: Colors.white, fontSize: 20)),
                   ],
                 ),
                 SizedBox(

@@ -1,15 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:satay_meals/widgets/payment_package_item.dart';
+import 'package:provider/provider.dart';
+import 'package:satay_meals/providers/http_exception.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
+
+import '../widgets/payment_package_item.dart';
 import '../widgets/drawer.dart';
+import '../providers/topup.dart';
+import '../providers/user.dart';
 
-class TopupScreen extends StatelessWidget {
+class TopupScreen extends StatefulWidget {
   static const routeName = '/topup-screen';
+  @override
+  _TopupScreenState createState() => _TopupScreenState();
+}
 
+class _TopupScreenState extends State<TopupScreen> {
+  var _isLoading  = false;
+  var _isInit     = true;
+
+  _loadListTopupSatay() async {
+    try{
+        await Provider.of<SatayTopup>(context).fetchListTopup();
+        setState(() {
+          _isLoading = false;
+        });
+     } on HttpException catch (err){
+      CustomNotif.showAlertDialog(context, 'Something is wrong!', err.toString(), true);
+    } catch (err) {
+      CustomNotif.showAlertDialog(context, 'An error occured!', err.toString(), true);
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      _isLoading = true;
+      _loadListTopupSatay();
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final mediaSize   = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
+    final listPackage = Provider.of<SatayTopup>(context).packagePurchase;
+    final userBallance= Provider.of<User>(context).myWallet;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,7 +85,7 @@ class TopupScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('RM 12.0000.12 ', style: TextStyle(color: Colors.white, fontSize: 24)),
+                          Text('RM ${userBallance.toStringAsFixed(2)} ', style: TextStyle(color: Colors.white, fontSize: 24)),
                           Container(
                             height: 30,
                             width: 60,
@@ -76,16 +113,27 @@ class TopupScreen extends StatelessWidget {
                 padding: EdgeInsets.only(left: 20),
                 child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
               ),
-              SizedBox(height: 20),
               // for list payment card
+              SizedBox(height: 20),
               Container(
                 height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
                 width: double.infinity,
                 color: Colors.white.withOpacity(0.1),
-                child: ListView.builder(
+                child: 
+                _isLoading
+                ?
+                Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+                :
+                ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  itemBuilder: (ctx, index) => PaymentPackage()
+                  itemCount: listPackage.length,
+                  itemBuilder: (ctx, index) => PaymentPackage(
+                    id: listPackage[index].id,
+                    package: listPackage[index].package,
+                    amount: listPackage[index].amount,
+                    price: listPackage[index].price,
+                    status: false,
+                  )
                 )
               )
             ],

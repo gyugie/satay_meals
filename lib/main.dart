@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './providers/topup.dart';
 import './screens/topup_screen.dart';
 import './screens/history_order_screen.dart';
 import './providers/orders.dart';
@@ -43,6 +44,13 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider.value(
           value: CartItem(),
+        ),
+        ChangeNotifierProxyProvider<Auth, SatayTopup>(
+          builder: (ctx, auth, cachedTopup) => SatayTopup(
+            auth.userId,
+            auth.token,
+            auth.role,
+          ), initialBuilder: (BuildContext context) { return;},
         ),
         ChangeNotifierProxyProvider<Auth, ItemOrders>(
           builder: (ctx, auth, chachedOrder) => ItemOrders(
