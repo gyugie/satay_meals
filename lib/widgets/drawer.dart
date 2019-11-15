@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/screens/auth_screen.dart';
+import '../screens/about_us_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/terms_and_condition_screen.dart';
 import '../screens/topup_pending.dart';
@@ -100,9 +99,9 @@ class DrawerSide extends StatelessWidget {
             ),
         ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),
-              title: Text('About Orders', style: Theme.of(context).textTheme.title),
+              title: Text('About Us', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                 Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
               },
             ),
       ],

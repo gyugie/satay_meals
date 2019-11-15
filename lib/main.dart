@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import './screens/about_us_screen.dart';
 import './screens/terms_and_condition_screen.dart';
 import './screens/topup_pending.dart';
 import './providers/topup.dart';
@@ -112,7 +113,7 @@ class MyApp extends StatelessWidget {
           TopupScreen.routeName : (ctx) => TopupScreen(),
           TopupPendingScreen.routeName : (ctx) => TopupPendingScreen(),
           TermsAndConditionScreen.routeName : (ctx) => TermsAndConditionScreen(),
-          AuthScreen.routeName : (ctx) => AuthScreen()
+          AboutUsScreen.routeName : (ctx) => AboutUsScreen()
         },
       ),
       )
