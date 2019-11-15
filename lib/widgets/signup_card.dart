@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../providers/auth.dart';
 
@@ -19,23 +20,6 @@ class _SignUpState extends State<SignUp> {
                                               'phone':''
                                             };
 
-  void _showAlertDialog(String title, String message){
-     showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title, style: TextStyle(color: Colors.red)),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Close', style: TextStyle(color: Colors.red)),
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      )
-    );
-  }
 
  Future<void> _submitSignup() async {
    if(!_formSignup.currentState.validate()){
@@ -49,11 +33,11 @@ class _SignUpState extends State<SignUp> {
 
    try{
       await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], int.parse(_newUser['phone']));
-      _showAlertDialog('Register success...', 'You have account for login now');
+        CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
    } on HttpException catch (err) {
-      _showAlertDialog('Authenticated failed', err.toString());  
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authenticated failed', err.toString(), true);
    } catch (err){
-     _showAlertDialog('Something is wrong', err.toString());
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
    }
 
    setState(() {
