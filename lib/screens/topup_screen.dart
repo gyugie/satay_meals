@@ -108,7 +108,7 @@ class _TopupScreenState extends State<TopupScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Container(
                 padding: EdgeInsets.only(left: 20),
                 child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),

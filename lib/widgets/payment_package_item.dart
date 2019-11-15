@@ -18,6 +18,7 @@ class PaymentPackage extends StatelessWidget {
       padding: EdgeInsets.all(15),
       child:Container(
         width: mediaSize.width,
+        height: mediaSize.height * 0.25,
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.grey,

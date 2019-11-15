@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/screens/home_screen.dart';
+import 'package:satay_meals/screens/topup_pending.dart';
 import '../screens/topup_screen.dart';
 import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
@@ -55,15 +57,13 @@ class DrawerSide extends StatelessWidget {
 
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.restaurant, color: Colors.white),
               title: Text('Buy Satay', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.credit_card, color: Colors.white),
               title: Text('Top Up', style: Theme.of(context).textTheme.title),
@@ -71,15 +71,13 @@ class DrawerSide extends StatelessWidget {
                 Navigator.of(context).pushReplacementNamed(TopupScreen.routeName);
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.redeem, color: Colors.white),
               title: Text('Pending Top Up', style: Theme.of(context).textTheme.title),
               onTap: (){
-                
+                Navigator.of(context).pushReplacementNamed(TopupPendingScreen.routeName);
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.replay_10, color: Colors.white),
               title: Text('History Orders', style: Theme.of(context).textTheme.title),
@@ -87,7 +85,6 @@ class DrawerSide extends StatelessWidget {
                 Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.help_outline, color: Colors.white),
               title: Text('Terms and Conditions', style: Theme.of(context).textTheme.title),
@@ -95,7 +92,6 @@ class DrawerSide extends StatelessWidget {
 
               },
             ),
-        // Divider(color: Colors.white),
         ListTile(
               leading: Icon(Icons.info_outline, color: Colors.white),
               title: Text('About Orders', style: Theme.of(context).textTheme.title),
@@ -103,7 +99,6 @@ class DrawerSide extends StatelessWidget {
 
               },
             ),
-        // Divider(color: Colors.white),
       ],
     );
   }
