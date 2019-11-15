@@ -20,7 +20,6 @@ class _SignUpState extends State<SignUp> {
                                               'phone':''
                                             };
 
-
  Future<void> _submitSignup() async {
    if(!_formSignup.currentState.validate()){
      return;
