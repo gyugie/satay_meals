@@ -5,6 +5,7 @@ import '../widgets/signup_card.dart';
 enum AuthMode { Signin, Signup}
 
 class AuthScreen extends StatefulWidget {
+  static const routeName = '/auth';
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }

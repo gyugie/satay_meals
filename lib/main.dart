@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:satay_meals/screens/topup_pending.dart';
+import './screens/terms_and_condition_screen.dart';
+import './screens/topup_pending.dart';
 import './providers/topup.dart';
 import './screens/topup_screen.dart';
 import './screens/history_order_screen.dart';
@@ -109,7 +110,9 @@ class MyApp extends StatelessWidget {
           PaymentScreen.routeName : (ctx) => PaymentScreen(),
           HistoryOrdersScreen.routeName : (ctx) => HistoryOrdersScreen(),
           TopupScreen.routeName : (ctx) => TopupScreen(),
-          TopupPendingScreen.routeName : (ctx) => TopupPendingScreen()
+          TopupPendingScreen.routeName : (ctx) => TopupPendingScreen(),
+          TermsAndConditionScreen.routeName : (ctx) => TermsAndConditionScreen(),
+          AuthScreen.routeName : (ctx) => AuthScreen()
         },
       ),
       )

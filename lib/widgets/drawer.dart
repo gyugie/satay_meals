@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/screens/home_screen.dart';
-import 'package:satay_meals/screens/topup_pending.dart';
+import 'package:satay_meals/screens/auth_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/terms_and_condition_screen.dart';
+import '../screens/topup_pending.dart';
 import '../screens/topup_screen.dart';
 import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
@@ -37,8 +40,11 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.exit_to_app, color: Colors.white),
               title: Text('Logout', style: Theme.of(context).textTheme.title),
               onTap: (){
-                Navigator.of(context).pop();
-                Provider.of<Auth>(context).logout();
+                  
+                  Provider.of<Auth>(context).logout();
+                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+
+
               },
             ),     
           ],
@@ -89,7 +95,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.help_outline, color: Colors.white),
               title: Text('Terms and Conditions', style: Theme.of(context).textTheme.title),
               onTap: (){
-
+                 Navigator.of(context).pushReplacementNamed(TermsAndConditionScreen.routeName);
               },
             ),
         ListTile(

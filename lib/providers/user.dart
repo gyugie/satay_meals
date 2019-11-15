@@ -59,4 +59,30 @@ class User with ChangeNotifier {
     }
    
   }
+
+  Future<void> getTermsAndCondition() async {
+    var result;
+    try{
+      headersAPI['token'] = _authToken;
+      final response = await http.post(
+        baseAPI + '/API_Account/GetPrivacy',
+        headers: headersAPI,
+        body: {
+          'type': _userRole
+        }
+      );
+
+       final responseData = json.decode(response.body);
+        if(responseData['success'] == false){
+          throw HttpException(responseData['message']);
+        }
+
+      result = response.body;
+
+    } catch (err){
+      throw err;
+    }
+
+    return result;
+  }
 }
