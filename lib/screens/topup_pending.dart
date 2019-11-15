@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/providers/http_exception.dart';
-import 'package:satay_meals/widgets/custom_notification.dart';
+import '../providers/http_exception.dart';
+import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
 import '../widgets/payment_package_item.dart';
 import '../providers/topup.dart';

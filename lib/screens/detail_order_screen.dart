@@ -72,9 +72,9 @@ class _DetailOrderState extends State<DetailOrder> {
 
     
     } on HttpException catch (err){
-      CustomNotif.showAlertDialog(context, 'Something is wrong!', err.toString(), true);
-    } catch (err) {
-      CustomNotif.showAlertDialog(context, 'An error occured!', err.toString(), true);
+        CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Something wrong!', err.toString(), true);
+    } catch (err){
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
     }
 
     setState(() {
@@ -146,10 +146,10 @@ class _DetailOrderState extends State<DetailOrder> {
                           Text('  ${widget.rider}', style: Theme.of(context).textTheme.body1),
                           SizedBox(height: 15),
                           Text('Address :', style: Theme.of(context).textTheme.title),
-                          Text('  ${_detail.address}', style: Theme.of(context).textTheme.body1),
+                          Text('  ${_detail != null ? _detail.address : '' }', style: Theme.of(context).textTheme.body1),
                           SizedBox(height: 15),
                           Text('Phone Number :', style: Theme.of(context).textTheme.title),
-                          Text('  ${_detail.phone}}', style: Theme.of(context).textTheme.body1),
+                          Text('  ${_detail != null ? _detail.phone : ''}', style: Theme.of(context).textTheme.body1),
                         ],
                       ),
                     )
@@ -172,8 +172,8 @@ class _DetailOrderState extends State<DetailOrder> {
                                 return new Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text(' ${_detail.item[index].quantity} x ${_detail.item[index].name}', style: Theme.of(context).textTheme.body1),
-                                    Text('RM  ${_detail.item[index].price}', style: Theme.of(context).textTheme.title),
+                                    Text(' ${_detail != null ? _detail.item[index].quantity : ''} x ${_detail != null ? _detail.item[index].name : ''}', style: Theme.of(context).textTheme.body1),
+                                    Text('RM  ${_detail != null ? _detail.item[index].price : ''}', style: Theme.of(context).textTheme.title),
                                   ],
                                 );
                               },
@@ -194,7 +194,7 @@ class _DetailOrderState extends State<DetailOrder> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text('Total Payment', style: Theme.of(context).textTheme.title),
-                              Text('RM ${_detail.total}', style: Theme.of(context).textTheme.title),
+                              Text('RM ${_detail != null ? _detail.total : 0}', style: Theme.of(context).textTheme.title),
                             ],
                           )
                         ],

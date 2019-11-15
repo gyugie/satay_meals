@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../providers/auth.dart';
 
@@ -58,11 +59,11 @@ class _VerificationCardState extends State<VerificationCard> {
   
     try{
       await Provider.of<Auth>(context, listen: false).verificationCode(_controllerVerification.text);
-       _showAlertDialog('Verification Success', 'Congratulation verification is success, you have login now', true);
+      CustomNotif.alertVerification(context, Icons.check_circle_outline, 'Verification Success', 'Congratulation verification is success, you have login now', true);
     } on HttpException catch (err){
-      _showAlertDialog('Verification Failed', err.toString(), false);
+      CustomNotif.alertVerification(context, Icons.error_outline, 'Verification Failed!', err.toString(), false);
     } catch (err){
-     _showAlertDialog('An error occured', err.toString(), false);
+     CustomNotif.alertVerification(context, Icons.error_outline, 'An error occured!', err.toString(), false);
     }
 
     setState(() {

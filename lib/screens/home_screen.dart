@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/custom_notification.dart';
 
 import '../widgets/product_list.dart';
 import '../widgets/drawer.dart';
@@ -26,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() {
               _isLoading = false;
             });
+         }).catchError( (err){
+            CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
          });
   }  
 

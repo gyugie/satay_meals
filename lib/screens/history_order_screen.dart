@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
 import 'dart:async';
 import '../providers/orders.dart';
 import '../widgets/history_order_item.dart';
@@ -16,12 +17,11 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
     var _isLoading = false;
 
   Future<void> _loadHistoryOrder() async {
-   
 
      try{
       await Provider.of<ItemOrders>(context).getHistoryOrders();
      } catch (err) {
-       throw err;
+       CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
      }
 
      setState(() {

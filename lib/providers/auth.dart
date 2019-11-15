@@ -91,7 +91,7 @@ class Auth with ChangeNotifier{
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
        
-        throw HttpException('Account is not active, please check on youre email for verified account');
+        throw HttpException('Account is not active, please check on your email for verified account');
       } else if(responseData['success'] == false) {
          throw HttpException(responseData['message']);
       }

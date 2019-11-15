@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../widgets/verification_card.dart';
 import '../providers/auth.dart';
@@ -22,37 +23,6 @@ class _SignInCardState extends State<SignInCard> {
     'password':''
   };
 
-  void _showAlertDialog(String title, String message, bool isVerification){
-     showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(title, style: TextStyle(color: Colors.red)),
-        content: Text(message),
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Close', style: TextStyle(color: Colors.red)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          isVerification 
-          ?
-          FlatButton(
-            child: Text('Verification now!', style: TextStyle(color: Colors.red)),
-            onPressed: (){
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VerificationCard()),
-                );
-            },
-          )
-          :
-          null
-          
-        ],
-      )
-    );
-  }
-
   Future<void> _submitLogin() async {
     if(!_formSignin.currentState.validate()){
       return;
@@ -67,12 +37,12 @@ class _SignInCardState extends State<SignInCard> {
 
     } on HttpException catch (err){
       if(err.toString().contains('Account is not active')){
-         _showAlertDialog('Authenticated failed!', err.toString(), true);
+         CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'User Is Not Active', err.toString(), true);
       } else {
-        _showAlertDialog('Authenticated failed!', err.toString(), false);
+         CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'Authenticated failed!', err.toString(), false);
       }
     } catch (err) {
-      _showAlertDialog('Something is wrong!', err.toString(), false);
+        CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'Something is wrong!', err.toString(), false);
     }
 
      setState(() {
