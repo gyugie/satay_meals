@@ -49,6 +49,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+      iconTheme: new IconThemeData(color: Colors.green),
         title: Text('Terms And Condition', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(

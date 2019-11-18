@@ -45,6 +45,7 @@ class _TopupPendingScreenState extends State<TopupPendingScreen> {
     final _listPendingTopup = Provider.of<SatayTopup>(context, listen: false).pendingPurchasePackage;
     return Scaffold(
       appBar: AppBar(
+         iconTheme: new IconThemeData(color: Colors.green),
         title: Text('Topup Pending', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(

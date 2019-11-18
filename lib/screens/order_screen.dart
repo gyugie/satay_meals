@@ -32,6 +32,7 @@ class _OrderScreenState extends State<OrderScreen> {
   final myWallet    = Provider.of<User>(context, listen: false).myWallet;
     return Scaffold(
       appBar: AppBar(
+         iconTheme: new IconThemeData(color: Colors.green),
         title: Text('Order', style: Theme.of(context).textTheme.headline),
         actions: <Widget>[
              userRole == 'consumer' || userRole == 'vendor' 

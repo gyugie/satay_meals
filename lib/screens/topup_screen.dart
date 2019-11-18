@@ -50,6 +50,7 @@ class _TopupScreenState extends State<TopupScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: new IconThemeData(color: Colors.green),
         title: Text('Top Up', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(

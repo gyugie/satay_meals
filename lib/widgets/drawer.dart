@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/profile_screen.dart';
 import 'package:satay_meals/screens/socket_screen.dart';
 import '../screens/about_us_screen.dart';
 import '../screens/home_screen.dart';
@@ -60,6 +61,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.person, color: Colors.white),
               title: Text('My Profile', style: Theme.of(context).textTheme.body1),
               onTap: (){
+                Navigator.of(context).pushReplacementNamed(UserProfile.routeName);
                 //  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SocketScreen()));
               },
             ),
@@ -95,7 +97,7 @@ class DrawerSide extends StatelessWidget {
               leading: Icon(Icons.help_outline, color: Colors.white),
               title: Text('Terms and Conditions', style: Theme.of(context).textTheme.body1),
               onTap: (){
-                //  Navigator.of(context).pushReplacementNamed(TermsAndConditionScreen.routeName);
+                 Navigator.of(context).pushReplacementNamed(TermsAndConditionScreen.routeName);
               },
             ),
         ListTile(
