@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
 
 class UserProfile extends StatelessWidget {
@@ -19,7 +20,8 @@ class UserProfile extends StatelessWidget {
        ),
        child: DrawerSide(),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+        child: Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -72,6 +74,15 @@ class UserProfile extends StatelessWidget {
                         title: Text('mugypleci@gmail.com', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
+                       ListTile(
+                        leading: Icon(Icons.lock, color: Colors.grey),
+                        title: Text('******', style: Theme.of(context).textTheme.subtitle),
+                        trailing: Icon(Icons.open_in_new),
+                        onTap: (){
+                          _changePasswordModal(context);
+                        },
+                      ),
+                      Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.phone, color: Colors.grey),
                         title: Text('089666528074', style: Theme.of(context).textTheme.subtitle),
@@ -103,13 +114,185 @@ class UserProfile extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.edit, color: Colors.white),
-          backgroundColor: Colors.green,
-          onPressed: (){
-          },
-
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.edit, color: Colors.white),
+        backgroundColor: Colors.green,
+        onPressed: (){
+          
+        },
+      ),
     );
+  }
+
+  Widget _changePasswordModal(BuildContext context){
+    //  showDialog<String>(
+    //     context: context,
+    //     builder: (context){
+    //       return  AlertDialog(
+    //       contentPadding: const EdgeInsets.all(16.0),
+    //       content: new Container(
+    //         height: MediaQuery.of(context).size.height * 0.3,
+    //         child: Column(
+    //         children: <Widget>[
+    //           TextFormField(
+    //               autofocus: true,
+    //               style: new TextStyle(color: Colors.white),
+    //               obscureText: true,
+    //               decoration: new InputDecoration(
+    //                   labelText: 'Current Password', 
+    //                   hintText: 'current password',
+    //                   labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+    //                   errorBorder: UnderlineInputBorder(
+    //                   borderSide: BorderSide(color: Colors.orange),
+    //                 ),
+    //               errorStyle: TextStyle(color: Colors.orange),
+    //               ),
+    //               validator: (val){},
+    //               onSaved: (val){},
+    //             ),
+    //             TextFormField(
+    //               autofocus: true,
+    //               style: new TextStyle(color: Colors.white),
+    //               obscureText: true,
+    //               decoration: new InputDecoration(
+    //                   labelText: 'New Password', 
+    //                   hintText: 'new password',
+    //                   labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+    //                   errorBorder: UnderlineInputBorder(
+    //                   borderSide: BorderSide(color: Colors.orange),
+    //                 ),
+    //               errorStyle: TextStyle(color: Colors.orange),
+    //               ),
+    //               validator: (val){},
+    //               onSaved: (val){},
+    //             ),
+    //             TextFormField(
+    //               autofocus: true,
+    //               style: new TextStyle(color: Colors.white),
+    //               obscureText: true,
+    //               decoration: new InputDecoration(
+    //                   labelText: 'Confirm Password', 
+    //                   hintText: 'confirm password',
+    //                   labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+    //                   errorBorder: UnderlineInputBorder(
+    //                   borderSide: BorderSide(color: Colors.orange),
+    //                 ),
+    //               errorStyle: TextStyle(color: Colors.orange),
+    //               ),
+    //               validator: (val){},
+    //               onSaved: (val){},
+    //             ),
+              
+    //           ],
+    //         ),
+    //       ),
+    //       actions: <Widget>[
+    //         new FlatButton(
+    //             child: const Text('CANCEL', style: TextStyle(color: Colors.orange)),
+    //             onPressed: () {
+    //               Navigator.pop(context);
+    //             }),
+    //         new FlatButton(
+    //             child: const Text('Ok', style: TextStyle(color: Colors.white)),
+    //             onPressed: () {
+    //                 Navigator.pop(context);
+                   
+    //             })
+    //       ],
+    //     );
+    //   }
+    // );
+    showGeneralDialog(
+        barrierColor: Colors.black.withOpacity(0.5),
+        transitionBuilder: (context, a1, a2, widget) {
+          final curvedValue = Curves.easeIn.transform(a2.value) - 0.2;
+          return Transform(
+            transform: Matrix4.translationValues(0.0, curvedValue * 20, 1.0),
+            child: Opacity(
+              opacity: a1.value,
+              child: AlertDialog(
+                shape: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.0)
+                ),
+                content: Container(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  child: Column(
+                  children: <Widget>[
+                    TextFormField(
+                        // autofocus: true,
+                        style: new TextStyle(color: Colors.white),
+                        obscureText: true,
+                        decoration: new InputDecoration(
+                            labelText: 'Current Password', 
+                            hintText: 'current password',
+                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                            errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange),
+                          ),
+                        errorStyle: TextStyle(color: Colors.orange),
+                        ),
+                        validator: (val){},
+                        onSaved: (val){},
+                      ),
+                      TextFormField(
+                        // autofocus: true,
+                        style: new TextStyle(color: Colors.white),
+                        obscureText: true,
+                        decoration: new InputDecoration(
+                            labelText: 'New Password', 
+                            hintText: 'new password',
+                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                            errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange),
+                          ),
+                        errorStyle: TextStyle(color: Colors.orange),
+                        ),
+                        validator: (val){},
+                        onSaved: (val){},
+                      ),
+                      TextFormField(
+                        // autofocus: true,
+                        style: new TextStyle(color: Colors.white),
+                        obscureText: true,
+                        decoration: new InputDecoration(
+                            labelText: 'Confirm Password', 
+                            hintText: 'confirm password',
+                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                            errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.orange),
+                          ),
+                        errorStyle: TextStyle(color: Colors.orange),
+                        ),
+                        validator: (val){},
+                        onSaved: (val){},
+                      ),
+                    
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  new FlatButton(
+                      child: const Text('CANCEL', style: TextStyle(color: Colors.white)),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                  new FlatButton(
+                      child: const Text('SAVE', style: TextStyle(color: Colors.green)),
+                      onPressed: () {
+                          Navigator.pop(context);
+                          CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Success', 'change password success', false);
+                        
+                      })
+                ],
+              ),
+            ),
+          );
+        },
+        transitionDuration: Duration(milliseconds: 500),
+        barrierDismissible: false,
+        barrierLabel: '',
+        context: context,
+        pageBuilder: (context, animation1, animation2) {});
   }
 }
