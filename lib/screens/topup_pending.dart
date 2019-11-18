@@ -64,7 +64,7 @@ class _TopupPendingScreenState extends State<TopupPendingScreen> {
           _listPendingTopup.isEmpty
           ?
           Center(
-            child: Text('You don`t have a pending payment...', style: Theme.of(context).textTheme.title)
+            child: Image.asset('assets/images/cartempty.png', height: 100),
           )
           :
           ListView.builder(

@@ -100,7 +100,7 @@ class _TopupScreenState extends State<TopupScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Text('Mugy PLeci ', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          Text('Your Name', style: TextStyle(color: Colors.white, fontSize: 20)),
                           Text(DateFormat.yMMMd().format(DateTime.now()))
                         ],
                       ),
