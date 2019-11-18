@@ -235,25 +235,25 @@ class _SignUpState extends State<SignUp> {
 
                 SizedBox(height: 20),
 
-                Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
+                // Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
-                SizedBox(height: 30),
+                // SizedBox(height: 30),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                     RaisedButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0),
-                      ),
-                      color: Colors.blue[900],
-                      child: Text("Signup With Facebook",
-                          style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      onPressed: () {},
-                    ),
-                  ],
-                )
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //   children: <Widget>[
+                //      RaisedButton(
+                //       shape: new RoundedRectangleBorder(
+                //         borderRadius: new BorderRadius.circular(18.0),
+                //       ),
+                //       color: Colors.blue[900],
+                //       child: Text("Signup With Facebook",
+                //           style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+                //         ),
+                //       onPressed: () {},
+                //     ),
+                //   ],
+                // )
             ],
           ),
         ),
