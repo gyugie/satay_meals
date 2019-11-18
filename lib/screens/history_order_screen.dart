@@ -62,6 +62,12 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
           ? 
           Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
           :
+            historyOrders.length == 0
+            ?
+            Center(
+              child: Image.asset('assets/images/cartempty.png', height: 100),
+            )
+            :
           ListView.builder(
             itemCount: historyOrders.length,
             itemBuilder: (ctx, index) => HistoryItem(

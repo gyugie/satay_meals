@@ -45,7 +45,14 @@ class _OrderItemState extends State<OrderItem> {
     return Card(
       child: Center(
       child: ListTile(
-        leading: Image.network(widget.imageUrl, height: 100,width: 100, fit: BoxFit.cover,),
+        leading: FadeInImage(
+              placeholder: AssetImage('assets/images/satay-vector.png'),
+              image: NetworkImage(widget.imageUrl),
+              height: 100,
+              width: 80,
+              fit: BoxFit.cover,
+            ),
+        //  Image.network(widget.imageUrl, height: 100,width: 80, fit: BoxFit.cover,),
         title: Text('${widget.name}'),
         subtitle: Text('RM ${widget.price}'),
         trailing: Row(
