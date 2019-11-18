@@ -480,43 +480,45 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   }
 
   Widget _showDialogPhone()  {
-     showDialog<String>(
-      context: context,
-      child: new AlertDialog(
-        contentPadding: const EdgeInsets.all(16.0),
-        content: new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new TextField(
-                controller: _phoneController,
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                style: new TextStyle(color: Colors.white),
-                decoration: new InputDecoration(
-                    labelText: 'Phone Number', 
-                    hintText: '+60 XXXX',
-                    labelStyle: TextStyle(color: Colors.white, fontSize: 20)
+      showDialog<String>(
+        context: context,
+        builder: (context){
+          return  AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                child: new TextField(
+                  controller: _phoneController,
+                  autofocus: true,
+                  keyboardType: TextInputType.number,
+                  style: new TextStyle(color: Colors.white),
+                  decoration: new InputDecoration(
+                      labelText: 'Phone Number', 
+                      hintText: '+60 XXXX',
+                      labelStyle: TextStyle(color: Colors.white, fontSize: 20)
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
-        actions: <Widget>[
-          new FlatButton(
-              child: const Text('CANCEL', style: TextStyle(color: Colors.orange)),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-          new FlatButton(
-              child: const Text('Ok', style: TextStyle(color: Colors.white)),
-              onPressed: () {
+              )
+            ],
+          ),
+          actions: <Widget>[
+            new FlatButton(
+                child: const Text('CANCEL', style: TextStyle(color: Colors.orange)),
+                onPressed: () {
                   Navigator.pop(context);
-                  setState(() {
-                    _userPhone = _phoneController.text;
-                  });
-              })
-        ],
-      ),
+                }),
+            new FlatButton(
+                child: const Text('Ok', style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _userPhone = _phoneController.text;
+                    });
+                })
+          ],
+        );
+      }
     );
   }
 }
