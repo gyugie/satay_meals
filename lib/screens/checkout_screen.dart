@@ -349,7 +349,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       isScrollControlled: false,
       builder: (builder){
         return new Container(
-          height: MediaQuery.of(context).size.height * 0.35,
+          height: MediaQuery.of(context).size.height * 0.4,
           child: Container(
             decoration: new BoxDecoration(
             color: Colors.white,
