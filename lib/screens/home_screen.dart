@@ -8,7 +8,6 @@ import '../providers/auth.dart';
 import '../providers/products.dart';
 import '../providers/user.dart';
 
-
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();

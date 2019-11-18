@@ -26,7 +26,13 @@ class ProductItem extends StatelessWidget {
           flex: 2,
           child: Container(
             height: deviceSize.height * 0.30,
-            child: Image.network(imageUrl, fit: BoxFit.cover,),
+            child: FadeInImage(
+              placeholder: AssetImage('assets/images/satay-vector.png'),
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+            ),
+            
+            // Image.network(imageUrl, fit: BoxFit.cover,),
           ),
         ),
         Expanded(
