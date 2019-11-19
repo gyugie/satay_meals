@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
+import './widgets/profile_edit.dart';
 import './screens/profile_screen.dart';
 import './screens/about_us_screen.dart';
 import './screens/terms_and_condition_screen.dart';
@@ -115,7 +117,8 @@ class MyApp extends StatelessWidget {
           TopupPendingScreen.routeName : (ctx) => TopupPendingScreen(),
           TermsAndConditionScreen.routeName : (ctx) => TermsAndConditionScreen(),
           AboutUsScreen.routeName : (ctx) => AboutUsScreen(),
-          UserProfile.routeName : (ctx) => UserProfile()
+          UserProfile.routeName : (ctx) => UserProfile(),
+          ProfileEdit.routeName : (ctx) => ProfileEdit()
         },
       ),
       )
