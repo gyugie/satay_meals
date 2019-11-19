@@ -69,7 +69,6 @@ class User with ChangeNotifier {
   }
 
   Future<void> fetchUserProfile() async {
-    
     try{
       headersAPI['token'] = _authToken;
       final response = await http.post(
