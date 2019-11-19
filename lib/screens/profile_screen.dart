@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/custom_notification.dart';
 import '../widgets/profile_edit.dart';
 import '../widgets/drawer.dart';
+import '../providers/user.dart';
 
 class UserProfile extends StatelessWidget {
   static const routeName = '/user-profile';
-
+    
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final deviceSize  = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
+    var _get              = Provider.of<User>(context, listen: false).userProfile;
+    var _user             = _get['userProfile'];
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile', style: Theme.of(context).textTheme.title),
@@ -26,7 +31,6 @@ class UserProfile extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Container(
                 height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.6,
@@ -57,11 +61,11 @@ class UserProfile extends StatelessWidget {
                 )
               ),
               Center(
-                child: Text('Pacar Orang', style: Theme.of(context).textTheme.title)
+                child: Text('${_user == null ? '-' : (_user.firstName == '') ? 'not set' : _user.firstName + _user.lastName }', style: Theme.of(context).textTheme.title)
               ),
               SizedBox(height: 10),
               Center(
-                child: Text('Dia nya dia', style: Theme.of(context).textTheme.subtitle)
+                child: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.subtitle)
               ),
               SizedBox(height: 20),
               Divider(color: Colors.green),
@@ -72,7 +76,7 @@ class UserProfile extends StatelessWidget {
                   children: <Widget>[
                       ListTile(
                         leading: Icon(Icons.email, color: Colors.grey),
-                        title: Text('mugypleci@gmail.com', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                        ListTile(
@@ -86,27 +90,27 @@ class UserProfile extends StatelessWidget {
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.phone, color: Colors.grey),
-                        title: Text('089666528074', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.phone != null) ? '+60' + _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.account_balance, color: Colors.grey),
-                        title: Text('West Java', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.business, color: Colors.grey),
-                        title: Text('Bandung', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.pin_drop, color: Colors.grey),
-                        title: Text('Jl. BKM Barat No.15, Sukapada, Kec. Cibeunying Kidul, Kota Bandung, Jawa Barat ', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.address != '') ? _user.address : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.voicemail, color: Colors.grey),
-                        title: Text('089666528074', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.postalCode != null) ? _user.postalCode : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                     ],
                   ),

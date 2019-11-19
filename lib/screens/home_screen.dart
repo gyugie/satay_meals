@@ -21,7 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadDataHome() async {
      Future.wait([
            Provider.of<Products>(context).fetchFoods(),
-           Provider.of<User>(context).getMyWallet()
+           Provider.of<User>(context).getMyWallet(),
+           Provider.of<User>(context).fetchUserProfile()
          ]).then( (List value) {
             setState(() {
               _isLoading = false;
@@ -46,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final userRole = Provider.of<Auth>(context, listen: false).role;
     final myWallet = Provider.of<User>(context, listen: false).myWallet;
+   
     return Scaffold(
       appBar: AppBar(
         iconTheme: new IconThemeData(color: Colors.green),

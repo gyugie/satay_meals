@@ -5,11 +5,54 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 import 'package:satay_meals/providers/http_exception.dart';
 
+class UserTemp {
+  final String id;
+  final String username;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final int phone;
+  final String address;
+  final int facebookId;
+  final int googleId;
+  final String joinData;
+  final String image;
+  final String latitude;
+  final String longitude;
+  final String postalCode;
+  final int stateId;
+  final String stateName;
+  final int cityId;
+  final String cityName;
+
+  UserTemp({
+    @required this.id,
+    @required this.username,
+    @required this.firstName,
+    @required this.lastName,
+    @required this.email,
+    @required this.phone,
+    @required this.address,
+    @required this.facebookId,
+    @required this.googleId,
+    @required this.joinData,
+    @required this.image,
+    @required this.latitude,
+    @required this.longitude,
+    @required this.postalCode,
+    @required this.stateId,
+    @required this.stateName,
+    @required this.cityId,
+    @required this.cityName,
+  });
+}
+
 class User with ChangeNotifier {
   final String _authToken;
   final String _userId;
   final String _userRole;
   double _myWallet = 0.0;
+  Map<String, UserTemp> _userProfile = {};
 
   User(this._authToken, this._userId, this._userRole);
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
@@ -20,6 +63,56 @@ class User with ChangeNotifier {
 
   Location location = Location();
   Map<String, double> userLocation;
+
+  Map<String, UserTemp> get userProfile{
+    return {..._userProfile};
+  }
+
+  Future<void> fetchUserProfile() async {
+    
+    try{
+      headersAPI['token'] = _authToken;
+      final response = await http.post(
+        baseAPI + '/API_Account/myProfile',
+        headers: headersAPI,
+        body: {
+          'id': _userId,
+          'type': _userRole
+        }
+      );
+
+      final responseData = json.decode(response.body);
+      if(responseData['success'] == false){
+        throw HttpException(responseData['message']);
+      }
+
+      _userProfile = {};
+      _userProfile.putIfAbsent('userProfile', () => UserTemp(
+        id          : responseData['data']['id'],
+        username    : responseData['data']['username'], 
+        firstName   : responseData['data']['first_name'],
+        lastName    : responseData['data']['last_name'],
+        email       : responseData['data']['email'],
+        phone       : responseData['data']['phone'] != null ? int.parse(responseData['data']['phone']) : null,
+        address     : responseData['data']['address'],
+        facebookId  : responseData['data']['id_facebook'] != null ? int.parse(responseData['data']['id_facebook']) : null,
+        googleId    : responseData['data']['id_google'] != null ? int.parse(responseData['data']['id_google']) : null,
+        joinData    : responseData['data']['join_date'],
+        image       : responseData['data']['image'],
+        latitude    : responseData['data']['lat'],
+        longitude   : responseData['data']['lng'],
+        postalCode  : responseData['data']['postal_code'],
+        stateId     : responseData['data']['state_id'] != null ? int.parse(responseData['data']['state_id']) : null,
+        stateName   : responseData['data']['state_name'],
+        cityId      : responseData['data']['city_id'] != '' ? int.parse(responseData['data']['city_id']) : null,
+        cityName    : responseData['data']['city_name'],
+      ));
+      notifyListeners();
+    }catch (err){
+      throw err;
+    }
+
+  }
 
   Future<Map<String, double>> getLocation() async {
     var currentLocation = <String, double>{};

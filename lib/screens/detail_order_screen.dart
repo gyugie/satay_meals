@@ -74,7 +74,7 @@ class _DetailOrderState extends State<DetailOrder> {
     } on HttpException catch (err){
         CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Something wrong!', err.toString(), true);
     } catch (err){
-      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
+        CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
     }
 
     setState(() {
