@@ -1,19 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/providers/http_exception.dart';
 import '../widgets/custom_notification.dart';
 import '../widgets/profile_edit.dart';
 import '../widgets/drawer.dart';
 import '../providers/user.dart';
+import '../providers/auth.dart';
 
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   static const routeName = '/user-profile';
+  @override
+  _UserProfileState createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  final GlobalKey<FormState> _formChangePassword  = GlobalKey();
+  final _passwordController                       = TextEditingController();
+  Map<String, String> _newPassword        = {
+    'oldPassword': '',
+    'newPassword': ''
+  };
+
+
+  Future<void> _submitChangePassword() async {
+    if(!_formChangePassword.currentState.validate()){
+      return;
+    }
+   
+    _formChangePassword.currentState.save();
+    try{
+      await Provider.of<Auth>(context).changePassword(_newPassword['oldPassword'], _newPassword['newPassword']);
+       CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Change Password Success...', 'now you have new password', false, true);
+   } on HttpException catch (err) {
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Change Password failed', err.toString(), true);
+   } catch (err){
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
+   }
     
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize  = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
-    var _get              = Provider.of<User>(context, listen: false).userProfile;
-    var _user             = _get['userProfile'];
+    var _get          = Provider.of<User>(context, listen: false).userProfile;
+    var _user         = _get['userProfile'];
 
     return Scaffold(
       appBar: AppBar(
@@ -82,10 +115,12 @@ class UserProfile extends StatelessWidget {
                        ListTile(
                         leading: Icon(Icons.lock, color: Colors.grey),
                         title: Text('******', style: Theme.of(context).textTheme.subtitle),
-                        trailing: Icon(Icons.open_in_new),
-                        onTap: (){
-                          _changePasswordModal(context);
-                        },
+                        trailing: GestureDetector(
+                          child:  Icon(Icons.open_in_new),
+                          onTap: (){
+                            _changePasswordModal(context);
+                          },
+                        ),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
@@ -144,60 +179,89 @@ class UserProfile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16.0)
                 ),
                 content: Container(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                        // autofocus: true,
-                        style: new TextStyle(color: Colors.white),
-                        obscureText: true,
-                        decoration: new InputDecoration(
-                            labelText: 'Current Password', 
-                            hintText: 'current password',
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  child: Form(
+                    key: _formChangePassword,
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                            // autofocus: true,
+                            style: new TextStyle(color: Colors.white),
+                            obscureText: true,
+                            decoration: new InputDecoration(
+                                labelText: 'Current Password', 
+                                hintText: 'current password',
+                                labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                                errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.orange),
+                              ),
+                            errorStyle: TextStyle(color: Colors.orange),
+                            ),
+                            validator: (val){
+                               
+                              if(val.isEmpty){
+                                return 'Please fill old password';
+                              }
+
+                            },
+                            onSaved: (val){
+                              _newPassword['oldPassword'] = val;
+                            },
                           ),
-                        errorStyle: TextStyle(color: Colors.orange),
-                        ),
-                        validator: (val){},
-                        onSaved: (val){},
-                      ),
-                      TextFormField(
-                        // autofocus: true,
-                        style: new TextStyle(color: Colors.white),
-                        obscureText: true,
-                        decoration: new InputDecoration(
-                            labelText: 'New Password', 
-                            hintText: 'new password',
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                          TextFormField(
+                            // autofocus: true,
+                            controller: _passwordController,
+                            style: new TextStyle(color: Colors.white),
+                            obscureText: true,
+                            decoration: new InputDecoration(
+                                labelText: 'New Password', 
+                                hintText: 'new password',
+                                labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                                errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.orange),
+                              ),
+                            errorStyle: TextStyle(color: Colors.orange),
+                            ),
+                            validator: (val){
+
+                              if(val.isEmpty){
+                                return 'Please fill old password';
+                              } else if( val.length < 6 ){
+                                return 'password is too shoort, min 6 character';
+                              }
+
+                            },
+                            onSaved: (val){
+                              _newPassword['newPassword'] = val;
+                            },
                           ),
-                        errorStyle: TextStyle(color: Colors.orange),
-                        ),
-                        validator: (val){},
-                        onSaved: (val){},
-                      ),
-                      TextFormField(
-                        // autofocus: true,
-                        style: new TextStyle(color: Colors.white),
-                        obscureText: true,
-                        decoration: new InputDecoration(
-                            labelText: 'Confirm Password', 
-                            hintText: 'confirm password',
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                          TextFormField(
+                            // autofocus: true,
+                            style: new TextStyle(color: Colors.white),
+                            obscureText: true,
+                            decoration: new InputDecoration(
+                                labelText: 'Confirm Password', 
+                                hintText: 'confirm password',
+                                labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                                errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.orange),
+                              ),
+                            errorStyle: TextStyle(color: Colors.orange),
+                            ),
+                            validator: (val){
+                              
+                              if( _passwordController.text != val){
+                                return 'Password not match';
+                              }else if(val.isEmpty){
+                                return 'Please confirm password';
+                              }
+
+                            },
                           ),
-                        errorStyle: TextStyle(color: Colors.orange),
-                        ),
-                        validator: (val){},
-                        onSaved: (val){},
+                        
+                        ],
                       ),
-                    
-                    ],
-                  ),
+                  )
                 ),
                 actions: <Widget>[
                   new FlatButton(
@@ -208,9 +272,8 @@ class UserProfile extends StatelessWidget {
                   new FlatButton(
                       child: const Text('SAVE', style: TextStyle(color: Colors.green)),
                       onPressed: () {
-                          Navigator.pop(context);
-                          CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Success', 'change password success', false);
-                        
+                        _submitChangePassword();
+                      
                       })
                 ],
               ),

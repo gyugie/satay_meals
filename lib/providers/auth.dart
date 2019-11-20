@@ -174,14 +174,45 @@ class Auth with ChangeNotifier{
 
   }
 
-   _autoLogout(){
-   if(_timer != null){
-     _timer.cancel();
-   }
+  _autoLogout(){
+    if(_timer != null){
+      _timer.cancel();
+    }
 
-   final timeExpired = _expiredToken.difference(DateTime.now()).inSeconds;
-   _timer = Timer(Duration(seconds: timeExpired), logout);
- }
+    final timeExpired = _expiredToken.difference(DateTime.now()).inSeconds;
+    _timer = Timer(Duration(seconds: timeExpired), logout);
+  }
+
+  Future<void> changePassword(String oldPassword, String newPassword) async {
+
+    try{
+        headersAPI['token'] = _token;
+        final response = await http.post(
+          baseAPI + '/API_Account/changePassword',
+          headers: headersAPI,
+          body: {
+            'id'            : _userId,
+            'type'          : _role,
+            'old_password'  : oldPassword,
+            'new_password'  : newPassword
+          }
+        );
+        final responseData = json.decode(response.body);
+        if(responseData['success'] == false){
+            throw HttpException(responseData['message']);
+          }
+    } catch (err){
+      throw err;
+    }
+
+  }  
+
+
+
+
+
+
+
 
   
 

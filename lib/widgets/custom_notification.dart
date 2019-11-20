@@ -20,7 +20,8 @@ static void showAlertDialog(BuildContext context ,String title, String message, 
     );
   }
 
-static void alertDialogWithIcon(BuildContext context, IconData icon, String title, String messages, bool warning){
+static void alertDialogWithIcon(BuildContext context, IconData icon, String title, String messages, bool warning, [bool doublePop = false]){
+  
     showGeneralDialog(
     barrierColor: Colors.black.withOpacity(0.5),
     transitionBuilder: (context, a1, a2, widget) {
@@ -49,6 +50,9 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
                 child: Text('Close', style: TextStyle(color: warning ? Colors.red : Colors.green)),
                 onPressed: (){
                   Navigator.of(context).pop();
+                  if(doublePop){
+                    Navigator.of(context).pop();
+                  }
                 },
               )
             ],
