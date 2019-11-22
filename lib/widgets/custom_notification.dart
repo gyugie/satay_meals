@@ -51,7 +51,7 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
                 onPressed: (){
                   Navigator.of(context).pop();
                   if(doublePop){
-                    Navigator.of(context).pop();
+                    Navigator.pop(context, true);
                   }
                 },
               )

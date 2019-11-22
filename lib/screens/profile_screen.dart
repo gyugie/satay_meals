@@ -16,6 +16,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   final GlobalKey<FormState> _formChangePassword  = GlobalKey();
   final _passwordController                       = TextEditingController();
+  var _isInit = true;
   Map<String, String> _newPassword        = {
     'oldPassword': '',
     'newPassword': ''
@@ -36,9 +37,16 @@ class _UserProfileState extends State<UserProfile> {
    } catch (err){
       CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
    }
-    
+  }
 
+  @override
+  void didChangeDependencies()async {
+    if(_isInit){
+      await Provider.of<User>(context).fetchUserProfile();
+    }
 
+    _isInit = false;
+    super.didChangeDependencies();
   }
 
   @override
@@ -47,7 +55,6 @@ class _UserProfileState extends State<UserProfile> {
     final orientation = MediaQuery.of(context).orientation;
     var _get          = Provider.of<User>(context, listen: false).userProfile;
     var _user         = _get['userProfile'];
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile', style: Theme.of(context).textTheme.title),
@@ -85,16 +92,16 @@ class _UserProfileState extends State<UserProfile> {
                       ],
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage('https://cdn0-production-images-kly.akamaized.net/2RsrPj4tFKF2R_qRXL8wdlgqGOw=/640x360/smart/filters:quality(75):strip_icc():format(jpeg)/kly-media-production/medias/1871456/original/078916900_1517919090-Jun-Ji-Hyun-3.jpg')
+                        image:  _user.image == '' ? AssetImage('assets/images/user-unknown.jpeg') : NetworkImage(_user.image)
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(160)),
-                      color: Colors.redAccent,
+                      color: Colors.grey,
                     ),
                   ),
                 )
               ),
               Center(
-                child: Text('${_user == null ? '-' : (_user.firstName == '') ? 'not set' : _user.firstName + _user.lastName }', style: Theme.of(context).textTheme.title)
+                child: Text('${_user == null ? '-' : (_user.firstName == '') ? 'not set' : _user.firstName +' '+ _user.lastName }', style: Theme.of(context).textTheme.title)
               ),
               SizedBox(height: 10),
               Center(
@@ -135,7 +142,7 @@ class _UserProfileState extends State<UserProfile> {
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.business, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.cityName != null) ? _user.cityName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(
@@ -146,6 +153,11 @@ class _UserProfileState extends State<UserProfile> {
                       ListTile(
                         leading: Icon(Icons.voicemail, color: Colors.grey),
                         title: Text('${_user == null ? '-' : (_user.postalCode != null) ? _user.postalCode : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                      ),
+                      Divider(color: Colors.green),
+                      ListTile(
+                        leading: Icon(Icons.insert_invitation, color: Colors.grey),
+                        title: Text('${_user == null ? '-' : (_user.joinDate != null) ? _user.joinDate : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                     ],
                   ),

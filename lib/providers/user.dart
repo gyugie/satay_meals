@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +16,7 @@ class UserTemp {
   final String address;
   final int facebookId;
   final int googleId;
-  final String joinData;
+  final String joinDate;
   final String image;
   final String latitude;
   final String longitude;
@@ -35,7 +36,7 @@ class UserTemp {
     @required this.address,
     @required this.facebookId,
     @required this.googleId,
-    @required this.joinData,
+    @required this.joinDate,
     @required this.image,
     @required this.latitude,
     @required this.longitude,
@@ -47,12 +48,28 @@ class UserTemp {
   });
 }
 
+class UserState {
+  final int stateId;
+  final String stateName;
+
+  UserState({this.stateId, this.stateName});
+}
+
+class UserCity {
+  final int cityId;
+  final String cityName;
+
+  UserCity({this.cityId, this.cityName});
+}
+
+
 class User with ChangeNotifier {
   final String _authToken;
   final String _userId;
   final String _userRole;
   double _myWallet = 0.0;
   Map<String, UserTemp> _userProfile = {};
+  Dio dio = new Dio();
 
   User(this._authToken, this._userId, this._userRole);
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
@@ -96,17 +113,69 @@ class User with ChangeNotifier {
         address     : responseData['data']['address'],
         facebookId  : responseData['data']['id_facebook'] != null ? int.parse(responseData['data']['id_facebook']) : null,
         googleId    : responseData['data']['id_google'] != null ? int.parse(responseData['data']['id_google']) : null,
-        joinData    : responseData['data']['join_date'],
+        joinDate    : responseData['data']['join_date'],
         image       : responseData['data']['image'],
         latitude    : responseData['data']['lat'],
         longitude   : responseData['data']['lng'],
-        postalCode  : responseData['data']['postal_code'],
+        postalCode  : responseData['data']['post_code'],
         stateId     : responseData['data']['state_id'] != null ? int.parse(responseData['data']['state_id']) : null,
         stateName   : responseData['data']['state_name'],
         cityId      : responseData['data']['city_id'] != '' ? int.parse(responseData['data']['city_id']) : null,
         cityName    : responseData['data']['city_name'],
       ));
       notifyListeners();
+    }catch (err){
+      throw err;
+    }
+
+  }
+
+  Future<void> updateUserProfile(String fileName, String path, String username,String firstName, String lastName, String address, String latitude, String longitude, String postalCode, String cityId, String stateId) async {
+    try{
+      headersAPI['token'] = _authToken;
+      // final response = await http.post(
+      //   baseAPI + '/API_Account/editProfile',
+      //   headers: headersAPI,
+      //   body: {
+      //     // 'id'          : _userId,
+      //     // 'type'        : _userRole,
+      //     // 'username'    : username,
+      //     // 'first_name'  : firstName,
+      //     // 'last_name'   : lastName,
+      //     // 'file'        : file,
+      //     // 'address'     : address,
+      //     // 'lat'         : latitude,
+      //     // 'lng'         : longitude,
+      //     // 'post_code'   : postalCode,
+      //     // 'city_id'     : cityId,
+      //     // 'state_id'    : stateId
+      //   }
+      // );
+      // final responseData = json.decode(response.body);
+        dio.options.headers= {"token" : _authToken};
+        FormData formData = new FormData.from({
+                'id'          : _userId,
+                'type'        : _userRole,
+                'nickname'    : username,
+                'username'    : username,
+                'first_name'  : firstName,
+                'last_name'   : lastName,
+                'address'     : address,
+                'lat'         : latitude,
+                'lng'         : longitude,
+                'post_code'   : postalCode,
+                'city_id'     : cityId,
+                'state_id'    : stateId,
+                "file"        : fileName != '' ? new UploadFileInfo(new File(path), fileName) : ''
+            });
+      var response = await dio.post(
+                      baseAPI + "/API_Account/editProfile",
+                      data: formData
+                    );
+      if(response.data['success'] == false){
+        throw HttpException(response.data['message']);
+      }
+
     }catch (err){
       throw err;
     }
@@ -203,4 +272,58 @@ class User with ChangeNotifier {
 
     return result;
   }
+
+  Future<void> fetchListState() async {
+   var result;
+    try{
+      headersAPI['token'] = _authToken;
+      final response = await http.post(
+        baseAPI + '/API_Account/GetAllState',
+        headers: headersAPI,
+        body: {
+          'type': _userRole
+        }
+      );
+
+       final responseData = json.decode(response.body);
+        if(responseData['success'] == false){
+          throw HttpException(responseData['message']);
+        }
+
+      result = response.body;
+
+    } catch (err){
+      throw err;
+    }
+
+    return result;
+  }
+
+  Future<void> fetchListCity(String stateId ) async {
+    var result;
+    try{
+      headersAPI['token'] = _authToken;
+      final response = await http.post(
+        baseAPI + '/API_Account/GetAllCitybyState',
+        headers: headersAPI,
+        body: {
+          'type': _userRole,
+          'id'  : stateId
+        }
+      );
+
+       final responseData = json.decode(response.body);
+        if(responseData['success'] == false){
+          throw HttpException(responseData['message']);
+        }
+
+      result = response.body;
+
+    } catch (err){
+      throw err;
+    }
+
+    return result;
+  }
+
 }
