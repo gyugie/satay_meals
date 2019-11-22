@@ -136,7 +136,7 @@ class _VerificationCardState extends State<VerificationCard> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Text('Please enter the verification code you recieve \n by email', style: TextStyle(
+                Text('Please enter the verification code that You received \n on your email', style: TextStyle(
                   color: Colors.green[200], 
                   fontSize: 14,
                   fontWeight: FontWeight.bold

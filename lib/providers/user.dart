@@ -12,7 +12,7 @@ class UserTemp {
   final String firstName;
   final String lastName;
   final String email;
-  final int phone;
+  final String phone;
   final String address;
   final int facebookId;
   final int googleId;
@@ -101,7 +101,7 @@ class User with ChangeNotifier {
       if(responseData['success'] == false){
         throw HttpException(responseData['message']);
       }
-
+      print(responseData);
       _userProfile = {};
       _userProfile.putIfAbsent('userProfile', () => UserTemp(
         id          : responseData['data']['id'],
@@ -109,7 +109,7 @@ class User with ChangeNotifier {
         firstName   : responseData['data']['first_name'],
         lastName    : responseData['data']['last_name'],
         email       : responseData['data']['email'],
-        phone       : responseData['data']['phone'] != null ? int.parse(responseData['data']['phone']) : null,
+        phone       : responseData['data']['phone'] != null ? responseData['data']['phone'] : null,
         address     : responseData['data']['address'],
         facebookId  : responseData['data']['id_facebook'] != null ? int.parse(responseData['data']['id_facebook']) : null,
         googleId    : responseData['data']['id_google'] != null ? int.parse(responseData['data']['id_google']) : null,
@@ -130,34 +130,16 @@ class User with ChangeNotifier {
 
   }
 
-  Future<void> updateUserProfile(String fileName, String path, String username,String firstName, String lastName, String address, String latitude, String longitude, String postalCode, String cityId, String stateId) async {
+  Future<void> updateUserProfile(String fileName, String path, String username,String firstName, String lastName, String address, String latitude, String longitude, String postalCode, String cityId, String stateId, String phone) async {
     try{
-      headersAPI['token'] = _authToken;
-      // final response = await http.post(
-      //   baseAPI + '/API_Account/editProfile',
-      //   headers: headersAPI,
-      //   body: {
-      //     // 'id'          : _userId,
-      //     // 'type'        : _userRole,
-      //     // 'username'    : username,
-      //     // 'first_name'  : firstName,
-      //     // 'last_name'   : lastName,
-      //     // 'file'        : file,
-      //     // 'address'     : address,
-      //     // 'lat'         : latitude,
-      //     // 'lng'         : longitude,
-      //     // 'post_code'   : postalCode,
-      //     // 'city_id'     : cityId,
-      //     // 'state_id'    : stateId
-      //   }
-      // );
-      // final responseData = json.decode(response.body);
+      print(phone);
         dio.options.headers= {"token" : _authToken};
         FormData formData = new FormData.from({
                 'id'          : _userId,
                 'type'        : _userRole,
                 'nickname'    : username,
                 'username'    : username,
+                'phone'       : phone,
                 'first_name'  : firstName,
                 'last_name'   : lastName,
                 'address'     : address,
@@ -166,7 +148,7 @@ class User with ChangeNotifier {
                 'post_code'   : postalCode,
                 'city_id'     : cityId,
                 'state_id'    : stateId,
-                "file"        : fileName != '' ? new UploadFileInfo(new File(path), fileName) : ''
+                "file"        : fileName != null ? new UploadFileInfo(new File(path), fileName) : ''
             });
       var response = await dio.post(
                       baseAPI + "/API_Account/editProfile",

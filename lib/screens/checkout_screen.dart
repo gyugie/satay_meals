@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/providers/auth.dart';
-import 'package:satay_meals/widgets/custom_notification.dart';
 import 'dart:io';
 
-import '../screens/payment_screen.dart';
+import '../providers/auth.dart';
+import '../screens/home_screen.dart';
 import '../providers/cart_item.dart';
 import '../providers/user.dart';
 import '../providers/orders.dart';
@@ -194,7 +193,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
               height: deviceSize.height * 0.3,
               color: Colors.black.withOpacity(0.8),
               child: Center(
-                child: Text('Ini Ceritanya Map, \n kata gobang'),
+                child: Text('Maps Will Available Soon'),
               ),
             ),
 
@@ -391,7 +390,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                   ],
                 ),
                 SizedBox(height: 15),
-                Text('(payment will be deducated from your wallet)', style: TextStyle(color: Colors.grey)),
+                Text('(payment will be deducted from your wallet)', style: TextStyle(color: Colors.grey)),
                 SizedBox(height: 15),
 
                 ButtonTheme(
@@ -400,7 +399,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                   buttonColor: Colors.green,
                   child: RaisedButton(
-                    child: Text("Confrim", style: Theme.of(context).textTheme.title),
+                    child: Text("Confirm", style: Theme.of(context).textTheme.title),
                     onPressed: () async {
                        
                         try{
@@ -465,6 +464,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                 onPressed: (){
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
                 },
               )
             ],

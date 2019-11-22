@@ -86,12 +86,11 @@ class Auth with ChangeNotifier{
 
       final responseData = json.decode(response.body);
       
-     
       if(responseData['verified'] == false ){
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
        
-        throw HttpException('Account is not active, please check on your email for verified account');
+        throw HttpException('Account is not active, please check on your email for verifying account');
       } else if(responseData['success'] == false) {
          throw HttpException(responseData['message']);
       }

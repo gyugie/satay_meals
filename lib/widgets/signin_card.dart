@@ -68,7 +68,7 @@ class _SignInCardState extends State<SignInCard> {
             key: _formSignin,
             child: Column(
               children: <Widget>[
-                SizedBox(height: 10),
+                SizedBox(height: 30),
                 TextFormField(
                   style: TextStyle(color: Colors.white),
                   decoration: new InputDecoration(
@@ -155,11 +155,11 @@ class _SignInCardState extends State<SignInCard> {
                   onPressed: _submitLogin,
                 ),
 
-                 SizedBox(height: 20),
-
+                SizedBox(height: 20),
+                Text('Satay warrior v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
                 // Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
-                SizedBox(height: 30),
+                // SizedBox(height: 30),
 
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceAround,

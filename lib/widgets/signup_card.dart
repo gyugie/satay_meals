@@ -34,7 +34,7 @@ class _SignUpState extends State<SignUp> {
       await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], int.parse(_newUser['phone']));
         CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
    } on HttpException catch (err) {
-      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authenticated failed', err.toString(), true);
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authentication Failed', err.toString(), true);
    } catch (err){
       CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
    }

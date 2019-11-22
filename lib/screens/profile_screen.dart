@@ -132,7 +132,7 @@ class _UserProfileState extends State<UserProfile> {
                       Divider(color: Colors.green),
                       ListTile(
                         leading: Icon(Icons.phone, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.phone != null) ? '+60' + _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        title: Text('${_user == null ? '-' : (_user.phone != null) ? _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
                       Divider(color: Colors.green),
                       ListTile(

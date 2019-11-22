@@ -64,7 +64,7 @@ class _OrderItemState extends State<OrderItem> {
                 var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
                 var reduceValue     = int.parse(_quantityValue) - 1; 
 
-                if(reduceValue >= 1){
+                if(reduceValue >= 0){
 
                   setState(() {
                   _quantityController.text = reduceValue.toString();

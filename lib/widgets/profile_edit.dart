@@ -18,6 +18,11 @@ class ProfileEdit extends StatefulWidget {
 
 class _ProfileEditState extends State<ProfileEdit> {
   final GlobalKey<FormState> _formEditUser     = GlobalKey(); 
+  final firstNameController   = TextEditingController();
+  final lastNameController    = TextEditingController();
+  final phoneController       = TextEditingController();
+  final addressController     = TextEditingController();
+  final postalCode            = TextEditingController();
   var _isInit                 = true;
   var _isLoading              = false;
   var _cityLoading            = false;
@@ -196,7 +201,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               
     try{
        
-      await Provider.of<User>(context).updateUserProfile(fileName, path, _currentProfile['username'], _currentProfile['firstName'], _currentProfile['lastName'], _currentProfile['address'],  userLocation['latitude'].toString(), userLocation['longitude'].toString(), _currentProfile['postalCode'], _currentProfile['cityId'], _currentProfile['stateId']);
+      await Provider.of<User>(context).updateUserProfile(fileName, path, _currentProfile['username'], _currentProfile['firstName'], _currentProfile['lastName'], _currentProfile['address'],  userLocation['latitude'].toString(), userLocation['longitude'].toString(), _currentProfile['postalCode'], _currentProfile['cityId'], _currentProfile['stateId'], _currentProfile['phone']);
       Provider.of<User>(context).fetchUserProfile().then((val){
         CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Edit Profile Success', 'your profile is updated', false, true);
       });
@@ -224,9 +229,8 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
+    final deviceSize  = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
-    print(file);
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile', style: Theme.of(context).textTheme.title),
@@ -303,6 +307,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                             Container(
                               width: deviceSize.width * 0.4,
                               child: TextFormField(
+                                // controller: firstNameController,
                                 style: new TextStyle(color: Colors.white),
                                 decoration: new InputDecoration(
                                   labelText: 'Frist Name *', 
@@ -345,6 +350,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                             Container(
                               width: deviceSize.width * 0.4,
                               child: TextFormField(
+                                // controller: lastNameController,
                                 style: new TextStyle(color: Colors.white),
                                 decoration: new InputDecoration(
                                     labelText: 'Last Name *', 
@@ -387,7 +393,9 @@ class _ProfileEditState extends State<ProfileEdit> {
                           ],
                         ),
                         TextFormField(
+                          // controller: phoneController,
                           style: new TextStyle(color: Colors.white),
+                          keyboardType: TextInputType.number,
                           decoration: new InputDecoration(
                             labelText: 'Phone Number *', 
                             labelStyle: TextStyle(color: Colors.white, fontSize: 16),
@@ -591,6 +599,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                         ),
                         Container(
                           child: TextFormField(
+                            // controller: addressController,
                             decoration: new InputDecoration(
                                 labelText: 'Address *', 
                                 labelStyle: TextStyle(color: Colors.white, fontSize: 16),
@@ -642,6 +651,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                           ),
                         ),
                         TextFormField(
+                          // controller: addressController,
                           style: new TextStyle(color: Colors.white),
                           keyboardType: TextInputType.number,
                           decoration: new InputDecoration(
@@ -698,7 +708,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save, color: Colors.white),
         backgroundColor: Colors.green,
-        onPressed: (){
+        onPressed:  (){
           // _loadDataState();
           // _loadCurrentProfile();
           _updateUser();
