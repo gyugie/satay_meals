@@ -74,7 +74,7 @@ class _HistoryItemState extends State<HistoryItem> {
       padding: EdgeInsets.only(top: 10),
       child: Card(
         child: Container(
-        height: orientation == Orientation.portrait ? deviceSize.height * 0.2 : deviceSize.height * 0.4 ,
+        height: orientation == Orientation.portrait ? deviceSize.height * 0.21 : deviceSize.height * 0.4 ,
         padding: EdgeInsets.all(10),
           child: Column(
             children: <Widget>[
@@ -82,7 +82,7 @@ class _HistoryItemState extends State<HistoryItem> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    width: deviceSize.width * 0.35,
+                    width: deviceSize.width * 0.45,
                     height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),

@@ -98,6 +98,7 @@ class _DetailOrderState extends State<DetailOrder> {
 
   @override
   Widget build(BuildContext context) {
+    
     if(itemLength < 5){
        _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
