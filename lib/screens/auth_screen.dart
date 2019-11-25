@@ -35,7 +35,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     } else {
       setState(() {
         _authMode       = AuthMode.Signin;
-         _flexForCard   = 3;
+         _flexForCard   = 4;
       });
     }
 
@@ -77,7 +77,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                    child: Container(
                      width: deviceSize.width * 0.8,
                      decoration: BoxDecoration(
-                       color: Colors.blueGrey,
+                       color:  Colors.grey.withOpacity(0.6),
                        borderRadius: BorderRadius.circular(30)
                      ),
                       child: TabBar(
@@ -86,11 +86,11 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                         labelColor: Colors.black,
                         indicator: BoxDecoration(
                           border: Border.all(
-                            color: Colors.blueGrey,
+                            color: Colors.grey[700],
                             width: 5.0,
                           ),
                           borderRadius: BorderRadius.circular(50),
-                          color: Colors.white
+                          color: Colors.green
                         ),
                         controller: _tabController,
                         onTap: (index){
@@ -98,10 +98,10 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                         },
                         tabs:[
                           Tab(
-                            child: Text('Sign in'),
+                            child: Text('Sign in', style: TextStyle(color: Colors.white)),
                           ),
                           Tab(
-                            child: Text('Sign up'),
+                            child: Text('Sign up',  style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),

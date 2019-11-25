@@ -226,9 +226,9 @@ class _SignUpState extends State<SignUp> {
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
-                color: Colors.white,
+                color: Colors.green,
                 child: Text("Register".toUpperCase(),
-                    style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 onPressed: _submitSignup,
               ),
