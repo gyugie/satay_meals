@@ -142,7 +142,7 @@ class _SignInCardState extends State<SignInCard> {
 
                 SizedBox(height: 20),
                 _isLoading ?
-                CircularProgressIndicator()
+                CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
                 :
                 RaisedButton(
                   shape: new RoundedRectangleBorder(

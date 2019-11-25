@@ -221,7 +221,8 @@ class _SignUpState extends State<SignUp> {
 
               SizedBox(height: 20),
               _isLoading ?
-              CircularProgressIndicator() :
+              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+              :
               RaisedButton(
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
