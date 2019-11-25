@@ -111,6 +111,9 @@ class _ProfileEditState extends State<ProfileEdit> {
     setState(() {
       _selectedState    = value;
       _cityLoading      = true;
+      _selectStateId    = value.stateId;
+      _selectStateName  = value.stateName;
+      _selectCityName   ='';
     });
 
     Provider.of<User>(context).fetchListCity(value.stateId.toString())
@@ -462,11 +465,6 @@ class _ProfileEditState extends State<ProfileEdit> {
                                   value: _selectedState,
                                   onChanged: (value) {
                                     _onChangesState(value);
-                                    
-                                    setState(() {
-                                      _selectStateId    = value.stateId;
-                                      _selectStateName  = value.stateName;
-                                    });
                                      
                                     _currentProfile         = {
                                       'id'          : _currentProfile['id'], 
@@ -585,15 +583,15 @@ class _ProfileEditState extends State<ProfileEdit> {
                         new Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            if(_validationState != '')
+                            // if(_validationState != '')
                             Container(
                               width: deviceSize.width * 0.4,
-                              child: Text(_validationState, style: TextStyle(fontSize: 14, color: Colors.orange))
+                              child: Text(_validationState != '' ? _validationState : '', style: TextStyle(fontSize: 14, color: Colors.orange))
                             ),
-                            if(_validationCity != '')
+                            // if(_validationCity != '')
                             Container(
                               width: deviceSize.width * 0.4,
-                              child: Text(_validationCity, style: TextStyle(fontSize: 14, color: Colors.orange))
+                              child: Text(_validationCity != '' ? _validationCity : '', style: TextStyle(fontSize: 14, color: Colors.orange))
                             )
                           ],
                         ),
