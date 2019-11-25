@@ -76,7 +76,7 @@ List<HistoryOrder> get history {
   return [..._historyOrders];
 }
 
-Future<void> addOrder(String consumerId, String address, String latitude, String longitude, int phone, double total, List<Item> items ) async {
+Future<void> addOrder(String consumerId, String address, String latitude, String longitude, int phone, String total, List<Item> items ) async {
 
   try{
     headersAPI['token'] = _authToken;
@@ -85,7 +85,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
       headers: headersAPI,
       body: {
         'consumer_id': consumerId,
-        'total': total.toString(),
+        'total': total,
         'address': address,
         'lat': latitude,
         'lng': longitude,

@@ -405,7 +405,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                         try{
 
                           //processing order
-                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment, items);
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment.toStringAsFixed(2), items);
                           _alertDialogWithIcon(context, Icons.check_circle_outline, 'Confirmation', 'Congratulation payment success', false);
 
                           setState(() {
