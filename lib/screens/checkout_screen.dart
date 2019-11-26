@@ -19,7 +19,7 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> 
   with SingleTickerProviderStateMixin {
-  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>(debugLabel: '/checkout-screen' );
   TextEditingController _searchQuery;
   bool _isSearching                                 = false;
   String searchQuery                                = "Search query";
@@ -174,7 +174,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     }
 
     return new Scaffold(
-      key: scaffoldKey,
+      // key: scaffoldKey,
       appBar: new AppBar(
         leading: _isSearching ? const BackButton() : null,
         title: _isSearching ? _buildSearchField() : _buildTitle(context),

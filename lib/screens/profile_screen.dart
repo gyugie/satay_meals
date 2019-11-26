@@ -159,6 +159,7 @@ class _UserProfileState extends State<UserProfile> {
                         leading: Icon(Icons.insert_invitation, color: Colors.grey),
                         title: Text('${_user == null ? '-' : (_user.joinDate != null) ? _user.joinDate : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                       ),
+                      SizedBox(height: 33),
                     ],
                   ),
                 )
