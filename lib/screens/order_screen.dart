@@ -63,7 +63,7 @@ class _OrderScreenState extends State<OrderScreen> {
           child: FloatingActionButton.extended(
             backgroundColor: Colors.green,
             label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
-            onPressed: (){
+            onPressed: cartItem.item.length < 1 ? null : (){
               Navigator.of(context).pushNamed(CheckoutScreen.routeName);
             },
           ),

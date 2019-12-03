@@ -14,7 +14,7 @@ class PaymentPackage extends StatelessWidget {
     final mediaSize   = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
     return Container(
-      width: mediaSize.width,
+      width: orientation == Orientation.portrait ? mediaSize.width : mediaSize.width * 0.5,
       padding: EdgeInsets.all(15),
       child:Container(
         width: mediaSize.width,

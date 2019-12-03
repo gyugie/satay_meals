@@ -73,9 +73,10 @@ class _HistoryItemState extends State<HistoryItem> {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: Card(
+        elevation: 5,
         child: Container(
         height: orientation == Orientation.portrait ? deviceSize.height * 0.21 : deviceSize.height * 0.4 ,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[
               Row(
