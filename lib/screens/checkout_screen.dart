@@ -24,6 +24,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   bool _isSearching                                 = false;
   String searchQuery                                = "Search query";
   double _setHeigtItemList                          = 0.1;
+  var _clickCount                                   = 0;              
   var _isLoading                                    = false;
   var _isInit                                       = true;
   Map<String, double> userLocation;
@@ -352,7 +353,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
           height: MediaQuery.of(context).size.height * 0.4,
           child: Container(
             decoration: new BoxDecoration(
-            color: Colors.white,
+            color: Colors.black,
             borderRadius: new BorderRadius.only(
             topLeft: const Radius.circular(30.0),
             topRight: const Radius.circular(30.0))),
@@ -368,16 +369,16 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('My Wallet', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('RM ${myWallet.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                    Text('My Wallet', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${myWallet.toStringAsFixed(2)}', style: TextStyle(color: Colors.white, fontSize: 20)),
                   ],
                 ),
                 SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Total Payment', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('RM ${totalPayment.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                    Text('Total Payment', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${totalPayment.toStringAsFixed(2)}', style: TextStyle(color: Colors.white, fontSize: 20)),
                   ],
                 ),
                 SizedBox(height: 5),
@@ -386,8 +387,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Balance', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20)),
-                    Text('RM ${balanceUser.toStringAsFixed(2)}', style: TextStyle(color: Colors.grey, fontSize: 20)),
+                    Text('Balance', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20)),
+                    Text('RM ${balanceUser.toStringAsFixed(2)}', style: TextStyle(color: Colors.white, fontSize: 20)),
                   ],
                 ),
                 SizedBox(height: 15),
@@ -402,19 +403,24 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                   child: RaisedButton(
                     child: Text("Confirm", style: Theme.of(context).textTheme.title),
                     onPressed: () async {
-                       
-                        try{
+                       setState(() {
+                         _clickCount = _clickCount + 1;
+                       });
+
+                       if(_clickCount == 1){
+                          try{
 
                           //processing order
                           await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment.toStringAsFixed(2), items);
                           _alertDialogWithIcon(context, Icons.check_circle_outline, 'Confirmation', 'Congratulation payment success', false);
 
-                          setState(() {
-                            _disabledButton = true;
-                          });
 
                           //clear cart item
                           Provider.of<CartItem>(context, listen: false).clearCartItem();
+                          setState(() {
+                            _disabledButton = true;
+                            _clickCount     = 0;
+                          });
                          
                         } on HttpException catch(err){
                           _alertDialogWithIcon(context, Icons.error_outline, 'Something wrong!', err.toString(), true);
@@ -422,7 +428,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                           _alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
                         }
 
-                        
+                       }
                         
                     },    
                   ),
