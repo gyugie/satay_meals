@@ -50,7 +50,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
     return Scaffold(
       appBar: AppBar(
       iconTheme: new IconThemeData(color: Colors.green),
-        title: Text('Terms And Condition', style: Theme.of(context).textTheme.title),
+        title: Text('About Us', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
@@ -58,16 +58,14 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
        ),
        child: DrawerSide(),
       ),
-      body: Center(
-        child: 
+      body: 
         _isLoading 
         ? 
-        CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) 
+        Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
         : 
         Container(
           padding: EdgeInsets.all(20),
-          child: Text(_aboutUs, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.center,)
-        )
+          child: Text(_aboutUs, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
       ),
     );
   }

@@ -282,7 +282,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   )
                 ),
                 FractionalTranslation(
-                  translation:orientation == Orientation.portrait ?  Offset(-0.23, -1.3) : Offset(-0.3, -2),
+                  translation:orientation == Orientation.portrait ?  Offset(-0.23, -1.8) : Offset(-0.3, -2),
                   child: Align(
                     child: GestureDetector(
                       onTap: () => _pickImage(ImageSource.gallery),

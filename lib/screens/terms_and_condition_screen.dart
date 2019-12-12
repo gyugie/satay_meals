@@ -58,17 +58,14 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
        ),
        child: DrawerSide(),
       ),
-      body: Center(
-        child: 
+      body:
         _isLoading 
         ? 
-        CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) 
+        Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
         :  
         Container(
           padding: EdgeInsets.all(20),
-          child: Text(_termsAndCondition, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.center,)
-        )
-        ,
+          child: Text(_termsAndCondition, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
       ),
     );
   }
