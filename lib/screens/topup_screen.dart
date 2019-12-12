@@ -110,9 +110,18 @@ class _TopupScreenState extends State<TopupScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              Container(
-                padding: EdgeInsets.only(left: 20),
-                child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text('swipe left ', style: Theme.of(context).textTheme.subtitle, textAlign: TextAlign.start,),
+                  ),
+                ],
               ),
               // for list payment card
               SizedBox(height: 20),
@@ -137,7 +146,7 @@ class _TopupScreenState extends State<TopupScreen> {
                   )
                 )
               ),
-              SizedBox(height: 10),
+              Center(child: Icon(Icons.more_horiz, color: Colors.grey, size: 50)),
               Center(
                 child: Text(
                   'Currency fluctuation, bank or convenience fee and  applicable  taxes charge by both the seller and payment gateway may increase your final amount.\n Check payment gateway terms and conditions. \n \n By tapping Buy, you accept the following terms of service \n', 
