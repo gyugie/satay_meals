@@ -5,6 +5,9 @@ import '../providers/http_exception.dart';
 import '../providers/auth.dart';
 
 class SignUp extends StatefulWidget {
+  final Function switchScreen;
+  SignUp({Key key, this.switchScreen}) : super (key: key);
+
   @override
   _SignUpState createState() => _SignUpState();
 }
@@ -33,6 +36,7 @@ class _SignUpState extends State<SignUp> {
    try{
       await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], int.parse(_newUser['phone']));
         CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
+         widget.switchScreen(0);
    } on HttpException catch (err) {
       CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authentication Failed', err.toString(), true);
    } catch (err){

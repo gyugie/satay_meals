@@ -31,11 +31,13 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       setState(() {
         _authMode     = AuthMode.Signup;
         _flexForCard  = 2;
+         _tabController.index = 0;
       });
     } else {
       setState(() {
         _authMode       = AuthMode.Signin;
          _flexForCard   = 4;
+         _tabController.index = 1;
       });
     }
 
@@ -121,7 +123,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                             onHorizontalDragStart: (DragStartDetails start) => _onDragStart(context, start),
                           ),
                           GestureDetector(
-                            child: SignUp(),
+                            child: SignUp(switchScreen: _switchAuthMode),
                             onHorizontalDragStart: (DragStartDetails start) => _onDragStart(context, start),
                           ),
                         ],
