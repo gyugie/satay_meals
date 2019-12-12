@@ -73,7 +73,7 @@ class _SignInCardState extends State<SignInCard> {
                   style: TextStyle(color: Colors.white),
                   decoration: new InputDecoration(
                     enabledBorder: UnderlineInputBorder(      
-                      borderSide: BorderSide(color: Colors.grey),   
+                      borderSide: BorderSide(color: Colors.green),   
                       ), 
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
@@ -110,7 +110,7 @@ class _SignInCardState extends State<SignInCard> {
                   obscureText: true,
                   decoration: new InputDecoration(
                     enabledBorder: UnderlineInputBorder(      
-                      borderSide: BorderSide(color: Colors.grey),   
+                      borderSide: BorderSide(color: Colors.green),   
                       ), 
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
