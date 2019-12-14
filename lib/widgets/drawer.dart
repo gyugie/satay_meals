@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/screens/firebase_notification.dart';
+import 'package:satay_meals/screens/local_notification_widget.dart';
 import '../screens/profile_screen.dart';
 import 'package:satay_meals/screens/socket_screen.dart';
 import '../screens/about_us_screen.dart';
@@ -38,8 +40,6 @@ class DrawerSide extends StatelessWidget {
 
             if(authData.role == 'consumer')
             _menuForConsumer(context),      
-            if(authData.role == 'courier')
-            _menuForCourier(context),      
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.white),
               title: Text('Logout', style: Theme.of(context).textTheme.title),
@@ -110,30 +110,17 @@ class DrawerSide extends StatelessWidget {
                  Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
               },
             ),
-      ],
-    );
-  }
-
-  Widget _menuForCourier(BuildContext context){
-    return Column(
-      children: <Widget>[
-         ListTile(
-              leading: Icon(Icons.person, color: Colors.white),
-              title: Text('My ', style: Theme.of(context).textTheme.title),
-              onTap: (){
-
-              },
-            ),
-        Divider(color: Colors.white),
         ListTile(
-              leading: Icon(Icons.person, color: Colors.white),
-              title: Text('My ', style: Theme.of(context).textTheme.title),
-              onTap: (){
-
-              },
-            ),
-        Divider(color: Colors.white)
-      ],
+            leading: Icon(Icons.info_outline, color: Colors.white),
+            title: Text('Notificaiton', style: Theme.of(context).textTheme.body1),
+            onTap: (){
+               Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FirebaseNotificationScreen()));
+// Navigator.push(
+//         context,
+//         MaterialPageRoute(builder: (context) => LocalNotificationWidget()));
+            },
+          ),
+        ],
     );
   }
 }

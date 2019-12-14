@@ -101,7 +101,6 @@ class User with ChangeNotifier {
       if(responseData['success'] == false){
         throw HttpException(responseData['message']);
       }
-      print(responseData);
       _userProfile = {};
       _userProfile.putIfAbsent('userProfile', () => UserTemp(
         id          : responseData['data']['id'],

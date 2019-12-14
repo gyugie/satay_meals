@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (ctx, authData, child) => MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Dev Satay Consumer',
         theme: ThemeData(
           primarySwatch: Colors.blue,
           primaryColor: Colors.black,

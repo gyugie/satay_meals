@@ -85,7 +85,7 @@ class Auth with ChangeNotifier{
         );
 
       final responseData = json.decode(response.body);
-      
+      print(responseData);
       if(responseData['verified'] == false ){
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
