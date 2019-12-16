@@ -166,7 +166,7 @@ class User with ChangeNotifier {
   Future<Map<String, double>> getLocation() async {
     var currentLocation = <String, double>{};
     try {
-      currentLocation = await location.getLocation();
+      currentLocation = null;//await location.getLocation();
     } catch (e) {
       currentLocation = null;
     }

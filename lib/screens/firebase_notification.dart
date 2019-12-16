@@ -1,12 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:satay_meals/screens/home_screen.dart';
 import 'package:satay_meals/widgets/drawer.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
+import 'package:path_provider/path_provider.dart';
 import '../providers/notification.dart';
-import 'dart:io';
-import 'dart:convert';
-import '../local_notications_helper.dart';
+
 
 class FirebaseNotificationScreen extends StatefulWidget {
   @override
@@ -14,50 +13,116 @@ class FirebaseNotificationScreen extends StatefulWidget {
 }
 
 class _FirebaseNotificationScreenState extends State<FirebaseNotificationScreen> {
- final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();  
- List<RealTimeNotificaiton> notifications = [];  
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();  
+  List<RealTimeNotificaiton> messages = [];  
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  final notifications = FlutterLocalNotificationsPlugin();
+
+
+ 
 @override  
 void initState() {  
   super.initState();  
+  //Init firebase notification
   _firebaseMessaging.configure(  
     onMessage: (Map<String, dynamic> notification) async {  
       setState(() {  
-        notifications.add(  
+        messages.add(  
           RealTimeNotificaiton(  
             title: notification["notification"]["title"],  
             body: notification["notification"]["body"],  
           ),  
         );  
       });  
+       showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
     },  
     onLaunch: (Map<String, dynamic> notification) async {  
       setState(() {  
-        notifications.add(  
+        messages.add(  
           RealTimeNotificaiton(  
             title: notification["notification"]["title"],  
             body: notification["notification"]["body"],  
           ),  
         );  
       });  
+      // showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
     },  
     onResume: (Map<String, dynamic> notification) async {  
       setState(() {  
-        notifications.add(  
+        messages.add(  
           RealTimeNotificaiton(  
             title: notification["notification"]["title"],  
             body: notification["notification"]["body"],  
           ),  
         );  
-      });  
+      }); 
+      // showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]); 
     },  
   );  
+
+  _firebaseMessaging.getToken().then( (results){
+    print(results);
+  }).catchError( (err){
+    print(err);
+  });
+
+  //Init local notification
+  final settingsAndroid = AndroidInitializationSettings('app_icon');
+  final settingsIOS = IOSInitializationSettings(
+      onDidReceiveLocalNotification: (id, title, body, payload) =>
+          onSelectNotification(payload));
+
+    notifications.initialize(
+        InitializationSettings(settingsAndroid, settingsIOS),
+        onSelectNotification: onSelectNotification);
+
 }
+  NotificationDetails get _ongoing {
+  final androidChannelSpecifics = AndroidNotificationDetails(
+    'your channel id',
+    'your channel name',
+    'your channel description',
+    importance: Importance.Max,
+    priority: Priority.High,
+    ongoing: true,
+    autoCancel: false,
+  );
+  final iOSChannelSpecifics = IOSNotificationDetails();
+  return NotificationDetails(androidChannelSpecifics, iOSChannelSpecifics);
+}
+
+  Future onSelectNotification(String payload) async {
+    notifications.cancelAll();
+
+     await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+    );
+  }
+
+  Future showOngoingNotification(
+    FlutterLocalNotificationsPlugin notifications, {
+    @required String title,
+    @required String body,
+    int id = 0,
+  }) =>
+      _showNotification(notifications,
+          title: title, body: body, id: id, type: _ongoing);
+
+  Future _showNotification(
+  FlutterLocalNotificationsPlugin notifications, {
+  @required String title,
+  @required String body,
+  @required NotificationDetails type,
+  int id = 0,
+}) =>
+    notifications.show(id, title, body, type);
 
  @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   notifications = [];
-    // });
+    setState(() {
+      messages = [];
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text('Push Notification', style: Theme.of(context).textTheme.title),
@@ -69,25 +134,27 @@ void initState() {
        child: DrawerSide(),
       ),
       body: 
-      notifications.length == 0
+      messages.length == 0
       ?
       Center(
         child: RaisedButton(
               child: Text('Show notification'),
-              onPressed: () {
-
+              onPressed: (){
+                 showOngoingNotification(notifications,
+                  title: 'Tite', body: 'Body');
+                  //  notifications.cancelAll();
               }
             ),
         )
       :
       ListView.builder(
-        itemCount: notifications.length,
+        itemCount: messages.length,
         itemBuilder: (ctx, index){
           return Container(
             child: Column(
               children: <Widget>[
-                Text(notifications[index].title),
-                Text(notifications[index].body),
+                Text(messages[index].title),
+                Text(messages[index].body),
               ],
             ),
           );
