@@ -153,6 +153,9 @@ class _SignInCardState extends State<SignInCard> {
                       style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   onPressed: _submitLogin,
+                  // (){
+                  //   Provider.of<Auth>(context).getLocation();
+                  // }
                 ),
 
                 SizedBox(height: 20),

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
+import '../providers/auth.dart';
 import '../widgets/signin_card.dart';
 import '../widgets/signup_card.dart';
+import '../providers/auth.dart';
 
 enum AuthMode { Signin, Signup}
 
@@ -14,14 +18,13 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   TabController _tabController;
   AuthMode _authMode  = AuthMode.Signin;
   var _flexForCard    = 2;
-
+  var _isInit         = true;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
     _tabController = new TabController(initialIndex: 0 ,length: 2, vsync: this);
-    _tabController.animateTo(0, curve: Curves.easeOutCirc, duration: Duration(milliseconds: 10000));
-
+    _tabController.animateTo(0, curve: Curves.easeOutCirc, duration: Duration(milliseconds: 10000));    
   }
 
   
@@ -46,6 +49,26 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   _onDragStart(BuildContext context, DragStartDetails start){
    
   }
+
+  Future<void> _firstLoad() async {
+    Future.wait([
+      Provider.of<Auth>(context).firebaseToken(),
+      Provider.of<Auth>(context).getLocation()
+    ]).then( (results){
+
+    }).catchError( (err){
+       CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'Something is wrong!', err.toString(), false);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit){
+      _firstLoad();
+    }
+    super.didChangeDependencies();
+  }
+
 
   @override
   Widget build(BuildContext context) {

@@ -13,8 +13,8 @@ class FirebaseNotificationScreen extends StatefulWidget {
 }
 
 class _FirebaseNotificationScreenState extends State<FirebaseNotificationScreen> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();  
-  List<RealTimeNotificaiton> messages = [];  
+  final FirebaseMessaging _firebaseMessaging  = FirebaseMessaging();  
+  List<RealTimeNotificaiton> messages         = [];  
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   final notifications = FlutterLocalNotificationsPlugin();
 

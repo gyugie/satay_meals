@@ -1,24 +1,31 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import './http_exception.dart';
+import 'package:location/location.dart';
+
 
 class Auth with ChangeNotifier{
+  final FirebaseMessaging _firebaseMessaging  = FirebaseMessaging();  
   String _token;
   DateTime _expiredToken;
   String _userId;
   String _role;
   Timer _timer;
-
+  String _firebaseToken;
+  Map<String, double> currentLocation = {};
+  Location location = new Location();
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
   final headersAPI  = {
                       "Accept": "application/json",
                       "Content-Type": "application/x-www-form-urlencoded"
                     };
+  
+ 
 
-                    
   bool get isAuth {
     return token != null;
   }
@@ -47,6 +54,26 @@ class Auth with ChangeNotifier{
     return null;
   }
 
+  
+  Future<Map<String, double>> getLocation() async {
+   
+       await location.getLocation().then( (res){
+         currentLocation['latitude']  = res.latitude;
+         currentLocation['longitude'] = res.longitude;
+       }).catchError( (err){
+         currentLocation = null;
+         throw err;
+       });
+    return currentLocation;
+  }
+
+  Future<void> firebaseToken() async {
+    await _firebaseMessaging.getToken().then( (results){
+      _firebaseToken = results;
+    }).catchError( (err){
+      throw err;
+    });
+  }
 
   Future<void> signUp(String username, String email, String password, int phone) async {
     try{
@@ -81,6 +108,7 @@ class Auth with ChangeNotifier{
           body: {
             'username': username,
             'password': password,
+            'token_firebase': _firebaseToken
           },
         );
 

@@ -78,8 +78,8 @@ class User with ChangeNotifier {
                       "Content-Type": "application/x-www-form-urlencoded"
                     };
 
-  Location location = Location();
-  Map<String, double> userLocation;
+  Map<String, double> currentLocation = {};
+  Location location = new Location();
 
   Map<String, UserTemp> get userProfile{
     return {..._userProfile};
@@ -164,12 +164,16 @@ class User with ChangeNotifier {
   }
 
   Future<Map<String, double>> getLocation() async {
-    var currentLocation = <String, double>{};
-    try {
-      currentLocation = null;//await location.getLocation();
-    } catch (e) {
-      currentLocation = null;
-    }
+      
+       await location.getLocation().then( (res){
+         currentLocation['latitude'] = res.latitude;
+         currentLocation['longitude'] = res.longitude;
+       }).catchError( (err){
+         currentLocation['latitude']  = null;
+         currentLocation['longitude'] = null;
+         throw err;
+       });
+       
     return currentLocation;
   }
 
