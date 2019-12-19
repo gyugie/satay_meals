@@ -106,7 +106,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
     final responseData = json.decode(response.body);
     if(responseData['success'] == false){
       throw HttpException(responseData['message']);
-    }
+    }print(responseData);
 
   } catch (err){
     throw err;

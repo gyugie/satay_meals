@@ -152,7 +152,6 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     final itemCart        = Provider.of<CartItem>(context, listen: false); 
     final authUser        = Provider.of<Auth>(context, listen: false);
     final myWallet        = Provider.of<User>(context).myWallet;
-
     final deviceSize      = MediaQuery.of(context).size;
     final int itemLength  = itemCart.item.length;
 

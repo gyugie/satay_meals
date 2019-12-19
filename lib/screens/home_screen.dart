@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/custom_notification.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../utils/firebase_notification.dart';
+import '../widgets/custom_notification.dart';
 import '../widgets/product_list.dart';
 import '../widgets/drawer.dart';
 import '../providers/auth.dart';
@@ -17,6 +19,33 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   var _isInit = true;
   var _isLoading = false;
+
+
+  @override  
+  void initState() {  
+    super.initState();  
+    // initFirebase();
+    new Future.delayed(Duration.zero,() {
+      initFirebase(context);
+    });
+     //Init local notification
+    final settingsAndroid = AndroidInitializationSettings('app_icon');
+    final settingsIOS     = IOSInitializationSettings(
+          onDidReceiveLocalNotification: (id, title, body, payload) => onSelectNotification(payload));
+
+          notifications.initialize(
+              InitializationSettings(settingsAndroid, settingsIOS),
+              onSelectNotification: onSelectNotification);
+
+  }
+
+  Future onSelectNotification(String payload) async {
+    notifications.cancelAll(); 
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeScreen()),
+    );
+  }
 
   Future<void> _loadDataHome() async {
      Future.wait([

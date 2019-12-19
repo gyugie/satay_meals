@@ -34,36 +34,36 @@ class MyApp extends StatelessWidget {
           value: Auth(),
         ),
         ChangeNotifierProxyProvider<Auth, User>(
-          builder: (ctx, auth, cachedUser) => User(
+          update: (ctx, auth, cachedUser) => User(
             auth.token,
             auth.userId,
             auth.role, 
-            ), initialBuilder: (BuildContext context) { return; },
+            ), create: (BuildContext context) { return; },
         ),
         ChangeNotifierProxyProvider<Auth, Products>(
-          builder: (ctx, auth, cachedProduct) => Products(
+          update: (ctx, auth, cachedProduct) => Products(
             auth.token,
             auth.role,
             auth.userId,
             cachedProduct == null ? [] : cachedProduct.products
-          ), initialBuilder: (BuildContext context) {return;},
+          ), create: (BuildContext context) {return;},
         ),
         ChangeNotifierProvider.value(
           value: CartItem(),
         ),
         ChangeNotifierProxyProvider<Auth, SatayTopup>(
-          builder: (ctx, auth, cachedTopup) => SatayTopup(
+          update: (ctx, auth, cachedTopup) => SatayTopup(
             auth.userId,
             auth.token,
             auth.role,
-          ), initialBuilder: (BuildContext context) { return;},
+          ), create: (BuildContext context) { return;},
         ),
         ChangeNotifierProxyProvider<Auth, ItemOrders>(
-          builder: (ctx, auth, chachedOrder) => ItemOrders(
+          update: (ctx, auth, chachedOrder) => ItemOrders(
             auth.token,
             auth.role,
             auth.userId,
-          ), initialBuilder: (BuildContext context) { return;},
+          ), create: (BuildContext context) { return;},
         )
       ],
       child: Consumer<Auth>(

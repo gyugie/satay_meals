@@ -26,6 +26,7 @@ void initState() {
   //Init firebase notification
   _firebaseMessaging.configure(  
     onMessage: (Map<String, dynamic> notification) async {  
+      print(notification['data']);
       setState(() {  
         messages.add(  
           RealTimeNotificaiton(  
@@ -45,7 +46,7 @@ void initState() {
           ),  
         );  
       });  
-      // showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
+      showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
     },  
     onResume: (Map<String, dynamic> notification) async {  
       setState(() {  
@@ -56,7 +57,7 @@ void initState() {
           ),  
         );  
       }); 
-      // showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]); 
+      showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]); 
     },  
   );  
 
