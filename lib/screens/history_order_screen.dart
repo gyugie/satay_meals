@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:satay_meals/widgets/custom_notification.dart';
 import 'dart:async';
+
+import '../providers/http_exception.dart';
+import '../widgets/custom_notification.dart';
 import '../providers/orders.dart';
 import '../widgets/history_order_item.dart';
 import '../widgets/drawer.dart';
@@ -17,7 +19,6 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
     var _isLoading = false;
 
   Future<void> _loadHistoryOrder() async {
-
      try{
       await Provider.of<ItemOrders>(context).getHistoryOrders();
      } catch (err) {
@@ -28,6 +29,18 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
        _isLoading = false;
      });
   }
+
+  Future<void> confirmOrder(String orderID) async {
+    try{
+      await Provider.of<ItemOrders>(context).confirmOrder(orderID);
+      _loadHistoryOrder();
+    } on HttpException catch(err){
+      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Something wrong', err.toString(), true);
+     } catch (err) {
+       CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
+     }
+  }
+
   @override
   void didChangeDependencies() {
     if(_isInit){
@@ -79,6 +92,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
               tableName: historyOrders[index].tableName,
               vendor: historyOrders[index].vendor,
               rider: historyOrders[index].rider,
+              confirmOrder: confirmOrder,
             ),
           ),
         )

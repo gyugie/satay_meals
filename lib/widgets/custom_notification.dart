@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../screens/history_order_screen.dart';
 import '../widgets/verification_card.dart';
+import '../providers/orders.dart';
 
 class CustomNotif {
 
@@ -166,6 +169,61 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
               )
               :
               null
+
+            ],
+          ),
+        ),
+      );
+    },
+    transitionDuration: Duration(milliseconds: 500),
+    barrierDismissible: false,
+    barrierLabel: '',
+    context: context,
+    pageBuilder: (context, animation1, animation2) {});
+  }
+
+  static void alertComplainOrder(BuildContext context, IconData icon, String title, String messages, String orderID){
+    showGeneralDialog(
+    barrierColor: Colors.black.withOpacity(0.5),
+    transitionBuilder: (context, a1, a2, widget) {
+      return Transform.scale(
+        scale: a1.value,
+        child: Opacity(
+          opacity: a1.value,
+          child: AlertDialog(
+            shape: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16.0)),
+            title: Container(
+              child: Icon(icon, size: 100, color: Colors.red),
+            ),
+            content: Container(
+              height: 150,
+                child: SingleChildScrollView(
+                  child: Column(
+                  children: <Widget>[
+                    Text(title, style: TextStyle(color: Colors.red, fontSize: 24)),
+                    SizedBox(height: 20),
+                    Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+                  ],
+                ),
+              )
+            ),
+            actions: <Widget>[
+               FlatButton(
+                child: Text('Yes!', style: TextStyle(color: Colors.red)),
+                onPressed: () async {
+                  await Provider.of<ItemOrders>(context).cancelOrder(orderID);
+                  Navigator.of(context).pop();
+                   Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
+                },
+              ),
+              
+              FlatButton(
+                child: Text('No', style: TextStyle(color: Colors.green)),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                },
+              ),
 
             ],
           ),

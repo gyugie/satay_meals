@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
 import '../screens/detail_order_screen.dart';
 
 
@@ -6,6 +7,7 @@ enum FilterOptions {
   Delivered,
   Tracking,
   Detail,
+  Complain
 }
 
 class HistoryItem extends StatefulWidget {
@@ -17,6 +19,7 @@ class HistoryItem extends StatefulWidget {
   final String tableName;
   final String vendor;
   final String rider;
+  final Function confirmOrder;
 
   HistoryItem({
     @required this.noTransaction,
@@ -26,7 +29,8 @@ class HistoryItem extends StatefulWidget {
     @required this.total,
     @required this.tableName,
     this.vendor,
-    this.rider
+    this.rider,
+    this.confirmOrder
   });
 
   @override
@@ -40,7 +44,7 @@ class _HistoryItemState extends State<HistoryItem> {
   Widget build(BuildContext context) {
     final deviceSize        = MediaQuery.of(context).size;
     final orientation       = MediaQuery.of(context).orientation;
-    
+      print(widget.statusOrder);
     switch (widget.statusOrder) {
       case 'Cancelled':
             setLabelColors = Colors.red;
@@ -48,7 +52,7 @@ class _HistoryItemState extends State<HistoryItem> {
       case 'Searching Vendor':
           setLabelColors = Colors.orange;
         break;
-      case 'Delivered':
+      case 'Deliveried':
           setLabelColors = Colors.green;
         break;
       case 'Delivering':
@@ -57,10 +61,10 @@ class _HistoryItemState extends State<HistoryItem> {
       case 'Serving':
           setLabelColors = Colors.orangeAccent;
         break;
-      case 'Served':
+      case 'Delivered':
           setLabelColors = Colors.blue;
         break;
-      case 'Sercing Driver':
+      case 'Searching Rider':
           setLabelColors = Colors.orange;
         break;
       case 'Waiting':
@@ -117,15 +121,21 @@ class _HistoryItemState extends State<HistoryItem> {
                                         rider: widget.rider,
                                     )),
                                 );
+                              if(selectedValue == FilterOptions.Delivered)
+                                widget.confirmOrder(widget.orderId);
+                              if(selectedValue == FilterOptions.Complain)
+                                CustomNotif.alertComplainOrder(context, Icons.cancel, "Complain this order?", 'please call +60 11-1220 3708 to complain your order\n Are you sure want to cancel this order', widget.orderId);
                             },
                             icon: Icon(
                               Icons.more_vert,
                               color: Colors.white,
                             ),
                             itemBuilder: (_) => [
-                              // if(widget.statusOrder == 'Serving' || widget.statusOrder == 'Delivered' || widget.statusOrder == 'Delivering')
-                              PopupMenuItem(child: Text('Get your satay ? '), value: FilterOptions.Delivered),
-                              // if(widget.statusOrder == 'Serving' || widget.statusOrder == 'Delivered' || widget.statusOrder == 'Delivering')
+                              if( widget.statusOrder == 'Deliveried')
+                              PopupMenuItem(child: Text('Complete delivery '), value: FilterOptions.Delivered),
+                              if( widget.statusOrder == 'Deliveried')
+                              PopupMenuItem(child: Text('Complain this order! '), value: FilterOptions.Complain),
+                              if( widget.statusOrder == 'Delivering')
                               PopupMenuItem(child: Text('Track Order'), value: FilterOptions.Tracking),
                               PopupMenuItem(child: Text('Detail'), value: FilterOptions.Detail),
                             ],

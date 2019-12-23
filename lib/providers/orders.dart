@@ -130,7 +130,7 @@ Future<void> getHistoryOrders() async {
     if(responseData['success'] == false){
       throw HttpException(responseData['message']);
     }
-
+    _historyOrders = [];
     for(int i = 0; i < responseData['data'].length; i++){
       loadedHistoryOrders.add(HistoryOrder(
         noTransaction: responseData['data'][i]['no_transaction'],
@@ -183,6 +183,48 @@ Future<void> getDetailOrder(String id, String tableName) async {
   return results;
 }
 
+Future<void> confirmOrder(String orderID) async {
+  try{
+
+    headersAPI['token'] = _authToken;
+    final response = await http.post(
+      baseAPI + '/API_Consumer/approvOrder',
+      headers: headersAPI,
+      body: {
+        'order_id' : orderID
+      }
+    );
+
+    final responseData  = json.decode(response.body);
+    if(responseData['success'] == false){
+      throw HttpException(responseData['message']);
+    }
+  }catch (err){
+    throw err;
+  }
+
+}
+
+Future<void> cancelOrder(String orderID) async {
+  try{
+
+    headersAPI['token'] = _authToken;
+    final response = await http.post(
+      baseAPI + '/API_Consumer/rejectOrder',
+      headers: headersAPI,
+      body: {
+        'order_id' : orderID
+      }
+    );
+
+    final responseData  = json.decode(response.body);
+    if(responseData['success'] == false){
+      throw HttpException(responseData['message']);
+    }
+  }catch (err){
+    throw err;
+  }
+}
 }
 
 
