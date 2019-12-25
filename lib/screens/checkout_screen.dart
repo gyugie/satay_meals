@@ -1,9 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 
+import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
 import '../screens/home_screen.dart';
 import '../providers/cart_item.dart';
@@ -470,7 +470,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                 onPressed: (){
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
-                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HistoryOrdersScreen()));
                 },
               )
             ],

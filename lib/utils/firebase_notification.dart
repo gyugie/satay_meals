@@ -29,48 +29,23 @@ final notifications = FlutterLocalNotificationsPlugin();
     _firebaseMessaging.configure(  
       onMessage: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
-         print("onMessage: ${results}");
-         
-        try{
-          
-          showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
-        }catch (err){
-          print(err);
-        }
+        print("onMessage: ${results}");
+        showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
         
       },  
       
       onLaunch: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
         print("onLaunch: $results");
-
-        try{
-         
-        }catch (err){
-          print(err);
-        }
-
+       
       },  
       onResume: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
          print("onResume: ${results}");
-         
-        try{
-        
-          showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
-        }catch (err){
-          print(err);
-        }
+        showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
         
       },  
     );  
-  
-    _firebaseMessaging.getToken().then( (results){
-      print(results);
-    }).catchError( (err){
-      print(err);
-    });
-
     
   }
  

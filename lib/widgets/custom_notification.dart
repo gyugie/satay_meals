@@ -70,170 +70,170 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
     pageBuilder: (context, animation1, animation2) {});
   }
 
-  static void alertDialogUserIsNotActive(BuildContext context, IconData icon, String title, String messages, bool isVerification){
-    showGeneralDialog(
-    barrierColor: Colors.black.withOpacity(0.5),
-    transitionBuilder: (context, a1, a2, widget) {
-      return Transform.scale(
-        scale: a1.value,
-        child: Opacity(
-          opacity: a1.value,
-          child: AlertDialog(
-            shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            title: Container(
-              child: Icon(icon, size: 100, color: !isVerification ? Colors.red : Colors.green),
+static void alertDialogUserIsNotActive(BuildContext context, IconData icon, String title, String messages, bool isVerification){
+  showGeneralDialog(
+  barrierColor: Colors.black.withOpacity(0.5),
+  transitionBuilder: (context, a1, a2, widget) {
+    return Transform.scale(
+      scale: a1.value,
+      child: Opacity(
+        opacity: a1.value,
+        child: AlertDialog(
+          shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.0)),
+          title: Container(
+            child: Icon(icon, size: 100, color: !isVerification ? Colors.red : Colors.green),
+          ),
+          content:Container(
+            height: 150,
+            child: Column(
+              children: <Widget>[
+                Text(title, style: TextStyle(color: !isVerification ? Colors.red : Colors.green, fontSize: 24)),
+                SizedBox(height: 20),
+                Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+              ],
             ),
-            content:Container(
-              height: 150,
-              child: Column(
+          ),
+          actions: <Widget>[
+            isVerification
+            ?
+              FlatButton(
+              child: Text('Verification now!', style: TextStyle(color: Colors.green)),
+              onPressed: (){
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => VerificationCard()),
+                  );
+              },
+            )
+            :
+            null,
+            FlatButton(
+              child: Text('Close', style: TextStyle(color: Colors.orange)),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+            ),
+
+          ],
+        ),
+      ),
+    );
+  },
+  transitionDuration: Duration(milliseconds: 500),
+  barrierDismissible: false,
+  barrierLabel: '',
+  context: context,
+  pageBuilder: (context, animation1, animation2) {});
+}
+
+static void alertVerification(BuildContext context, IconData icon, String title, String messages, bool isSuccess){
+  showGeneralDialog(
+  barrierColor: Colors.black.withOpacity(0.5),
+  transitionBuilder: (context, a1, a2, widget) {
+    return Transform.scale(
+      scale: a1.value,
+      child: Opacity(
+        opacity: a1.value,
+        child: AlertDialog(
+          shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.0)),
+          title: Container(
+            child: Icon(icon, size: 100, color: !isSuccess ? Colors.red : Colors.green),
+          ),
+          content:Container(
+            height: 150,
+            child: Column(
+              children: <Widget>[
+                Text(title, style: TextStyle(color: !isSuccess ? Colors.red : Colors.green, fontSize: 24)),
+                SizedBox(height: 20),
+                Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Close', style: TextStyle(color: Colors.orange)),
+              onPressed: () => Navigator.pop(context),
+            ),
+            isSuccess 
+            ?
+            FlatButton(
+              child: Text('OK!', style: TextStyle(color: Colors.green)),
+              onPressed: (){
+                Navigator.pop(context);
+                Navigator.pop(context, true);
+                
+              },
+            )
+            :
+            null
+
+          ],
+        ),
+      ),
+    );
+  },
+  transitionDuration: Duration(milliseconds: 500),
+  barrierDismissible: false,
+  barrierLabel: '',
+  context: context,
+  pageBuilder: (context, animation1, animation2) {});
+}
+
+static void alertComplainOrder(BuildContext context, IconData icon, String title, String messages, String orderID){
+  showGeneralDialog(
+  barrierColor: Colors.black.withOpacity(0.5),
+  transitionBuilder: (context, a1, a2, widget) {
+    return Transform.scale(
+      scale: a1.value,
+      child: Opacity(
+        opacity: a1.value,
+        child: AlertDialog(
+          shape: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.0)),
+          title: Container(
+            child: Icon(icon, size: 100, color: Colors.red),
+          ),
+          content: Container(
+            height: 150,
+              child: SingleChildScrollView(
+                child: Column(
                 children: <Widget>[
-                  Text(title, style: TextStyle(color: !isVerification ? Colors.red : Colors.green, fontSize: 24)),
+                  Text(title, style: TextStyle(color: Colors.red, fontSize: 24)),
                   SizedBox(height: 20),
                   Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
                 ],
               ),
-            ),
-            actions: <Widget>[
-              isVerification
-              ?
-               FlatButton(
-                child: Text('Verification now!', style: TextStyle(color: Colors.green)),
-                onPressed: (){
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => VerificationCard()),
-                    );
-                },
-              )
-              :
-              null,
-              FlatButton(
-                child: Text('Close', style: TextStyle(color: Colors.orange)),
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-              ),
-
-            ],
+            )
           ),
-        ),
-      );
-    },
-    transitionDuration: Duration(milliseconds: 500),
-    barrierDismissible: false,
-    barrierLabel: '',
-    context: context,
-    pageBuilder: (context, animation1, animation2) {});
-  }
-
-  static void alertVerification(BuildContext context, IconData icon, String title, String messages, bool isSuccess){
-    showGeneralDialog(
-    barrierColor: Colors.black.withOpacity(0.5),
-    transitionBuilder: (context, a1, a2, widget) {
-      return Transform.scale(
-        scale: a1.value,
-        child: Opacity(
-          opacity: a1.value,
-          child: AlertDialog(
-            shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            title: Container(
-              child: Icon(icon, size: 100, color: !isSuccess ? Colors.red : Colors.green),
-            ),
-            content:Container(
-              height: 150,
-              child: Column(
-                children: <Widget>[
-                  Text(title, style: TextStyle(color: !isSuccess ? Colors.red : Colors.green, fontSize: 24)),
-                  SizedBox(height: 20),
-                  Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                ],
-              ),
-            ),
-            actions: <Widget>[
+          actions: <Widget>[
               FlatButton(
-                child: Text('Close', style: TextStyle(color: Colors.orange)),
-                onPressed: () => Navigator.pop(context),
-              ),
-              isSuccess 
-              ?
-              FlatButton(
-                child: Text('OK!', style: TextStyle(color: Colors.green)),
-                onPressed: (){
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
-                  
-                },
-              )
-              :
-              null
-
-            ],
-          ),
-        ),
-      );
-    },
-    transitionDuration: Duration(milliseconds: 500),
-    barrierDismissible: false,
-    barrierLabel: '',
-    context: context,
-    pageBuilder: (context, animation1, animation2) {});
-  }
-
-  static void alertComplainOrder(BuildContext context, IconData icon, String title, String messages, String orderID){
-    showGeneralDialog(
-    barrierColor: Colors.black.withOpacity(0.5),
-    transitionBuilder: (context, a1, a2, widget) {
-      return Transform.scale(
-        scale: a1.value,
-        child: Opacity(
-          opacity: a1.value,
-          child: AlertDialog(
-            shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.0)),
-            title: Container(
-              child: Icon(icon, size: 100, color: Colors.red),
+              child: Text('Yes!', style: TextStyle(color: Colors.red)),
+              onPressed: () async {
+                await Provider.of<ItemOrders>(context).cancelOrder(orderID);
+                Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
+              },
             ),
-            content: Container(
-              height: 150,
-                child: SingleChildScrollView(
-                  child: Column(
-                  children: <Widget>[
-                    Text(title, style: TextStyle(color: Colors.red, fontSize: 24)),
-                    SizedBox(height: 20),
-                    Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
-                  ],
-                ),
-              )
+            
+            FlatButton(
+              child: Text('No', style: TextStyle(color: Colors.green)),
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
             ),
-            actions: <Widget>[
-               FlatButton(
-                child: Text('Yes!', style: TextStyle(color: Colors.red)),
-                onPressed: () async {
-                  await Provider.of<ItemOrders>(context).cancelOrder(orderID);
-                  Navigator.of(context).pop();
-                   Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
-                },
-              ),
-              
-              FlatButton(
-                child: Text('No', style: TextStyle(color: Colors.green)),
-                onPressed: (){
-                  Navigator.of(context).pop();
-                },
-              ),
 
-            ],
-          ),
+          ],
         ),
-      );
-    },
-    transitionDuration: Duration(milliseconds: 500),
-    barrierDismissible: false,
-    barrierLabel: '',
-    context: context,
-    pageBuilder: (context, animation1, animation2) {});
-  }
+      ),
+    );
+  },
+  transitionDuration: Duration(milliseconds: 500),
+  barrierDismissible: false,
+  barrierLabel: '',
+  context: context,
+  pageBuilder: (context, animation1, animation2) {});
+}
 }

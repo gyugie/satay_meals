@@ -42,10 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future onSelectNotification(String payload) async {
     notifications.cancelAll(); 
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HistoryOrdersScreen()),
-    );
+    Future.delayed(Duration.zero, () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => HistoryOrdersScreen()),
+      );
+    });
   }
 
   Future<void> _loadDataHome() async {
