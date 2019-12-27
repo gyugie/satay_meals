@@ -10,7 +10,8 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Satay Warrior"
