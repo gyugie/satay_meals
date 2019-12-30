@@ -57,15 +57,22 @@ class Auth with ChangeNotifier{
   
   Future<Map<String, double>> getLocation() async {
    
-       await location.getLocation().then( (res){
+       await location.getLocation().then( (res) async {
          currentLocation['latitude']  = res.latitude;
          currentLocation['longitude'] = res.longitude;
+
        }).catchError( (err){
-         currentLocation = null;
+         currentLocation['latitude']  = null;
+         currentLocation['longitude'] = null;
          throw err;
        });
+
+      
+
     return currentLocation;
   }
+
+
 
   Future<void> firebaseToken() async {
     await _firebaseMessaging.getToken().then( (results){
@@ -113,7 +120,7 @@ class Auth with ChangeNotifier{
         );
 
       final responseData = json.decode(response.body);
-      print(responseData);
+
       if(responseData['verified'] == false ){
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
@@ -122,6 +129,13 @@ class Auth with ChangeNotifier{
       } else if(responseData['success'] == false) {
          throw HttpException(responseData['message']);
       }
+
+      if(responseData['success'] == true){
+         if(responseData['data']['type'] != 'consumer' ){
+          throw HttpException('Your account don`t have login with this app');
+         }
+      } 
+
       //set session on local storage
       _token  = responseData['data']['token'];
       _userId = responseData['data']['id'];

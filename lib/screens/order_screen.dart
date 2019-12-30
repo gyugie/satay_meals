@@ -65,6 +65,9 @@ class _OrderScreenState extends State<OrderScreen> {
             label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
             onPressed: cartItem.item.length < 1 ? null : (){
               Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+                  // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PlaceMarkerPage( )));
+
+
             },
           ),
         )

@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'dart:math';
+import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geocoder/geocoder.dart';
+
 
 import '../screens/history_order_screen.dart';
 import '../providers/auth.dart';
@@ -27,19 +32,138 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   var _clickCount                                   = 0;              
   var _isLoading                                    = false;
   var _isInit                                       = true;
-  Map<String, double> userLocation;
+  static Map<String, double> userLocation;
   var _disabledButton                               = false;
   TextEditingController _phoneController            = new TextEditingController();
   String _userPhone                                 = '0899628974';
+  String userAddress;
 
+   @override
+  void dispose() {
+    super.dispose();
+  }
+ 
   @override
   void initState() {
     super.initState();
     _searchQuery = new TextEditingController();
   }
 
+  /**************************************************
+   *                GOOGLE MAPS INIT        
+   *************************************************/
+  static final LatLng center = const LatLng( -6.914744, 107.609810);
+  GoogleMapController controller;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  MarkerId selectedMarker;
+  int _markerIdCounter = 1;
+
+  void _onMapCreated(GoogleMapController controller) {
+    this.controller = controller;
+  }
+
+  static final CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(center.latitude, center.longitude),
+    zoom: 10,
+  );
+
+  void _onMarkerTapped(MarkerId markerId) {
+    final Marker tappedMarker = markers[markerId];
+    if (tappedMarker != null) {
+      setState(() {
+        if (markers.containsKey(selectedMarker)) {
+          final Marker resetOld = markers[selectedMarker]
+              .copyWith(iconParam: BitmapDescriptor.defaultMarker);
+          markers[selectedMarker] = resetOld;
+        }
+        selectedMarker = markerId;
+        final Marker newMarker = tappedMarker.copyWith(
+          iconParam: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueGreen,
+          ),
+        );
+        markers[markerId] = newMarker;
+      });
+    }
+  }
+
+  void _onMarkerDragEnd(MarkerId markerId, LatLng newPosition) async {
+    final Marker tappedMarker = markers[markerId];
+    if (tappedMarker != null) {
+      await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('OK'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+                content: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 66),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Old position: ${tappedMarker.position}'),
+                        Text('New position: $newPosition'),
+                      ],
+                    )));
+          });
+    }
+  }
+
+  void _addMarker(double lat, double lng) async {
+    markers.clear();
+    final int markerCount = markers.length;
+
+    if (markerCount == 2) {
+      return;
+    }
+
+    final String markerIdVal = 'marker_id_$_markerIdCounter';
+    _markerIdCounter++;
+    final MarkerId markerId = MarkerId(markerIdVal);
+
+    final Marker marker = Marker(
+      markerId: markerId,
+      draggable: true,
+      position: LatLng(
+        lat == null ? center.latitude : lat,
+        lng == null ? center.longitude  : lng,
+      ),
+      // infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
+      onTap: () {
+        // _onMarkerTapped(markerId);
+      },
+      onDragEnd: (LatLng position) {
+        // _onMarkerDragEnd(markerId, position);
+      },
+    );
+
+    //get address for type String 
+    final coordinates = new Coordinates(
+            lat == null ? center.latitude : lat,
+            lng == null ? center.longitude : lng
+          );
+    var addresses   = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first       = addresses.first;
+      // print(' ${first.locality}, ${first.adminArea}, ${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
+
+    setState(() {
+      markers[markerId] = marker;
+      userAddress = first.addressLine;
+    });
+
+  }
+
+  /**************************************************
+   *                GOOGLE MAPS INIT        
+   *************************************************/
+  
+ 
+
   void _startSearch() {
-    print("open search box");
     ModalRoute
         .of(context)
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
@@ -132,15 +256,22 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     ];
   }
 
+  void _currentLocation() async {
+      await Provider.of<User>(context).getLocation().then((value){
+        setState(() {
+            userLocation = value;
+          });
+          _addMarker(userLocation['latitude'], userLocation['longitude']);
+        });
+  }
+
   
 
   @override
   void didChangeDependencies() {
     if(_isInit){
       // for get location latitude longitude
-      Provider.of<User>(context).getLocation().then((value){
-          userLocation = value;
-      });
+     _currentLocation();
 
     }
     _isInit = false;
@@ -173,6 +304,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       _setHeigtItemList = 0.65;
     }
 
+   
+
     return new Scaffold(
       // key: scaffoldKey,
       appBar: new AppBar(
@@ -180,155 +313,196 @@ class _CheckoutScreenState extends State<CheckoutScreen>
         title: _isSearching ? _buildSearchField() : _buildTitle(context),
         actions: _buildActions(),
       ),
-      body: SingleChildScrollView(
+      body: 
+      _isSearching 
+      ?
+      Container(
+        height: double.infinity,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // new Text(
-            //   '$searchQuery',
-            //   style: Theme.of(context).textTheme.display1,
-            // ),
-
-            Container(
-              height: deviceSize.height * 0.3,
-              color: Colors.black.withOpacity(0.8),
-              child: Center(
-                child: Text('Maps Will Available Soon'),
-              ),
-            ),
-
-            Container(
-              padding: EdgeInsets.all(15),
-              child: Text('Order Detail', style: Theme.of(context).textTheme.title),
-            ),
-            Card(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  children: <Widget>[
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Address', style: Theme.of(context).textTheme.title),
-                      ],
-                    ),
-                    Divider(color: Colors.grey[100]),
-                    Text('Jl. Bojong Koneng Makmur Barat No.15 Kelurahan Sukapada Kecamatan Cibeunying Kidul Bandung 40125'),
-                  ],
-                )
-              )
-            ),
-
-             Card(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Phone number', style: Theme.of(context).textTheme.title),
-                        SizedBox(
-                          width: 70,
-                          height: 20,
-                          child: FlatButton(
-                            child: Text('Edit', style: Theme.of(context).textTheme.title),
-                            onPressed: _showDialogPhone,
-                          ),
-                        )
-                      ],
-                    ),
-                    Divider(color: Colors.grey[100]),
-                    Text(_userPhone ),
-                  ],
-                )
-              )
-            ),
-
-            Card(
-              child: Container(
-                width: double.infinity,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Payment Detail', style: Theme.of(context).textTheme.title),
-                      ],
-                    ),
-                    Divider(color: Colors.grey[100]),
-
-                    /**
-                     * List Order Item
-                     */
-                    Container(
-                      height: deviceSize.height * _setHeigtItemList,
-                      child: ListView.builder(
-                        itemCount: itemLength,
-                        itemBuilder: (BuildContext context, index) {
-                        return new Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
-                              Text('RM ${itemCart.item.values.toList()[index].subTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 16)),
-                            ],
-                          );
-                        }
-                      ),
-                    ),
-                   
-                    /**
-                     * Total Item
-                     */
-                    Divider(color: Colors.grey[100]),
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Total', style: Theme.of(context).textTheme.title),
-                        Text('RM ${itemCart.getTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 18)),
-                      ],
-                    ),
-                    
-                  ],
-                )
-                
-              )
-            ),
-
-            SizedBox(height: 80),
-
+            Text('Order Detail', style: Theme.of(context).textTheme.title),
           ],
+        )
+      )
+      :
+      AnimatedOpacity(
+        opacity: _isSearching ? 0.0 : 1.0,
+        duration: Duration(milliseconds: 2000),
+        child: Container(
+          height: deviceSize.height,
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: deviceSize.height * 0.5,
+                color: Colors.black.withOpacity(0.8),
+                child: GoogleMap(
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: _kGooglePlex,
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  // TODO(iskakaushik): Remove this when collection literals makes it to stable.
+                  // https://github.com/flutter/flutter/issues/28312
+                  // ignore: prefer_collection_literals
+                  markers: Set<Marker>.of(markers.values),
+                  onTap: (val){
+                    _addMarker(val.latitude, val.longitude);
+                  },
+                ),
+              ),
+              Container(
+                height: deviceSize.height * 0.30,
+                color: Colors.black.withOpacity(0.8),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(15),
+                        child: Text('Order Detail', style: Theme.of(context).textTheme.title),
+                      ),
+                      Card(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: <Widget>[
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('Address', style: Theme.of(context).textTheme.title),
+                                ],
+                              ),
+                              Divider(color: Colors.grey[100]),
+                              Text('${userAddress}'),
+                            ],
+                          )
+                        )
+                      ),
+
+                      Card(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('Phone number', style: Theme.of(context).textTheme.title),
+                                  SizedBox(
+                                    width: 70,
+                                    height: 20,
+                                    child: FlatButton(
+                                      child: Text('Edit', style: Theme.of(context).textTheme.title),
+                                      onPressed: _showDialogPhone,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Divider(color: Colors.grey[100]),
+                              Text(_userPhone ),
+                            ],
+                          )
+                        )
+                      ),
+
+                      Card(
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('Payment Detail', style: Theme.of(context).textTheme.title),
+                                ],
+                              ),
+                              Divider(color: Colors.grey[100]),
+
+                              /**
+                              * List Order Item
+                              */
+                              Container(
+                                height: deviceSize.height * _setHeigtItemList,
+                                child: ListView.builder(
+                                  itemCount: itemLength,
+                                  itemBuilder: (BuildContext context, index) {
+                                  return new Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
+                                        Text('RM ${itemCart.item.values.toList()[index].subTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 16)),
+                                      ],
+                                    );
+                                  }
+                                ),
+                              ),
+                            
+                              /**
+                              * Total Item
+                              */
+                              Divider(color: Colors.grey[100]),
+                              new Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('Total', style: Theme.of(context).textTheme.title),
+                                  Text('RM ${itemCart.getTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 18)),
+                                ],
+                              ),
+                              
+                            ],
+                          )
+                          
+                        )
+                      ),
+
+                      SizedBox(height: 80),
+
+                    ],
+                  ),
+                ),
+              ),
+              
+            ],
+          )
         ),
       ),
-      floatingActionButton: Container(
-        width: deviceSize.width * 0.9,
-        child: FloatingActionButton.extended(
+      floatingActionButton: AnimatedOpacity(
+        opacity: _isSearching ? 0.0 : 1.0,
+        duration: Duration(milliseconds: 5000),
+        child : 
+          _isSearching 
+          ? 
+          null 
+          : 
+          Container(
+            width: deviceSize.width * 0.9,
+            child: FloatingActionButton.extended(
 
-          backgroundColor: _disabledButton ? Colors.grey : Colors.green,
-          icon: Icon(Icons.attach_money, color: Colors.white,),
-          label: Text('Buy', style: Theme.of(context).textTheme.headline),
-          onPressed: _disabledButton ? null : (){
+              backgroundColor: _disabledButton ? Colors.grey : Colors.green,
+              icon: Icon(Icons.attach_money, color: Colors.white,),
+              label: Text('Buy', style: Theme.of(context).textTheme.headline),
+              onPressed: _disabledButton ? null : (){
 
-           _confirmModalBottom(
-              authUser.userId, 
-              '', 
-              userLocation['latitude'].toString(), 
-              userLocation['longitude'].toString(),
-              _userPhone,
-              myWallet, 
-              itemCart.getTotal,
-              itemCart.item.values.toList()
-             );
-          
-          },
+              _confirmModalBottom(
+                  authUser.userId, 
+                  '', 
+                  userLocation['latitude'].toString(), 
+                  userLocation['longitude'].toString(),
+                  _userPhone,
+                  myWallet, 
+                  itemCart.getTotal,
+                  itemCart.item.values.toList()
+                );
+              
+              },
+            ),
+          ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -528,4 +702,3 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     );
   }
 }
-
