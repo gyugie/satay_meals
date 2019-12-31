@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:google_maps_webservice/places.dart';
 
 
 import '../screens/history_order_screen.dart';
@@ -14,6 +15,10 @@ import '../screens/home_screen.dart';
 import '../providers/cart_item.dart';
 import '../providers/user.dart';
 import '../providers/orders.dart';
+import '../providers/maps.dart';
+
+const kGoogleApiKey = "AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo";
+
 
 class CheckoutScreen extends StatefulWidget {
   static const routeName = '/checkout-screen';
@@ -21,6 +26,8 @@ class CheckoutScreen extends StatefulWidget {
   @override
   _CheckoutScreenState createState() => _CheckoutScreenState();
 }
+final homeScaffoldKey = new GlobalKey<ScaffoldState>();
+final searchScaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _CheckoutScreenState extends State<CheckoutScreen> 
   with SingleTickerProviderStateMixin {
@@ -57,7 +64,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId selectedMarker;
   int _markerIdCounter = 1;
-
+  double latitudeFromString  = null;
+  double longitudeFromString = null;
   void _onMapCreated(GoogleMapController controller) {
     this.controller = controller;
   }
@@ -113,24 +121,45 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     }
   }
 
-  void _addMarker(double lat, double lng) async {
+  void _addMarker(double latitude, double longitude, bool fromQueryString, String queryString) async {
     markers.clear();
-    final int markerCount = markers.length;
+    
 
-    if (markerCount == 2) {
-      return;
+    if(fromQueryString){
+      //get address for type String to coordinate 
+      var addresses           = await Geocoder.local.findAddressesFromQuery(queryString);
+      var first               = addresses.first;  // print("${first.featureName} : ${first.coordinates} : ${first.addressLine}");
+      setState(() {
+        userAddress               = first.addressLine;
+        userLocation['latitude']  = first.coordinates.latitude;
+        userLocation['longitude'] = first.coordinates.longitude;
+      });
+    }else{
+      //get address for type coordinate to String 
+      final coordinates = new Coordinates(
+              latitude == null ? center.latitude : latitude,
+              longitude == null ? center.longitude : longitude
+            );
+      var addresses   = await Geocoder.local.findAddressesFromCoordinates(coordinates);
+      var first       = addresses.first;
+
+      setState(() {
+        userAddress = first.addressLine;
+        userLocation['latitude']  = first.coordinates.latitude;
+        userLocation['longitude'] = first.coordinates.longitude;
+      });  // print(' ${first.locality}, ${first.adminArea}, ${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
     }
 
     final String markerIdVal = 'marker_id_$_markerIdCounter';
-    _markerIdCounter++;
+                 _markerIdCounter++;
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final Marker marker = Marker(
       markerId: markerId,
       draggable: true,
       position: LatLng(
-        lat == null ? center.latitude : lat,
-        lng == null ? center.longitude  : lng,
+        latitude == null ? (fromQueryString == true) ? userLocation['latitude'] : center.latitude : latitude,
+        longitude == null ? (fromQueryString == true) ? userLocation['longitude'] : center.longitude  : longitude,
       ),
       // infoWindow: InfoWindow(title: markerIdVal, snippet: '*'),
       onTap: () {
@@ -141,20 +170,11 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       },
     );
 
-    //get address for type String 
-    final coordinates = new Coordinates(
-            lat == null ? center.latitude : lat,
-            lng == null ? center.longitude : lng
-          );
-    var addresses   = await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first       = addresses.first;
-      // print(' ${first.locality}, ${first.adminArea}, ${first.subLocality}, ${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, ${first.subThoroughfare}');
 
     setState(() {
-      markers[markerId] = marker;
-      userAddress = first.addressLine;
-    });
-
+        markers[markerId] = marker;
+      });
+      _stopSearching();
   }
 
   /**************************************************
@@ -163,7 +183,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   
  
 
-  void _startSearch() {
+  void _startSearch() async {
     ModalRoute
         .of(context)
         .addLocalHistoryEntry(new LocalHistoryEntry(onRemove: _stopSearching));
@@ -171,6 +191,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     setState(() {
       _isSearching = true;
     });
+    
   }
 
   void _stopSearching() {
@@ -222,12 +243,16 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     );
   }
 
-  void updateSearchQuery(String newQuery) {
-
+  Future<void> updateSearchQuery(String newQuery) async {
     setState(() {
       searchQuery = newQuery;
     });
-    print("search query " + newQuery);
+
+    try{
+      await Provider.of<MapsAutocomplete>(context).findAddress(context, newQuery, kGoogleApiKey);
+    }catch (err){
+      _alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
+    }
 
   }
 
@@ -237,12 +262,13 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       return <Widget>[
         new IconButton(
           icon: const Icon(Icons.clear),
-          onPressed: () {
+          onPressed: () async {
             if (_searchQuery == null || _searchQuery.text.isEmpty) {
               Navigator.pop(context);
               return;
             }
             _clearSearchQuery();
+             
           },
         ),
       ];
@@ -251,7 +277,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     return <Widget>[
       new IconButton(
         icon: const Icon(Icons.search),
-        onPressed: _startSearch,
+        onPressed: ()  {
+          _startSearch();
+        },
       ),
     ];
   }
@@ -261,11 +289,10 @@ class _CheckoutScreenState extends State<CheckoutScreen>
         setState(() {
             userLocation = value;
           });
-          _addMarker(userLocation['latitude'], userLocation['longitude']);
+          _addMarker(userLocation['latitude'], userLocation['longitude'], false, null);
         });
   }
 
-  
 
   @override
   void didChangeDependencies() {
@@ -280,11 +307,12 @@ class _CheckoutScreenState extends State<CheckoutScreen>
 
   @override
   Widget build(BuildContext context) {
-    final itemCart        = Provider.of<CartItem>(context, listen: false); 
-    final authUser        = Provider.of<Auth>(context, listen: false);
-    final myWallet        = Provider.of<User>(context).myWallet;
-    final deviceSize      = MediaQuery.of(context).size;
-    final int itemLength  = itemCart.item.length;
+    final itemCart            = Provider.of<CartItem>(context, listen: false); 
+    final authUser            = Provider.of<Auth>(context, listen: false);
+    final myWallet            = Provider.of<User>(context).myWallet;
+    final deviceSize          = MediaQuery.of(context).size;
+    final int itemLength      = itemCart.item.length;
+    final recomendationAddress= Provider.of<MapsAutocomplete>(context).recomendAddress;
 
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
@@ -304,11 +332,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       _setHeigtItemList = 0.65;
     }
 
-   
-
-    return new Scaffold(
+    return Scaffold(
       // key: scaffoldKey,
-      appBar: new AppBar(
+      appBar: AppBar(
         leading: _isSearching ? const BackButton() : null,
         title: _isSearching ? _buildSearchField() : _buildTitle(context),
         actions: _buildActions(),
@@ -318,11 +344,32 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       ?
       Container(
         height: double.infinity,
-        child: Column(
-          children: <Widget>[
-            Text('Order Detail', style: Theme.of(context).textTheme.title),
-          ],
+        child: 
+        recomendationAddress.length == 0
+        ?
+        Center(
+          child: Text('Address Not Found...'),
         )
+        :
+        ListView.builder(
+          itemCount: recomendationAddress.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: ListTile(
+                leading: Icon(Icons.place),
+                title: Text('${recomendationAddress[index].description}'),
+                onTap: (){
+                  _addMarker(null, null, true, recomendationAddress[index].description);
+                },
+              )
+            );
+          },
+        )
+        // Column(
+        //   children: <Widget>[
+        //     Text('List Address', style: Theme.of(context).textTheme.title),
+        //   ],
+        // )
       )
       :
       AnimatedOpacity(
@@ -345,7 +392,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                   // ignore: prefer_collection_literals
                   markers: Set<Marker>.of(markers.values),
                   onTap: (val){
-                    _addMarker(val.latitude, val.longitude);
+                    _addMarker(val.latitude, val.longitude, false, null);
                   },
                 ),
               ),
@@ -584,7 +631,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                           try{
 
                           //processing order
-                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, 'jl BKM Barat no 123', latitude, longitude, int.parse(phone), totalPayment.toStringAsFixed(2), items);
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, userAddress, latitude, longitude, int.parse(phone), totalPayment.toStringAsFixed(2), items);
                           _alertDialogWithIcon(context, Icons.check_circle_outline, 'Confirmation', 'Congratulation payment success', false);
 
 

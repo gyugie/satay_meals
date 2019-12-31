@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:satay_meals/providers/maps.dart';
 
 import './widgets/profile_edit.dart';
 import './screens/profile_screen.dart';
@@ -63,6 +64,14 @@ class MyApp extends StatelessWidget {
             auth.token,
             auth.role,
             auth.userId,
+          ), create: (BuildContext context) { return;},
+        ),
+        ChangeNotifierProxyProvider<Auth, MapsAutocomplete>(
+          update: (ctx, auth, cachedAddressList) => MapsAutocomplete(
+            auth.token,
+            auth.role,
+            auth.userId,
+            cachedAddressList == null ? [] : cachedAddressList.recomendAddress
           ), create: (BuildContext context) { return;},
         )
       ],
