@@ -91,7 +91,12 @@ class _OrderItemState extends State<OrderItem> {
                     border: InputBorder.none
                   ),
                   onChanged: (value){
-                    if(value.isEmpty || value == ''){
+                    if(value.contains('-') || value.contains('.') || value.contains(',')){
+                      setState(() {
+                        _quantityController.text = '';
+                      });
+                    }
+                    if(value.isEmpty || value == '' ){
                       foods.removingSingleItem(widget.id);
                     }
 
