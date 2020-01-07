@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:satay_meals/screens/history_order_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 
 import '../utils/firebase_notification.dart';
 import '../widgets/custom_notification.dart';
@@ -10,6 +12,8 @@ import '../widgets/drawer.dart';
 import '../providers/auth.dart';
 import '../providers/products.dart';
 import '../providers/user.dart';
+
+const String URI = 'https://adminbe.sw1975.com.my:3000/';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,7 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   var _isInit = true;
   var _isLoading = false;
-
+  IO.Socket socket = IO.io(URI, <String, dynamic>{
+    'transports': ['websocket'],
+    'extraHeaders': {'foo':'bar'} // optional,
+    
+  });
+  List _user = [];
+  String temp;
+  var ids = '26';
 
   @override  
   void initState() {  
@@ -29,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     new Future.delayed(Duration.zero,() {
       initFirebase(context);
     });
+    initSocket();
      //Init local notification
     final settingsAndroid = AndroidInitializationSettings('app_icon');
     final settingsIOS     = IOSInitializationSettings(
@@ -38,6 +50,36 @@ class _HomeScreenState extends State<HomeScreen> {
               InitializationSettings(settingsAndroid, settingsIOS),
               onSelectNotification: onSelectNotification);
 
+  }
+
+  void initSocket()  {
+    print('get_loc_'+ ids);
+    socket.on('connect', (_) {
+     socket.on('get_loc_'+ ids, (data)  {
+        // var stringMap =  data.cast<String, dynamic>();
+          // if(temp == stringMap['data']['name'].toString()){
+          //   return;
+          // } else {
+          //   setState(() {
+          //     temp = stringMap['data']['name'];
+          //   });
+          //     _user.add({'date': stringMap['data']['name']});
+          // }
+        print('user ${data}');
+
+        });
+
+        socket.on('client--left', (data) {
+          print(data);
+        });
+
+
+      });
+                 
+      socket.on('event', (data) => print('disconnect'));
+      socket.on('disconnect', (_) => print('disconnect'));
+      socket.on('fromServer', (_) => print(_));
+      socket.connect();
   }
 
   Future onSelectNotification(String payload) async {
@@ -69,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
     if(_isInit){
         _isLoading = true;
         _loadDataHome();
+        socket.emit('room', '${ids}');
+
     }
 
     _isInit = false;
