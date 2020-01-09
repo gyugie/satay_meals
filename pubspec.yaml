@@ -80,6 +80,8 @@ flutter:
    - assets/images/satay-vector.png
    - assets/images/cartempty.png
    - assets/images/user-unknown.jpeg
+   - assets/images/driver.png
+   - assets/images/scooter-delivery.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

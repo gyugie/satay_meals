@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   });
   List _user = [];
   String temp;
-  var ids = '26';
+  var ids = '27';
 
   @override  
   void initState() {  
@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     new Future.delayed(Duration.zero,() {
       initFirebase(context);
     });
-    initSocket();
+    // initSocket();
      //Init local notification
     final settingsAndroid = AndroidInitializationSettings('app_icon');
     final settingsIOS     = IOSInitializationSettings(
@@ -52,35 +52,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  void initSocket()  {
-    print('get_loc_'+ ids);
-    socket.on('connect', (_) {
-     socket.on('get_loc_'+ ids, (data)  {
-        // var stringMap =  data.cast<String, dynamic>();
-          // if(temp == stringMap['data']['name'].toString()){
-          //   return;
-          // } else {
-          //   setState(() {
-          //     temp = stringMap['data']['name'];
-          //   });
-          //     _user.add({'date': stringMap['data']['name']});
-          // }
-        print('user ${data}');
+  // void initSocket()  {
+  //   print('get_loc_'+ ids);
+  //   socket.on('connect', (_) {
+  //     print('connect');
+  //     socket.on('get_loc_'+ ids, (data)  {
+          
+  //         print('user ${data}');
 
-        });
+  //       });
 
-        socket.on('client--left', (data) {
-          print(data);
-        });
-
-
-      });
+  //   });
                  
-      socket.on('event', (data) => print('disconnect'));
-      socket.on('disconnect', (_) => print('disconnect'));
-      socket.on('fromServer', (_) => print(_));
-      socket.connect();
-  }
+  //     socket.on('event', (data) => print('disconnect'));
+  //     socket.on('disconnect', (_) => print('disconnect'));
+  //     socket.on('fromServer', (_) => print(_));
+  //     socket.connect();
+  // }
 
   Future onSelectNotification(String payload) async {
     notifications.cancelAll(); 
@@ -111,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(_isInit){
         _isLoading = true;
         _loadDataHome();
-        socket.emit('room', '${ids}');
+        // socket.emit('room', '${ids}');
 
     }
 
