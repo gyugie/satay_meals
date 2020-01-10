@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+
+
 import '../providers/products.dart';
 import '../widgets/product_item.dart';
 
 class ProductList extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     var products = Provider.of<Products>(context, listen: false).products;
