@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:quiver/async.dart';
 
+import '../widgets/custom_notification.dart';
 import '../utils/Uint8List.dart';
 
 const kGoogleApiKey = "AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo";
@@ -23,6 +25,10 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
   var _isLoading  = true;
   List _riderPositionTemp = [];
   int _counter    = 0;
+  int _start = 10;
+  int _current = 10;
+
+
   @override  
   void initState() {  
     super.initState();  
@@ -74,6 +80,28 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
       socket.connect();
   }
 
+  void startTimer() {
+    CountdownTimer countDownTimer = new CountdownTimer(
+      new Duration(seconds: _start),
+      new Duration(seconds: 1),
+    );
+
+    var sub = countDownTimer.listen(null);
+    sub.onData((duration) {
+      setState(() { 
+        _current = _start - duration.elapsed.inSeconds; 
+        });
+    });
+
+    sub.onDone(() {
+      if(_riderPositionTemp.length == 0){
+       CustomNotif.alertDialogWithIcon(context, Icons.warning, 'Tracking Not Available Now', 'rider is offline, please try again later', true, true);
+      }
+      sub.cancel();
+    });
+  }
+
+
   /**************************************************
    *                GOOGLE MAPS INIT        
    *************************************************/
@@ -107,6 +135,7 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
     // TODO: implement didChangeDependencies
     if(_isInit){
       socket.emit('room', widget.orderID);
+      startTimer();
     }
 
     _isInit = false;
