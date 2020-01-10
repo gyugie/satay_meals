@@ -45,7 +45,6 @@ class _HistoryItemState extends State<HistoryItem> {
   Widget build(BuildContext context) {
     final deviceSize        = MediaQuery.of(context).size;
     final orientation       = MediaQuery.of(context).orientation;
-      print(widget.statusOrder);
     switch (widget.statusOrder) {
       case 'Cancelled':
             setLabelColors = Colors.red;
@@ -80,7 +79,7 @@ class _HistoryItemState extends State<HistoryItem> {
       child: Card(
         elevation: 5,
         child: Container(
-        height: orientation == Orientation.portrait ? deviceSize.height * 0.21 : deviceSize.height * 0.4 ,
+        height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.4 ,
         padding: EdgeInsets.all(15),
           child: Column(
             children: <Widget>[

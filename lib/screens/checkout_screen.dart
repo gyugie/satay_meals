@@ -270,8 +270,6 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     final recomendationAddress  = Provider.of<MapsAutocomplete>(context).recomendAddress;
     final bool isKeyboardShowing= MediaQuery.of(context).viewInsets.vertical > 0;
 
-
-    print(isKeyboardShowing);
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
@@ -359,7 +357,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
               Container()
               :
               Container(
-                  height: deviceSize.height * 0.48,
+                  height: deviceSize.height * 0.45,
                   color: Colors.black.withOpacity(0.8),
                   child: SingleChildScrollView(
                     child: Column(
@@ -601,7 +599,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                           try{
 
                           //processing order
-                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, userAddress, latitude, longitude, int.parse(phone), totalPayment.toStringAsFixed(2), items);
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, userAddress, latitude, longitude, phone, totalPayment.toStringAsFixed(2), items);
                           _alertDialogWithIcon(context, Icons.check_circle_outline, 'Confirmation', 'Congratulation payment success', false);
 
 
