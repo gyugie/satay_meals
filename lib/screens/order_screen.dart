@@ -66,8 +66,6 @@ class _OrderScreenState extends State<OrderScreen> {
             onPressed: cartItem.item.length < 1 ? null : (){
               Navigator.of(context).pushNamed(CheckoutScreen.routeName);
                   // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PlaceMarkerPage( )));
-
-
             },
           ),
         )
