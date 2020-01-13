@@ -20,14 +20,15 @@ class TrackingOrderScreen extends StatefulWidget {
   _TrackingOrderScreenState createState() => _TrackingOrderScreenState();
 }
 
-class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
+class _TrackingOrderScreenState extends State<TrackingOrderScreen> with TickerProviderStateMixin {
   var _isInit     = true;
   var _isLoading  = true;
   List _riderPositionTemp = [];
   int _counter    = 0;
   int _start = 10;
   int _current = 10;
-
+  AnimationController controllerAnimation;
+  Animation<double> animation;
 
   @override  
   void initState() {  
@@ -36,7 +37,14 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
     //Init local notification
     initSocket(widget.orderID);
     initCustomIcon();
+
+    controllerAnimation = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controllerAnimation, curve: Curves.easeInToLinear);
+
+    controllerAnimation.forward();
   }
+
   /**************************************************
    *                SOCKET INIT        
    *************************************************/
@@ -95,7 +103,7 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
 
     sub.onDone(() {
       if(_riderPositionTemp.length == 0){
-       CustomNotif.alertDialogWithIcon(context, Icons.warning, 'Tracking Not Available Now', 'rider is offline, please try again later', true, true);
+       CustomNotif.alertDialogWithIcon(context, Icons.warning, 'Warning', 'tracking not available now, rider is offline please try again later', true, true);
       }
       sub.cancel();
     });
@@ -161,33 +169,45 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> {
         iconTheme: new IconThemeData(color: Colors.green),
         title: Text('Tracking Your Order', style: Theme.of(context).textTheme.title),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: 
       _isLoading 
       ?
-      Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+      Center(
+        child: FadeTransition(
+            opacity: animation,
+            child: Container(
+              height: deviceSize.height * 0.8,
+              width: deviceSize.width * 0.8,
+              child: Image.asset('assets/images/sate.gif'),
+          )
+        ),
+      )
       :
       Container(
         height: deviceSize.height,
-        child: GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: _kGooglePlex,
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          // TODO(iskakaushik): Remove this when collection literals makes it to stable.
-          // https://github.com/flutter/flutter/issues/28312
-          // ignore: prefer_collection_literals
-          // markers: Set<Marker>.of(markers.values),
-          markers: Set<Marker>.of(
-            <Marker>[
-              Marker(
-                draggable: false,
-                markerId: MarkerId("1"),
-                position: LatLng(latitudeFromString, longitudeFromString ),
-                icon: BitmapDescriptor.fromBytes(markerIcon),
-              )
-            ],
-          ),
-          
+        child: FadeTransition(
+          opacity: animation,
+          child: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kGooglePlex,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            // TODO(iskakaushik): Remove this when collection literals makes it to stable.
+            // https://github.com/flutter/flutter/issues/28312
+            // ignore: prefer_collection_literals
+            // markers: Set<Marker>.of(markers.values),
+            markers: Set<Marker>.of(
+              <Marker>[
+                Marker(
+                  draggable: false,
+                  markerId: MarkerId("1"),
+                  position: LatLng(latitudeFromString, longitudeFromString ),
+                  icon: BitmapDescriptor.fromBytes(markerIcon),
+                )
+              ],
+            ),
+          )
         ),
       ),
     );
