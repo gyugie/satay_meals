@@ -12,8 +12,19 @@ class OrderScreen extends StatefulWidget {
   _OrderScreenState createState() => _OrderScreenState();
 }
 
-class _OrderScreenState extends State<OrderScreen> {
+class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin {
   var _isInit = true;
+  AnimationController controller;
+  Animation<double> animation;
+
+  void initState(){
+    super.initState();
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   @override
   void didChangeDependencies() {
@@ -46,30 +57,34 @@ class _OrderScreenState extends State<OrderScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: deviceSize.height * 0.78 ,
-              child: OrderList()
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: deviceSize.height * 0.78 ,
+                  child: FadeTransition(
+                    opacity: animation,
+                    child: OrderList()
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: Container(
-        width: deviceSize.width * 0.9,
-        child: AnimatedOpacity(
-          opacity: cartItem.item.length > 0 ? 1.0 : 0.0,
-          duration: Duration(milliseconds: 1000),
-          child: FloatingActionButton.extended(
-            backgroundColor: Colors.green,
-            label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
-            onPressed: cartItem.item.length < 1 ? null : (){
-              Navigator.of(context).pushNamed(CheckoutScreen.routeName);
-                  // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PlaceMarkerPage( )));
-            },
           ),
-        )
-      ),
+       
+        floatingActionButton: Container(
+          width: deviceSize.width * 0.9,
+          child: AnimatedOpacity(
+            opacity: cartItem.item.length > 0 ? 1.0 : 0.0,
+            duration: Duration(milliseconds: 1000),
+            child: FloatingActionButton.extended(
+              backgroundColor: Colors.green,
+              label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
+              onPressed: cartItem.item.length < 1 ? null : (){
+                Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+                    // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PlaceMarkerPage( )));
+              },
+            ),
+          )
+        ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

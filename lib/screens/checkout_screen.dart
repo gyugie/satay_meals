@@ -31,7 +31,7 @@ final homeScaffoldKey = new GlobalKey<ScaffoldState>();
 final searchScaffoldKey = new GlobalKey<ScaffoldState>();
 
 class _CheckoutScreenState extends State<CheckoutScreen> 
-  with SingleTickerProviderStateMixin {
+  with SingleTickerProviderStateMixin, TickerProviderStateMixin {
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>(debugLabel: '/checkout-screen' );
   TextEditingController _searchQuery;
   bool _isSearching                                 = false;
@@ -45,8 +45,10 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   TextEditingController _phoneController            = new TextEditingController();
   String _userPhone                                 = '';
   String userAddress;
+  AnimationController controllerAnimation;
+  Animation<double> animation;
 
-   @override
+  @override
   void dispose() {
     super.dispose();
   }
@@ -55,6 +57,13 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   void initState() {
     super.initState();
     _searchQuery = new TextEditingController();
+
+    controllerAnimation = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controllerAnimation, curve: Curves.easeInToLinear);
+
+    controllerAnimation.forward();
+
   }
 
   /**************************************************
@@ -328,160 +337,162 @@ class _CheckoutScreenState extends State<CheckoutScreen>
         // )
       )
       :
-      AnimatedOpacity(
-        opacity: _isSearching ? 0.0 : 1.0,
-        duration: Duration(milliseconds: 2000),
-        child: Container(
-          height: deviceSize.height,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: deviceSize.height * 0.40,
-                color: Colors.black.withOpacity(0.8),
-                child: GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: _kGooglePlex,
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  // TODO(iskakaushik): Remove this when collection literals makes it to stable.
-                  // https://github.com/flutter/flutter/issues/28312
-                  // ignore: prefer_collection_literals
-                  markers: Set<Marker>.of(markers.values),
-                  onTap: (val){
-                    _addMarker(val.latitude, val.longitude, false, null);
-                  },
-                ),
-              ),
-              isKeyboardShowing
-              ?
-              Container()
-              :
-              Container(
-                  height: deviceSize.height * 0.45,
+      FadeTransition(
+        opacity: animation,
+        child: AnimatedOpacity(
+          opacity: _isSearching ? 0.0 : 1.0,
+          duration: Duration(milliseconds: 2000),
+          child: Container(
+            height: deviceSize.height,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: deviceSize.height * 0.40,
                   color: Colors.black.withOpacity(0.8),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          padding: EdgeInsets.all(15),
-                          child: Text('Order Detail', style: Theme.of(context).textTheme.title),
-                        ),
-                        Card(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              children: <Widget>[
-                                new Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('Address', style: Theme.of(context).textTheme.title),
-                                  ],
-                                ),
-                                Divider(color: Colors.grey[100]),
-                                _isLoading
-                                ?
-                                CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
-                                :
-                                Text('${userAddress}'),
-                              ],
-                            )
-                          )
-                        ),
-
-                        Card(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                new Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('Phone number', style: Theme.of(context).textTheme.title),
-                                    SizedBox(
-                                      width: 70,
-                                      height: 20,
-                                      child: FlatButton(
-                                        child: Text('Edit', style: Theme.of(context).textTheme.title),
-                                        onPressed: _showDialogPhone,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Divider(color: Colors.grey[100]),
-                                Text(_userPhone ),
-                              ],
-                            )
-                          )
-                        ),
-
-                        Card(
-                          child: Container(
-                            width: double.infinity,
-                            padding: EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                new Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('Payment Detail', style: Theme.of(context).textTheme.title),
-                                  ],
-                                ),
-                                Divider(color: Colors.grey[100]),
-
-                                /**
-                                * List Order Item
-                                */
-                                Container(
-                                  height: deviceSize.height * _setHeigtItemList,
-                                  child: ListView.builder(
-                                    itemCount: itemLength,
-                                    itemBuilder: (BuildContext context, index) {
-                                    return new Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
-                                          Text('RM ${itemCart.item.values.toList()[index].subTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 16)),
-                                        ],
-                                      );
-                                    }
-                                  ),
-                                ),
-                              
-                                /**
-                                * Total Item
-                                */
-                                Divider(color: Colors.grey[100]),
-                                new Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('Total', style: Theme.of(context).textTheme.title),
-                                    Text('RM ${itemCart.getTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 18)),
-                                  ],
-                                ),
-                                
-                              ],
-                            )
-                            
-                          )
-                        ),
-
-                        SizedBox(height: 50),
-
-                      ],
-                    ),
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: _kGooglePlex,
+                    myLocationEnabled: true,
+                    myLocationButtonEnabled: true,
+                    // TODO(iskakaushik): Remove this when collection literals makes it to stable.
+                    // https://github.com/flutter/flutter/issues/28312
+                    // ignore: prefer_collection_literals
+                    markers: Set<Marker>.of(markers.values),
+                    onTap: (val){
+                      _addMarker(val.latitude, val.longitude, false, null);
+                    },
                   ),
                 ),
-              
-            ],
-          )
+                isKeyboardShowing
+                ?
+                Container()
+                :
+                Container(
+                    height: deviceSize.height * 0.45,
+                    color: Colors.black.withOpacity(0.8),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(15),
+                            child: Text('Order Detail', style: Theme.of(context).textTheme.title),
+                          ),
+                          Card(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                children: <Widget>[
+                                  new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Address', style: Theme.of(context).textTheme.title),
+                                    ],
+                                  ),
+                                  Divider(color: Colors.grey[100]),
+                                  _isLoading
+                                  ?
+                                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                                  :
+                                  Text('${userAddress}'),
+                                ],
+                              )
+                            )
+                          ),
+
+                          Card(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Phone number', style: Theme.of(context).textTheme.title),
+                                      SizedBox(
+                                        width: 70,
+                                        height: 20,
+                                        child: FlatButton(
+                                          child: Text('Edit', style: Theme.of(context).textTheme.title),
+                                          onPressed: _showDialogPhone,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Divider(color: Colors.grey[100]),
+                                  Text(_userPhone ),
+                                ],
+                              )
+                            )
+                          ),
+
+                          Card(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Payment Detail', style: Theme.of(context).textTheme.title),
+                                    ],
+                                  ),
+                                  Divider(color: Colors.grey[100]),
+
+                                  /**
+                                  * List Order Item
+                                  */
+                                  Container(
+                                    height: deviceSize.height * _setHeigtItemList,
+                                    child: ListView.builder(
+                                      itemCount: itemLength,
+                                      itemBuilder: (BuildContext context, index) {
+                                      return new Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('${itemCart.item.values.toList()[index].name} X ${itemCart.item.values.toList()[index].quantity}', style: TextStyle(fontSize: 16)),
+                                            Text('RM ${itemCart.item.values.toList()[index].subTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 16)),
+                                          ],
+                                        );
+                                      }
+                                    ),
+                                  ),
+                                
+                                  /**
+                                  * Total Item
+                                  */
+                                  Divider(color: Colors.grey[100]),
+                                  new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Total', style: Theme.of(context).textTheme.title),
+                                      Text('RM ${itemCart.getTotal.toStringAsFixed(2)}', style: TextStyle(fontSize: 18)),
+                                    ],
+                                  ),
+                                  
+                                ],
+                              )
+                              
+                            )
+                          ),
+
+                          SizedBox(height: 50),
+
+                        ],
+                      ),
+                    ),
+                  ),
+                
+              ],
+            )
+          ),
         ),
       ),
-     
       floatingActionButton: AnimatedOpacity(
         opacity: _isSearching ? 0.0 : 1.0,
         duration: Duration(milliseconds: 200),

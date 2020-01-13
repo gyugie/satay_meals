@@ -16,7 +16,7 @@ class ProfileEdit extends StatefulWidget {
   _ProfileEditState createState() => _ProfileEditState();
 }
 
-class _ProfileEditState extends State<ProfileEdit> {
+class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixin {
   final GlobalKey<FormState> _formEditUser     = GlobalKey(); 
   final firstNameController   = TextEditingController();
   final lastNameController    = TextEditingController();
@@ -62,6 +62,16 @@ class _ProfileEditState extends State<ProfileEdit> {
     'cityName':'',
   };
 
+  AnimationController controller;
+  Animation<double> animation;
+
+  void animationTransition(){
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   Future<void> _loadDataState(){
      
@@ -95,6 +105,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
         setState(() {
           _isLoading = false;
+          animationTransition();
         });
       }).catchError( (err){
         CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
@@ -225,6 +236,7 @@ class _ProfileEditState extends State<ProfileEdit> {
       _isLoading = true;
       _loadDataState();
       _loadCurrentProfile();
+      animationTransition();
     }
     _isInit = false;
     super.didChangeDependencies();
@@ -241,367 +253,179 @@ class _ProfileEditState extends State<ProfileEdit> {
         backgroundColor: Colors.black.withOpacity(0.03),
         iconTheme: new IconThemeData(color: Colors.green),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: 
       _isLoading
       ?
-      Center(
-        child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)),
-      )
+      // Center( child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)), )
+      FadeTransition(
+          opacity: animation,
+          child: Center(
+            child: Container(
+                height: deviceSize.height * 0.8,
+                width: deviceSize.width * 0.8,
+                child: Image.asset('assets/images/sate.gif'),
+              ),
+            )
+         )
       :
-      SingleChildScrollView(
-        child: Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                height: orientation == Orientation.portrait ? deviceSize.height * 0.30 : deviceSize.height * 0.6,
-                child: Center(
-                    child: Container(
-                      width: 160.0,
-                      height: 160.0,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 30.0, // has the effect of softening the shadow
-                            spreadRadius: 3.0, // has the effect of extending the shadow
-                            offset: Offset(
-                              3.0, // horizontal, move right 5
-                              3.0, // vertical, move down 15                          
-                            ),
-                          )
-                        ],
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: ( file != null ) ? FileImage(file) : (_currentProfile['image'] == '') ? AssetImage('assets/images/user-unknown.jpeg') : NetworkImage(_currentProfile['image'])
+       FadeTransition(
+        opacity: animation,
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  height: orientation == Orientation.portrait ? deviceSize.height * 0.30 : deviceSize.height * 0.6,
+                  child: Center(
+                      child: Container(
+                        width: 160.0,
+                        height: 160.0,
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black,
+                              blurRadius: 30.0, // has the effect of softening the shadow
+                              spreadRadius: 3.0, // has the effect of extending the shadow
+                              offset: Offset(
+                                3.0, // horizontal, move right 5
+                                3.0, // vertical, move down 15                          
+                              ),
+                            )
+                          ],
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: ( file != null ) ? FileImage(file) : (_currentProfile['image'] == '') ? AssetImage('assets/images/user-unknown.jpeg') : NetworkImage(_currentProfile['image'])
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(160)),
+                          color: Colors.grey,
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(160)),
-                        color: Colors.grey,
+                      ),
+                    )
+                  ),
+                  FractionalTranslation(
+                    translation:orientation == Orientation.portrait ?  Offset(-0.23, -1.8) : Offset(-0.3, -2),
+                    child: Align(
+                      child: GestureDetector(
+                        onTap: () => _pickImage(ImageSource.gallery),
+                        child: CircleAvatar(
+                        foregroundColor: Colors.black,
+                        backgroundColor:  Colors.white,
+                        radius: 20.0,
+                        child: Icon(Icons.camera_alt,size: 20),
                       ),
                     ),
-                  )
-                ),
-                FractionalTranslation(
-                  translation:orientation == Orientation.portrait ?  Offset(-0.23, -1.8) : Offset(-0.3, -2),
-                  child: Align(
-                    child: GestureDetector(
-                      onTap: () => _pickImage(ImageSource.gallery),
-                      child: CircleAvatar(
-                      foregroundColor: Colors.black,
-                      backgroundColor:  Colors.white,
-                      radius: 20.0,
-                      child: Icon(Icons.camera_alt,size: 20),
-                    ),
+                    alignment: FractionalOffset(0.90, 0.55),
                   ),
-                  alignment: FractionalOffset(0.90, 0.55),
                 ),
-              ),
-              Form(
-                key: _formEditUser,
-                child: Container(
-                height: deviceSize.height * 0.52,
-                padding: EdgeInsets.only(left: 20, right: 20),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              child: TextFormField(
-                                // controller: firstNameController,
-                                style: new TextStyle(color: Colors.white),
-                                decoration: new InputDecoration(
-                                  labelText: 'Frist Name *', 
-                                  labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                                  errorBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.orange),
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(      
-                                    borderSide: BorderSide(color: Colors.green),   
-                                  ),  
-                                  errorStyle: TextStyle(color: Colors.orange),
-                                ),
-                                initialValue: _currentProfile['firstName'],
-                                validator: (val){
-                                  if(val.isEmpty){
-                                    return 'please fill your first name';
-                                  }
-                                },
-                                onSaved: (val){
-                                   _currentProfile         = {
-                                        'id'          : _currentProfile['id'], 
-                                        'username'    : _currentProfile['username'], 
-                                        'firstName'   : val, 
-                                        'lastName'    : _currentProfile['lastName'], 
-                                        'email'       : _currentProfile['email'], 
-                                        'phone'       : _currentProfile['phone'], 
-                                        'address'     : _currentProfile['address'], 
-                                        'image'       : _currentProfile['image'], 
-                                        'latitude'    : _currentProfile['latitude'],
-                                        'longitude'   : _currentProfile['longitude'],
-                                        'postalCode'  : _currentProfile['postalCode'],
-                                        'stateId'     : _selectStateId.toString(),
-                                        'stateName'   : _selectStateName,
-                                        'cityId'      : _selectCityId.toString(), 
-                                        'cityName'    : _selectCityName,
-                                      }; 
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              child: TextFormField(
-                                // controller: lastNameController,
-                                style: new TextStyle(color: Colors.white),
-                                decoration: new InputDecoration(
-                                    labelText: 'Last Name *', 
+                Form(
+                  key: _formEditUser,
+                  child: Container(
+                  height: deviceSize.height * 0.52,
+                  padding: EdgeInsets.only(left: 20, right: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                child: TextFormField(
+                                  // controller: firstNameController,
+                                  style: new TextStyle(color: Colors.white),
+                                  decoration: new InputDecoration(
+                                    labelText: 'Frist Name *', 
                                     labelStyle: TextStyle(color: Colors.white, fontSize: 16),
                                     errorBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.orange),
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(      
-                                    borderSide: BorderSide(color: Colors.green),   
-                                  ),  
-                                  errorStyle: TextStyle(color: Colors.orange),
-                                ),
-                                initialValue: _currentProfile['lastName'],
-                                validator: (val){
-                                  if(val.isEmpty){
-                                    return 'please fill your last name';
-                                  }
-                                },
-                                onSaved: (val){
-                                   _currentProfile         = {
-                                        'id'          : _currentProfile['id'], 
-                                        'username'    : _currentProfile['username'], 
-                                        'firstName'   : _currentProfile['firstName'], 
-                                        'lastName'    : val, 
-                                        'email'       : _currentProfile['email'], 
-                                        'phone'       : _currentProfile['phone'], 
-                                        'address'     : _currentProfile['address'], 
-                                        'image'       : _currentProfile['image'], 
-                                        'latitude'    : _currentProfile['latitude'],
-                                        'longitude'   : _currentProfile['longitude'],
-                                        'postalCode'  : _currentProfile['postalCode'],
-                                        'stateId'     : _selectStateId.toString(),
-                                        'stateName'   : _selectStateName,
-                                        'cityId'      : _selectCityId.toString(), 
-                                        'cityName'    : _selectCityName,
-                                      }; 
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        TextFormField(
-                          // controller: phoneController,
-                          style: new TextStyle(color: Colors.white),
-                          keyboardType: TextInputType.number,
-                          decoration: new InputDecoration(
-                            labelText: 'Phone Number *', 
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                            errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.orange),
-                            ),
-                            enabledBorder: UnderlineInputBorder(      
-                              borderSide: BorderSide(color: Colors.green),   
-                            ),  
-                            errorStyle: TextStyle(color: Colors.orange),
-                          ),
-                          initialValue: _currentProfile['phone'],
-                          validator: (val){
-                            if(val.isEmpty){
-                              return 'please fill your phone';
-                            }
-                          },
-                          onSaved: (val){
-                             _currentProfile         = {
-                                'id'          : _currentProfile['id'], 
-                                'username'    : _currentProfile['username'], 
-                                'firstName'   : _currentProfile['firstName'], 
-                                'lastName'    : _currentProfile['lastName'], 
-                                'email'       : _currentProfile['email'], 
-                                'phone'       : val, 
-                                'address'     : _currentProfile['address'], 
-                                'facebookId'  : _currentProfile['facebookId'], 
-                                'googleId'    : _currentProfile['googleId'], 
-                                'joinDate'    : _currentProfile['joinDate'], 
-                                'image'       : _currentProfile['image'], 
-                                'latitude'    : _currentProfile['latitude'],
-                                'longitude'   : _currentProfile['longitude'],
-                                'postalCode'  : _currentProfile['postalCode'],
-                                'stateId'     : _currentProfile['stateId'],
-                                'stateName'   : _currentProfile['stateName'],
-                                'cityId'      : _currentProfile['cityId'], 
-                                'cityName'    : _currentProfile['cityName'],
-                              }; 
-                          },
-                        ),
-                        new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              padding: EdgeInsets.only(top: 10),
-                              child:Theme(
-                                data: Theme.of(context).copyWith(
-                                  canvasColor: Colors.black,
-                                ),
-                                child: DropdownButton<UserState>(
-                                  isExpanded: true,
-                                  hint: Text("${_selectStateName != '' ?  _selectStateName :  'Select State *' }", style: TextStyle(color: Colors.white)),
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                  underline: Container(
-                                    height: 1,
-                                    color: _validationState == null ? Colors.orange : Colors.green,
-                                  ),
-                                  value: _selectedState,
-                                  onChanged: (value) {
-                                    _onChangesState(value);
-                                     
-                                    _currentProfile         = {
-                                      'id'          : _currentProfile['id'], 
-                                      'username'    : _currentProfile['username'], 
-                                      'firstName'   : _currentProfile['firstName'], 
-                                      'lastName'    : _currentProfile['lastName'], 
-                                      'email'       : _currentProfile['email'], 
-                                      'phone'       : _currentProfile['phone'], 
-                                      'address'     : _currentProfile['address'], 
-                                      'image'       : _currentProfile['image'], 
-                                      'latitude'    : _currentProfile['latitude'],
-                                      'longitude'   : _currentProfile['longitude'],
-                                      'postalCode'  : _currentProfile['postalCode'],
-                                      'stateId'     : _selectStateId.toString(),
-                                      'stateName'   : _selectStateName,
-                                      'cityId'      : _selectCityId.toString(), 
-                                      'cityName'    : _selectCityName,
-                                    }; 
-                                  },
-                                  
-                                  items: _listState.map((UserState state) {
-                                    return  DropdownMenuItem<UserState>(
-                                      value: state,
-                                      child: Row(
-                                        children: <Widget>[
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            state.stateName,
-                                            style:  TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              )
-                            ),
-                            _cityLoading
-                            ?
-                            Align(
-                              alignment: Alignment.center,
-                              child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
-                            )
-                            :
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              padding: EdgeInsets.only(top: 10),
-                              child:Theme(
-                                data: Theme.of(context).copyWith(
-                                  canvasColor: Colors.black,
-                                ),
-                                child: DropdownButton<UserCity>(
-                                  isExpanded: true,
-                                  hint: Text('${_selectCityName != '' ?  _selectCityName :  'Select City *' }', 
-                                    style: TextStyle(
-                                      color: Colors.white
+                                      borderSide: BorderSide(color: Colors.orange),
                                     ),
+                                    enabledBorder: UnderlineInputBorder(      
+                                      borderSide: BorderSide(color: Colors.green),   
+                                    ),  
+                                    errorStyle: TextStyle(color: Colors.orange),
                                   ),
-                                  value: null,
-                                  icon: Icon(Icons.arrow_downward),
-                                  iconSize: 24,
-                                  elevation: 16,
-                                  style: TextStyle(
-                                    color: Colors.white
-                                  ),
-                                  underline: Container(
-                                    height: 1,
-                                    color: _validationCity == null ? Colors.orange : Colors.green,
-                                  ),
-                                  onChanged: (UserCity value) {
-                                    setState(() {
-                                      _selectedCity   = value;
-                                      _selectCityName = value.cityName;
-                                      _selectCityId   = value.cityId;
-                                    });
-
-                                    _currentProfile         = {
-                                        'id'          : _currentProfile['id'], 
-                                        'username'    : _currentProfile['username'], 
-                                        'firstName'   : _currentProfile['firstName'],
-                                        'lastName'    : _currentProfile['lastName'], 
-                                        'email'       : _currentProfile['email'], 
-                                        'phone'       : _currentProfile['phone'], 
-                                        'address'     : _currentProfile['address'], 
-                                        'image'       : _currentProfile['image'], 
-                                        'latitude'    : _currentProfile['latitude'],
-                                        'longitude'   : _currentProfile['longitude'],
-                                        'postalCode'  : _currentProfile['postalCode'],
-                                        'stateId'     : _selectStateId.toString(),
-                                        'stateName'   : _selectStateName,
-                                        'cityId'      : _selectCityId.toString(), 
-                                        'cityName'    : _selectCityName,
-                                      }; 
-                                            
+                                  initialValue: _currentProfile['firstName'],
+                                  validator: (val){
+                                    if(val.isEmpty){
+                                      return 'please fill your first name';
+                                    }
                                   },
-                                  items: _listCity.map((UserCity city) {
-                                    return  DropdownMenuItem<UserCity>(
-                                      value: city,
-                                      child: Row(
-                                        children: <Widget>[
-                                          SizedBox(width: 10),
-                                          Text(
-                                            city.cityName,
-                                            style:  TextStyle(color: Colors.white),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
+                                  onSaved: (val){
+                                    _currentProfile         = {
+                                          'id'          : _currentProfile['id'], 
+                                          'username'    : _currentProfile['username'], 
+                                          'firstName'   : val, 
+                                          'lastName'    : _currentProfile['lastName'], 
+                                          'email'       : _currentProfile['email'], 
+                                          'phone'       : _currentProfile['phone'], 
+                                          'address'     : _currentProfile['address'], 
+                                          'image'       : _currentProfile['image'], 
+                                          'latitude'    : _currentProfile['latitude'],
+                                          'longitude'   : _currentProfile['longitude'],
+                                          'postalCode'  : _currentProfile['postalCode'],
+                                          'stateId'     : _selectStateId.toString(),
+                                          'stateName'   : _selectStateName,
+                                          'cityId'      : _selectCityId.toString(), 
+                                          'cityName'    : _selectCityName,
+                                        }; 
+                                  },
                                 ),
-                              )
-                            )
-                          ],
-                        ),
-                        if(_validationState != '' || _validationCity != '')
-                        new Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            // if(_validationState != '')
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              child: Text(_validationState != '' ? _validationState : '', style: TextStyle(fontSize: 14, color: Colors.orange))
-                            ),
-                            // if(_validationCity != '')
-                            Container(
-                              width: deviceSize.width * 0.4,
-                              child: Text(_validationCity != '' ? _validationCity : '', style: TextStyle(fontSize: 14, color: Colors.orange))
-                            )
-                          ],
-                        ),
-                        Container(
-                          child: TextFormField(
-                            // controller: addressController,
+                              ),
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                child: TextFormField(
+                                  // controller: lastNameController,
+                                  style: new TextStyle(color: Colors.white),
+                                  decoration: new InputDecoration(
+                                      labelText: 'Last Name *', 
+                                      labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                                      errorBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.orange),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(      
+                                      borderSide: BorderSide(color: Colors.green),   
+                                    ),  
+                                    errorStyle: TextStyle(color: Colors.orange),
+                                  ),
+                                  initialValue: _currentProfile['lastName'],
+                                  validator: (val){
+                                    if(val.isEmpty){
+                                      return 'please fill your last name';
+                                    }
+                                  },
+                                  onSaved: (val){
+                                    _currentProfile         = {
+                                          'id'          : _currentProfile['id'], 
+                                          'username'    : _currentProfile['username'], 
+                                          'firstName'   : _currentProfile['firstName'], 
+                                          'lastName'    : val, 
+                                          'email'       : _currentProfile['email'], 
+                                          'phone'       : _currentProfile['phone'], 
+                                          'address'     : _currentProfile['address'], 
+                                          'image'       : _currentProfile['image'], 
+                                          'latitude'    : _currentProfile['latitude'],
+                                          'longitude'   : _currentProfile['longitude'],
+                                          'postalCode'  : _currentProfile['postalCode'],
+                                          'stateId'     : _selectStateId.toString(),
+                                          'stateName'   : _selectStateName,
+                                          'cityId'      : _selectCityId.toString(), 
+                                          'cityName'    : _selectCityName,
+                                        }; 
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextFormField(
+                            // controller: phoneController,
+                            style: new TextStyle(color: Colors.white),
+                            keyboardType: TextInputType.number,
                             decoration: new InputDecoration(
-                                labelText: 'Address *', 
-                                labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                                 errorBorder: UnderlineInputBorder(
+                              labelText: 'Phone Number *', 
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                              errorBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.orange),
                               ),
                               enabledBorder: UnderlineInputBorder(      
@@ -609,30 +433,21 @@ class _ProfileEditState extends State<ProfileEdit> {
                               ),  
                               errorStyle: TextStyle(color: Colors.orange),
                             ),
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 3,
-                            initialValue: _currentProfile['address'],
-                            validator: (value){ 
-                              if(value.isEmpty){
-                                return 'Description is required!';
+                            initialValue: _currentProfile['phone'],
+                            validator: (val){
+                              if(val.isEmpty){
+                                return 'please fill your phone';
                               }
-
-                              if(value.length < 10){
-                                return 'Should be at least a long text';
-                              }
-
-                              return null;
                             },
                             onSaved: (val){
                               _currentProfile         = {
                                   'id'          : _currentProfile['id'], 
                                   'username'    : _currentProfile['username'], 
-                                  'firstName'   : _currentProfile['firstName'],
+                                  'firstName'   : _currentProfile['firstName'], 
                                   'lastName'    : _currentProfile['lastName'], 
                                   'email'       : _currentProfile['email'], 
-                                  'phone'       : _currentProfile['phone'], 
-                                  'address'     : val, 
+                                  'phone'       : val, 
+                                  'address'     : _currentProfile['address'], 
                                   'facebookId'  : _currentProfile['facebookId'], 
                                   'googleId'    : _currentProfile['googleId'], 
                                   'joinDate'    : _currentProfile['joinDate'], 
@@ -647,62 +462,271 @@ class _ProfileEditState extends State<ProfileEdit> {
                                 }; 
                             },
                           ),
-                        ),
-                        TextFormField(
-                          // controller: addressController,
-                          style: new TextStyle(color: Colors.white),
-                          keyboardType: TextInputType.number,
-                          decoration: new InputDecoration(
-                            labelText: 'Postal Code *', 
-                            labelStyle: TextStyle(color: Colors.white, fontSize: 16),
-                             errorBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.orange),
-                            ),
-                            enabledBorder: UnderlineInputBorder(      
-                              borderSide: BorderSide(color: Colors.green),   
-                            ),  
-                            errorStyle: TextStyle(color: Colors.orange),
-                          ),
-                          initialValue: _currentProfile['postalCode'],
-                          validator: (val){
-                            if(val.isEmpty){
-                              return 'please fill your postal code';
-                            }
-                          },
-                          onSaved: (val){
-                            _currentProfile         = {
-                                'id'          : _currentProfile['id'], 
-                                'username'    : _currentProfile['username'], 
-                                'firstName'   : _currentProfile['firstName'],
-                                'lastName'    : _currentProfile['lastName'], 
-                                'email'       : _currentProfile['email'], 
-                                'phone'       : _currentProfile['phone'], 
-                                'address'     : _currentProfile['address'], 
-                                'facebookId'  : _currentProfile['facebookId'], 
-                                'googleId'    : _currentProfile['googleId'], 
-                                'joinDate'    : _currentProfile['joinDate'], 
-                                'image'       : _currentProfile['image'], 
-                                'latitude'    : _currentProfile['latitude'],
-                                'longitude'   : _currentProfile['longitude'],
-                                'postalCode'  : val,
-                                'stateId'     : _currentProfile['stateId'],
-                                'stateName'   : _currentProfile['stateName'],
-                                'cityId'      : _currentProfile['cityId'], 
-                                'cityName'    : _currentProfile['cityName'],
-                              }; 
-                          },
-                        ),
+                          new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                padding: EdgeInsets.only(top: 10),
+                                child:Theme(
+                                  data: Theme.of(context).copyWith(
+                                    canvasColor: Colors.black,
+                                  ),
+                                  child: DropdownButton<UserState>(
+                                    isExpanded: true,
+                                    hint: Text("${_selectStateName != '' ?  _selectStateName :  'Select State *' }", style: TextStyle(color: Colors.white)),
+                                    icon: Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(
+                                      color: Colors.white
+                                    ),
+                                    underline: Container(
+                                      height: 1,
+                                      color: _validationState == null ? Colors.orange : Colors.green,
+                                    ),
+                                    value: _selectedState,
+                                    onChanged: (value) {
+                                      _onChangesState(value);
+                                      
+                                      _currentProfile         = {
+                                        'id'          : _currentProfile['id'], 
+                                        'username'    : _currentProfile['username'], 
+                                        'firstName'   : _currentProfile['firstName'], 
+                                        'lastName'    : _currentProfile['lastName'], 
+                                        'email'       : _currentProfile['email'], 
+                                        'phone'       : _currentProfile['phone'], 
+                                        'address'     : _currentProfile['address'], 
+                                        'image'       : _currentProfile['image'], 
+                                        'latitude'    : _currentProfile['latitude'],
+                                        'longitude'   : _currentProfile['longitude'],
+                                        'postalCode'  : _currentProfile['postalCode'],
+                                        'stateId'     : _selectStateId.toString(),
+                                        'stateName'   : _selectStateName,
+                                        'cityId'      : _selectCityId.toString(), 
+                                        'cityName'    : _selectCityName,
+                                      }; 
+                                    },
+                                    
+                                    items: _listState.map((UserState state) {
+                                      return  DropdownMenuItem<UserState>(
+                                        value: state,
+                                        child: Row(
+                                          children: <Widget>[
+                                            SizedBox(width: 10,),
+                                            Text(
+                                              state.stateName,
+                                              style:  TextStyle(color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              ),
+                              _cityLoading
+                              ?
+                              Align(
+                                alignment: Alignment.center,
+                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                              )
+                              :
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                padding: EdgeInsets.only(top: 10),
+                                child:Theme(
+                                  data: Theme.of(context).copyWith(
+                                    canvasColor: Colors.black,
+                                  ),
+                                  child: DropdownButton<UserCity>(
+                                    isExpanded: true,
+                                    hint: Text('${_selectCityName != '' ?  _selectCityName :  'Select City *' }', 
+                                      style: TextStyle(
+                                        color: Colors.white
+                                      ),
+                                    ),
+                                    value: null,
+                                    icon: Icon(Icons.arrow_downward),
+                                    iconSize: 24,
+                                    elevation: 16,
+                                    style: TextStyle(
+                                      color: Colors.white
+                                    ),
+                                    underline: Container(
+                                      height: 1,
+                                      color: _validationCity == null ? Colors.orange : Colors.green,
+                                    ),
+                                    onChanged: (UserCity value) {
+                                      setState(() {
+                                        _selectedCity   = value;
+                                        _selectCityName = value.cityName;
+                                        _selectCityId   = value.cityId;
+                                      });
 
-                        
-                      ],
-                    ),
+                                      _currentProfile         = {
+                                          'id'          : _currentProfile['id'], 
+                                          'username'    : _currentProfile['username'], 
+                                          'firstName'   : _currentProfile['firstName'],
+                                          'lastName'    : _currentProfile['lastName'], 
+                                          'email'       : _currentProfile['email'], 
+                                          'phone'       : _currentProfile['phone'], 
+                                          'address'     : _currentProfile['address'], 
+                                          'image'       : _currentProfile['image'], 
+                                          'latitude'    : _currentProfile['latitude'],
+                                          'longitude'   : _currentProfile['longitude'],
+                                          'postalCode'  : _currentProfile['postalCode'],
+                                          'stateId'     : _selectStateId.toString(),
+                                          'stateName'   : _selectStateName,
+                                          'cityId'      : _selectCityId.toString(), 
+                                          'cityName'    : _selectCityName,
+                                        }; 
+                                              
+                                    },
+                                    items: _listCity.map((UserCity city) {
+                                      return  DropdownMenuItem<UserCity>(
+                                        value: city,
+                                        child: Row(
+                                          children: <Widget>[
+                                            SizedBox(width: 10),
+                                            Text(
+                                              city.cityName,
+                                              style:  TextStyle(color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              )
+                            ],
+                          ),
+                          if(_validationState != '' || _validationCity != '')
+                          new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              // if(_validationState != '')
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                child: Text(_validationState != '' ? _validationState : '', style: TextStyle(fontSize: 14, color: Colors.orange))
+                              ),
+                              // if(_validationCity != '')
+                              Container(
+                                width: deviceSize.width * 0.4,
+                                child: Text(_validationCity != '' ? _validationCity : '', style: TextStyle(fontSize: 14, color: Colors.orange))
+                              )
+                            ],
+                          ),
+                          Container(
+                            child: TextFormField(
+                              // controller: addressController,
+                              decoration: new InputDecoration(
+                                  labelText: 'Address *', 
+                                  labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                                  errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                enabledBorder: UnderlineInputBorder(      
+                                  borderSide: BorderSide(color: Colors.green),   
+                                ),  
+                                errorStyle: TextStyle(color: Colors.orange),
+                              ),
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 3,
+                              initialValue: _currentProfile['address'],
+                              validator: (value){ 
+                                if(value.isEmpty){
+                                  return 'Description is required!';
+                                }
+
+                                if(value.length < 10){
+                                  return 'Should be at least a long text';
+                                }
+
+                                return null;
+                              },
+                              onSaved: (val){
+                                _currentProfile         = {
+                                    'id'          : _currentProfile['id'], 
+                                    'username'    : _currentProfile['username'], 
+                                    'firstName'   : _currentProfile['firstName'],
+                                    'lastName'    : _currentProfile['lastName'], 
+                                    'email'       : _currentProfile['email'], 
+                                    'phone'       : _currentProfile['phone'], 
+                                    'address'     : val, 
+                                    'facebookId'  : _currentProfile['facebookId'], 
+                                    'googleId'    : _currentProfile['googleId'], 
+                                    'joinDate'    : _currentProfile['joinDate'], 
+                                    'image'       : _currentProfile['image'], 
+                                    'latitude'    : _currentProfile['latitude'],
+                                    'longitude'   : _currentProfile['longitude'],
+                                    'postalCode'  : _currentProfile['postalCode'],
+                                    'stateId'     : _currentProfile['stateId'],
+                                    'stateName'   : _currentProfile['stateName'],
+                                    'cityId'      : _currentProfile['cityId'], 
+                                    'cityName'    : _currentProfile['cityName'],
+                                  }; 
+                              },
+                            ),
+                          ),
+                          TextFormField(
+                            // controller: addressController,
+                            style: new TextStyle(color: Colors.white),
+                            keyboardType: TextInputType.number,
+                            decoration: new InputDecoration(
+                              labelText: 'Postal Code *', 
+                              labelStyle: TextStyle(color: Colors.white, fontSize: 16),
+                              errorBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.orange),
+                              ),
+                              enabledBorder: UnderlineInputBorder(      
+                                borderSide: BorderSide(color: Colors.green),   
+                              ),  
+                              errorStyle: TextStyle(color: Colors.orange),
+                            ),
+                            initialValue: _currentProfile['postalCode'],
+                            validator: (val){
+                              if(val.isEmpty){
+                                return 'please fill your postal code';
+                              }
+                            },
+                            onSaved: (val){
+                              _currentProfile         = {
+                                  'id'          : _currentProfile['id'], 
+                                  'username'    : _currentProfile['username'], 
+                                  'firstName'   : _currentProfile['firstName'],
+                                  'lastName'    : _currentProfile['lastName'], 
+                                  'email'       : _currentProfile['email'], 
+                                  'phone'       : _currentProfile['phone'], 
+                                  'address'     : _currentProfile['address'], 
+                                  'facebookId'  : _currentProfile['facebookId'], 
+                                  'googleId'    : _currentProfile['googleId'], 
+                                  'joinDate'    : _currentProfile['joinDate'], 
+                                  'image'       : _currentProfile['image'], 
+                                  'latitude'    : _currentProfile['latitude'],
+                                  'longitude'   : _currentProfile['longitude'],
+                                  'postalCode'  : val,
+                                  'stateId'     : _currentProfile['stateId'],
+                                  'stateName'   : _currentProfile['stateName'],
+                                  'cityId'      : _currentProfile['cityId'], 
+                                  'cityName'    : _currentProfile['cityName'],
+                                }; 
+                            },
+                          ),
+
+                          
+                        ],
+                      ),
+                    )
                   )
                 )
-              )
-            ],
+              ],
+            ),
           ),
         ),
-      ),
+       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save, color: Colors.white),
         backgroundColor: Colors.green,

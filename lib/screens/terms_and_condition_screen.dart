@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'package:shimmer/shimmer.dart';
+
 import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
 import '../providers/http_exception.dart';
@@ -12,19 +14,32 @@ class TermsAndConditionScreen extends StatefulWidget {
   _TermsAndConditionScreenState createState() => _TermsAndConditionScreenState();
 }
 
-class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
+class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with TickerProviderStateMixin  {
   var _isInit       = true;
   var _isLoading    = false;
   var _termsAndCondition;
+  AnimationController controller;
+  Animation<double> animation;
+
+  void animationTransition(){
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   _loadTermsAndCondition() async {
      try{
        await Provider.of<User>(context).getTermsAndCondition()
        .then((Object results){
          final responseData = json.decode(results);
-          setState(() {
-            _isLoading          = false;
-            _termsAndCondition  = responseData['data']; 
+          Future.delayed(Duration(seconds: 3), (){
+            setState(() {
+              _isLoading          = false;
+              _termsAndCondition  = responseData['data']; 
+              animationTransition();
+            });
           });
           
        });
@@ -41,12 +56,15 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
     if(_isInit){
       _isLoading = true;
       _loadTermsAndCondition();
+      animationTransition();
     }  
     _isInit = false;
     super.didChangeDependencies();
   }  
   @override
   Widget build(BuildContext context) {
+    final deviceSize  = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
          iconTheme: new IconThemeData(color: Colors.green),
@@ -54,19 +72,33 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen> {
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.transparent
+         canvasColor: Colors.black.withOpacity(0.5)
        ),
        child: DrawerSide(),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body:
-        _isLoading 
+        !_isLoading 
         ? 
-        Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
+        FadeTransition(
+          opacity: animation,
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Text(_termsAndCondition, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
+          )
+        )
         :  
-        Container(
-          padding: EdgeInsets.all(20),
-          child: Text(_termsAndCondition, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
-      ),
+        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
+        FadeTransition(
+          opacity: animation,
+          child: Center(
+            child: Container(
+              height: deviceSize.height * 0.8,
+              width: deviceSize.width * 0.8,
+              child: Image.asset('assets/images/sate.gif'),
+            ),
+          )
+        )
     );
   }
 }

@@ -15,9 +15,19 @@ class HistoryOrdersScreen extends StatefulWidget {
   _HistoryOrdersScreenState createState() => _HistoryOrdersScreenState();
 }
 
-class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
-    var _isInit = true;
-    var _isLoading = false;
+class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerProviderStateMixin {
+  var _isInit = true;
+  var _isLoading = false;
+  AnimationController controller;
+  Animation<double> animation;
+
+  void animationTransition(){
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   Future<void> _loadHistoryOrder() async {
      try{
@@ -25,6 +35,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
       Future.delayed(Duration(seconds: 3), (){
         setState(() {
           _isLoading = false;
+          animationTransition();
         });
       });
      } catch (err) {
@@ -50,6 +61,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
     if(_isInit){
     _isLoading = true;
      _loadHistoryOrder();
+     animationTransition();
     }
     
     _isInit = false;
@@ -69,10 +81,11 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.transparent
+         canvasColor: Colors.black.withOpacity(0.5)
        ),
        child: DrawerSide(),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: Container(
         padding: EdgeInsets.all(10),
         child: RefreshIndicator(
@@ -80,20 +93,23 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
           child: 
           !_isLoading 
           ? 
-           ListView.builder(
-            itemCount: historyOrders.length,
-            itemBuilder: (ctx, index) => HistoryItem(
-              noTransaction: historyOrders[index].noTransaction,
-              orderId: historyOrders[index].orderId,
-              createdAt: historyOrders[index].createdAt,
-              statusOrder: historyOrders[index].statusOrder,
-              total: historyOrders[index].total,
-              tableName: historyOrders[index].tableName,
-              vendor: historyOrders[index].vendor,
-              rider: historyOrders[index].rider,
-              confirmOrder: confirmOrder,
-            ),
-          )
+            ListView.builder(
+              itemCount: historyOrders.length,
+              itemBuilder: (ctx, index) => FadeTransition(
+                opacity: animation,
+                child: HistoryItem(
+                  noTransaction: historyOrders[index].noTransaction,
+                  orderId: historyOrders[index].orderId,
+                  createdAt: historyOrders[index].createdAt,
+                  statusOrder: historyOrders[index].statusOrder,
+                  total: historyOrders[index].total,
+                  tableName: historyOrders[index].tableName,
+                  vendor: historyOrders[index].vendor,
+                  rider: historyOrders[index].rider,
+                  confirmOrder: confirmOrder,
+              ),
+              )
+            )
           :
             historyOrders.length == 0
             ?
@@ -102,164 +118,18 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen> {
             )
             :
           // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
-          ListView.builder(
-            itemCount: 3,
-            itemBuilder: (ctx, index){
-              return  Container(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Card(
-                    elevation: 5,
-                    child: Shimmer.fromColors(
-                      baseColor: Colors.grey[700],
-                      highlightColor: Colors.grey[100],
-                      child: Container(
-                        height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.4 ,
-                        padding: EdgeInsets.all(15),
-                          child: Column(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    width: deviceSize.width * 0.45,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: <Widget>[
-                                        Container(
-                                          width: deviceSize.width * 0.10,
-                                          height: 20.0,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ),                  
-                                ],
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Container(
-                                    width: deviceSize.width * 0.30,
-                                    height: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                  Container(
-                                    width: deviceSize.width * 0.30,
-                                    height: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                    Container(
-                                    width: deviceSize.width * 0.40,
-                                    height: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                  Container(
-                                    width: deviceSize.width * 0.15,
-                                    height: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      )
-                    )
-                  );
-              }),
+          Center(
+            child: FadeTransition(
+                opacity: animation,
+                child: Container(
+                  height: deviceSize.height * 0.8,
+                  width: deviceSize.width * 0.8,
+                  child: Image.asset('assets/images/sate.gif'),
+              )
+            ),
+          )
         )
       )
     );
   }
 }
-// Container(
-//             padding: EdgeInsets.only(top: 10),
-//             child: Card(
-//               elevation: 5,
-//               child: Shimmer.fromColors(
-//               baseColor: Colors.grey[700],
-//               highlightColor: Colors.grey[100],
-//               child: Container(
-//               height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.4 ,
-//               padding: EdgeInsets.all(15),
-//                 child: Column(
-//                   children: <Widget>[
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: <Widget>[
-//                         Container(
-//                           width: deviceSize.width * 0.45,
-//                           height: 30,
-//                           decoration: BoxDecoration(
-//                             borderRadius: BorderRadius.circular(20),
-//                             color: Colors.white,
-//                           ),
-//                         ),
-//                         Container(
-//                           child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.end,
-//                             children: <Widget>[
-//                               Container(
-//                                 width: deviceSize.width * 0.10,
-//                                 height: 20.0,
-//                                 color: Colors.white,
-//                               ),
-//                             ],
-//                           ),
-//                         ),                  
-//                       ],
-//                     ),
-//                     SizedBox(height: 20),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: <Widget>[
-//                         Container(
-//                           width: deviceSize.width * 0.30,
-//                           height: 20.0,
-//                           color: Colors.white,
-//                         ),
-//                         Container(
-//                           width: deviceSize.width * 0.15,
-//                           height: 20.0,
-//                           color: Colors.white,
-//                         ),
-//                       ],
-//                     ),
-//                     SizedBox(height: 10),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: <Widget>[
-//                           Container(
-//                           width: deviceSize.width * 0.40,
-//                           height: 20.0,
-//                           color: Colors.white,
-//                         ),
-//                         Container(
-//                           width: deviceSize.width * 0.15,
-//                           height: 20.0,
-//                           color: Colors.white,
-//                         ),
-//                       ],
-//                     )
-//                   ],
-//                 ),
-//               )
-//             )
-//             )
-//           )
-//         )
-//       )

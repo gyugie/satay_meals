@@ -25,13 +25,23 @@ class DetailOrder extends StatefulWidget {
   _DetailOrderState createState() => _DetailOrderState();
 }
 
-class _DetailOrderState extends State<DetailOrder> {
+class _DetailOrderState extends State<DetailOrder> with TickerProviderStateMixin {
   double _setHeigtItemList  = 0.1;
   var _isInit               = true;
   var _isLoading            = false;
   int itemLength            = 1;
   var _detail;
   Map<String, Order> _detailOrder    = {};
+  AnimationController controller;
+  Animation<double> animation;
+
+  void animationTransition(){
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   Future<void> loadDetailOrder() async {
     setState(() {
@@ -62,9 +72,12 @@ class _DetailOrderState extends State<DetailOrder> {
                   ).toList()
               ));
 
-              setState(() {
-                _isLoading  = false;
-              });
+               Future.delayed(Duration(seconds: 2), (){
+                    setState(() {
+                      _isLoading        = false;
+                      animationTransition();
+                    });
+                });
 
               _detail     = _detailOrder['detail'];
               itemLength  = _detail.item.length;
@@ -77,9 +90,7 @@ class _DetailOrderState extends State<DetailOrder> {
         CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    
   }
 
 
@@ -90,6 +101,7 @@ class _DetailOrderState extends State<DetailOrder> {
           _isLoading = true;
           _detailOrder = {};
           loadDetailOrder();
+          animationTransition();
       }
 
     _isInit = false;
@@ -98,7 +110,7 @@ class _DetailOrderState extends State<DetailOrder> {
 
   @override
   Widget build(BuildContext context) {
-    
+    final deviceSize  = MediaQuery.of(context).size;
     if(itemLength < 5){
        _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
@@ -121,92 +133,106 @@ class _DetailOrderState extends State<DetailOrder> {
       appBar: AppBar(
         title: Text('Order Detail', style: Theme.of(context).textTheme.title),
       ),
+      backgroundColor: Theme.of(context).primaryColor,
       body: 
         _isLoading 
         ?
-        Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
-        :
-        Container(
-          padding: EdgeInsets.all(10),
-          child: SingleChildScrollView(
+        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+       FadeTransition(
+          opacity: animation,
+          child: Center(
             child: Container(
-              child: Column(
-                children: <Widget>[
-                  Card(
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Kios Name :', style: Theme.of(context).textTheme.title),
-                          Text('  ${widget.vendor}', style: Theme.of(context).textTheme.body1),
-                          SizedBox(height: 15),
-                          Text('Rider Name :', style: Theme.of(context).textTheme.title),
-                          Text('  ${widget.rider}', style: Theme.of(context).textTheme.body1),
-                          SizedBox(height: 15),
-                          Text('Address :', style: Theme.of(context).textTheme.title),
-                          Text('  ${_detail != null ? _detail.address : '' }', style: Theme.of(context).textTheme.body1),
-                          SizedBox(height: 15),
-                          Text('Phone Number :', style: Theme.of(context).textTheme.title),
-                          Text('  ${_detail != null ? _detail.phone : ''}', style: Theme.of(context).textTheme.body1),
-                        ],
-                      ),
-                    )
-                  ),
-              
-                  Card(
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('Payment Detail', style: Theme.of(context).textTheme.title),
-                          Divider(color: Colors.white),
-                          Container(
-                            height: MediaQuery.of(context).size.height * _setHeigtItemList,
-                            child: ListView.builder(
-                              itemCount: itemLength,
-                              itemBuilder: (BuildContext ctx, index){
-                                return new Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(' ${_detail != null ? _detail.item[index].quantity : ''} x ${_detail != null ? _detail.item[index].name : ''}', style: Theme.of(context).textTheme.body1),
-                                    Text('RM  ${_detail != null ? _detail.item[index].price : ''}', style: Theme.of(context).textTheme.title),
-                                  ],
-                                );
-                              },
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ),
-                  Card(
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text('Total Payment', style: Theme.of(context).textTheme.title),
-                              Text('RM ${_detail != null ? _detail.total : 0}', style: Theme.of(context).textTheme.title),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ),
-                ],
+                height: deviceSize.height * 0.8,
+                width: deviceSize.width * 0.8,
+                child: Image.asset('assets/images/sate.gif'),
+              ),
+            )
+         )
+        :
+        FadeTransition(
+          opacity: animation,
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Card(
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Kios Name :', style: Theme.of(context).textTheme.title),
+                            Text('  ${widget.vendor}', style: Theme.of(context).textTheme.body1),
+                            SizedBox(height: 15),
+                            Text('Rider Name :', style: Theme.of(context).textTheme.title),
+                            Text('  ${widget.rider}', style: Theme.of(context).textTheme.body1),
+                            SizedBox(height: 15),
+                            Text('Address :', style: Theme.of(context).textTheme.title),
+                            Text('  ${_detail != null ? _detail.address : '' }', style: Theme.of(context).textTheme.body1),
+                            SizedBox(height: 15),
+                            Text('Phone Number :', style: Theme.of(context).textTheme.title),
+                            Text('  ${_detail != null ? _detail.phone : ''}', style: Theme.of(context).textTheme.body1),
+                          ],
+                        ),
+                      )
+                    ),
+                
+                    Card(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Payment Detail', style: Theme.of(context).textTheme.title),
+                            Divider(color: Colors.white),
+                            Container(
+                              height: MediaQuery.of(context).size.height * _setHeigtItemList,
+                              child: ListView.builder(
+                                itemCount: itemLength,
+                                itemBuilder: (BuildContext ctx, index){
+                                  return new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(' ${_detail != null ? _detail.item[index].quantity : ''} x ${_detail != null ? _detail.item[index].name : ''}', style: Theme.of(context).textTheme.body1),
+                                      Text('RM  ${_detail != null ? _detail.item[index].price : ''}', style: Theme.of(context).textTheme.title),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ),
+                    Card(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Total Payment', style: Theme.of(context).textTheme.title),
+                                Text('RM ${_detail != null ? _detail.total : 0}', style: Theme.of(context).textTheme.title),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        )
     );
   }
 }

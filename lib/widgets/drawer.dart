@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import '../screens/firebase_notification.dart';
-// import '../screens/local_notification_widget.dart';
+
 import '../screens/profile_screen.dart';
-import '../screens/socket_screen.dart';
 import '../screens/about_us_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/terms_and_condition_screen.dart';
@@ -45,9 +43,8 @@ class DrawerSide extends StatelessWidget {
               title: Text('Logout', style: Theme.of(context).textTheme.title),
               onTap: (){
                   
-                  Provider.of<Auth>(context).logout();
-                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-
+                Provider.of<Auth>(context).logout();
+                Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
 
               },
             ),     

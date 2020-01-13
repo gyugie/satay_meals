@@ -55,7 +55,7 @@ class _TopupScreenState extends State<TopupScreen> {
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.transparent
+         canvasColor: Colors.black.withOpacity(0.5)
        ),
        child: DrawerSide(),
       ),

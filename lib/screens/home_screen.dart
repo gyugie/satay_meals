@@ -18,10 +18,12 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
   var _isInit = true;
   var _isLoading = false;
+  AnimationController controller;
+  Animation<double> animation;
 
 
   @override  
@@ -31,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     new Future.delayed(Duration.zero,() {
       initFirebase(context);
     });
-    // initSocket();
      //Init local notification
     final settingsAndroid = AndroidInitializationSettings('app_icon');
     final settingsIOS     = IOSInitializationSettings(
@@ -43,6 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
+  void animationTransition(){
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   Future onSelectNotification(String payload) async {
     notifications.cancelAll(); 
@@ -63,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Future.delayed(Duration(seconds: 3), (){
               setState(() {
                 _isLoading = false;
+                animationTransition();
               });
             });
          }).catchError( (err){
@@ -74,6 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     if(_isInit){
         _isLoading = true;
+        animationTransition();
         _loadDataHome();
     }
 
@@ -103,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.transparent
+         canvasColor: Colors.black.withOpacity(0.5)
        ),
        child: DrawerSide(),
       ),
@@ -123,82 +133,24 @@ class _HomeScreenState extends State<HomeScreen> {
         child: 
                 !_isLoading 
                 ? 
-                // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
-                ProductList()
-                : 
-                //shimmer loader
                 Container(
-                  height: deviceSize.height,
-                  child: SingleChildScrollView(
-                    child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: deviceSize.height,
-                        child:Center(
-                          child: Shimmer.fromColors(
-                            direction: ShimmerDirection.rtl,
-                            period: Duration(milliseconds:700),
-                              child: Column(
-                                children: [0, 1, 2]
-                                .map((_) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 1.0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                            height: deviceSize.height * 0.30,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Container(
-                                            height: deviceSize.height * 0.30,
-                                            color: Theme.of(context).accentColor,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Container(
-                                                  width: deviceSize.width * 0.20,
-                                                  height: 20.0,
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(height: 10),
-                                                Container(
-                                                  width: deviceSize.width * 0.30,
-                                                  height: 15.0,
-                                                  color: Colors.white,
-                                                ),
-                                                SizedBox(height: 10),
-                                                Container(
-                                                  height: deviceSize.height * 0.05,
-                                                  width: 150,
-                                                  decoration: new BoxDecoration(borderRadius: BorderRadius.circular(15.0),
-                                                  color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ).toList(),
-                              ),
-                              baseColor: Colors.grey[700],
-                              highlightColor: Colors.grey[100]),
-                            )
-                          )
-                      ],
-                    ),
+                  child: FadeTransition(
+                      opacity: animation,
+                      child: ProductList()
+                      )
                   )
+                : 
+                Center(
+                  child: FadeTransition(
+                      opacity: animation,
+                      child: Container(
+                        height: deviceSize.height * 0.8,
+                        width: deviceSize.width * 0.8,
+                        child: Image.asset('assets/images/sate.gif'),
+                    )
+                  ),
                 )
       )
     );
   }
-
-  
 }

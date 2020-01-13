@@ -13,7 +13,7 @@ class UserProfile extends StatefulWidget {
   _UserProfileState createState() => _UserProfileState();
 }
 
-class _UserProfileState extends State<UserProfile> {
+class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin {
   final GlobalKey<FormState> _formChangePassword  = GlobalKey();
   final _passwordController                       = TextEditingController();
   var _isInit = true;
@@ -21,6 +21,17 @@ class _UserProfileState extends State<UserProfile> {
     'oldPassword': '',
     'newPassword': ''
   };
+  AnimationController controller;
+  Animation<double> animation;
+
+  void initState(){
+    super.initState();
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
 
   Future<void> _submitChangePassword() async {
@@ -43,6 +54,7 @@ class _UserProfileState extends State<UserProfile> {
   void didChangeDependencies()async {
     if(_isInit){
       await Provider.of<User>(context).fetchUserProfile();
+      
     }
 
     _isInit = false;
@@ -64,107 +76,111 @@ class _UserProfileState extends State<UserProfile> {
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.transparent
+         canvasColor: Colors.black.withOpacity(0.5)
        ),
        child: DrawerSide(),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.6,
-                child: Center(
-                  child: Container(
-                    width: 160.0,
-                    height: 160.0,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 30.0, // has the effect of softening the shadow
-                          spreadRadius: 3.0, // has the effect of extending the shadow
-                          offset: Offset(
-                            3.0, // horizontal, move right 5
-                            3.0, // vertical, move down 15                          
-                          ),
-                        )
-                      ],
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image:  _user.image == '' ? AssetImage('assets/images/user-unknown.jpeg') : NetworkImage(_user.image)
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(160)),
-                      color: Colors.grey,
-                    ),
-                  ),
-                )
-              ),
-              Center(
-                child: Text('${_user == null ? '-' : (_user.firstName == '') ? 'not set' : _user.firstName +' '+ _user.lastName }', style: Theme.of(context).textTheme.title)
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.subtitle)
-              ),
-              SizedBox(height: 20),
-              Divider(color: Colors.green),
-              Container(
-                height: deviceSize.height * 0.52,
-                child: SingleChildScrollView(
-                  child: Column(
-                  children: <Widget>[
-                      ListTile(
-                        leading: Icon(Icons.email, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                       ListTile(
-                        leading: Icon(Icons.lock, color: Colors.grey),
-                        title: Text('******', style: Theme.of(context).textTheme.subtitle),
-                        trailing: GestureDetector(
-                          child:  Icon(Icons.open_in_new),
-                          onTap: (){
-                            _changePasswordModal(context);
-                          },
+      backgroundColor: Theme.of(context).primaryColor,
+      body: FadeTransition(
+        opacity: animation,
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: orientation == Orientation.portrait ? deviceSize.height * 0.25 : deviceSize.height * 0.6,
+                  child: Center(
+                    child: Container(
+                      width: 160.0,
+                      height: 160.0,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 30.0, // has the effect of softening the shadow
+                            spreadRadius: 3.0, // has the effect of extending the shadow
+                            offset: Offset(
+                              3.0, // horizontal, move right 5
+                              3.0, // vertical, move down 15                          
+                            ),
+                          )
+                        ],
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image:  _user.image == '' ? AssetImage('assets/images/user-unknown.jpeg') : NetworkImage(_user.image)
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(160)),
+                        color: Colors.grey,
                       ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.phone, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.phone != null) ? _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.account_balance, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.business, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.cityName != null) ? _user.cityName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.pin_drop, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.address != '') ? _user.address : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.voicemail, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.postalCode != null) ? _user.postalCode : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      Divider(color: Colors.green),
-                      ListTile(
-                        leading: Icon(Icons.insert_invitation, color: Colors.grey),
-                        title: Text('${_user == null ? '-' : (_user.joinDate != null) ? _user.joinDate : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-                      ),
-                      SizedBox(height: 33),
-                    ],
-                  ),
+                    ),
+                  )
+                ),
+                Center(
+                  child: Text('${_user == null ? '-' : (_user.firstName == '') ? 'not set' : _user.firstName +' '+ _user.lastName }', style: Theme.of(context).textTheme.title)
+                ),
+                SizedBox(height: 10),
+                Center(
+                  child: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.subtitle)
+                ),
+                SizedBox(height: 20),
+                Divider(color: Colors.green),
+                Container(
+                  height: deviceSize.height * 0.52,
+                  child: SingleChildScrollView(
+                    child: Column(
+                    children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.email, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.lock, color: Colors.grey),
+                          title: Text('******', style: Theme.of(context).textTheme.subtitle),
+                          trailing: GestureDetector(
+                            child:  Icon(Icons.open_in_new),
+                            onTap: (){
+                              _changePasswordModal(context);
+                            },
+                          ),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.phone, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.phone != null) ? _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.account_balance, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.business, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.cityName != null) ? _user.cityName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.pin_drop, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.address != '') ? _user.address : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.voicemail, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.postalCode != null) ? _user.postalCode : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        Divider(color: Colors.green),
+                        ListTile(
+                          leading: Icon(Icons.insert_invitation, color: Colors.grey),
+                          title: Text('${_user == null ? '-' : (_user.joinDate != null) ? _user.joinDate : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+                        ),
+                        SizedBox(height: 33),
+                      ],
+                    ),
+                  )
                 )
-              )
-            ],
+              ],
+            ),
           ),
         ),
       ),
