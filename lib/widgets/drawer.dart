@@ -40,11 +40,11 @@ class DrawerSide extends StatelessWidget {
             _menuForConsumer(context),      
             ListTile(
               leading: Icon(Icons.exit_to_app, color: Colors.white),
-              title: Text('Logout', style: Theme.of(context).textTheme.title),
+              title: Text('Logout', style: Theme.of(context).textTheme.body1),
               onTap: (){
                   
-                Provider.of<Auth>(context).logout();
                 Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+                Provider.of<Auth>(context).logout();
 
               },
             ),     
