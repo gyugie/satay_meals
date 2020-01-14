@@ -15,9 +15,20 @@ class TopupScreen extends StatefulWidget {
   _TopupScreenState createState() => _TopupScreenState();
 }
 
-class _TopupScreenState extends State<TopupScreen> {
+class _TopupScreenState extends State<TopupScreen>   with TickerProviderStateMixin {
   var _isLoading  = false;
   var _isInit     = true;
+  AnimationController controller;
+  Animation<double> animation;
+
+  void initState(){
+    super.initState();
+    controller = AnimationController(
+    duration: const Duration(seconds: 1), vsync: this);
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeInToLinear);
+
+    controller.forward();
+  }
 
   _loadListTopupSatay() async {
     try{
@@ -59,106 +70,108 @@ class _TopupScreenState extends State<TopupScreen> {
        ),
        child: DrawerSide(),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-        
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 20, top: 20),
-                child: Text('Your Ballance', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
-              ),
-              Container(
-                padding: EdgeInsets.all(20),
-                height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
-                width: orientation == Orientation.portrait ? double.infinity :  mediaSize.width * 0.5,
-                child: Container(
+      backgroundColor: Theme.of(context).primaryColor,
+      body: FadeTransition(
+        opacity: animation,
+        child: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 20, top: 20),
+                  child: Text('Your Ballance', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+                ),
+                Container(
                   padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.cyan,
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text('RM ${userBallance.toStringAsFixed(2)} ', style: TextStyle(color: Colors.white, fontSize: 24)),
-                          Container(
-                            height: 30,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              borderRadius: BorderRadius.all(Radius.circular(20))
-                            ),
-                          )
-                        ],
-                      ),
-                      Text('0000   ****   ****    0000 ', style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text('Your Name', style: TextStyle(color: Colors.white, fontSize: 20)),
-                          Text(DateFormat.yMMMd().format(DateTime.now()))
-                        ],
-                      ),
-                    ],
+                  height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
+                  width: orientation == Orientation.portrait ? double.infinity :  mediaSize.width * 0.5,
+                  child: Container(
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.cyan,
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('RM ${userBallance.toStringAsFixed(2)} ', style: TextStyle(color: Colors.white, fontSize: 24)),
+                            Container(
+                              height: 30,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.all(Radius.circular(20))
+                              ),
+                            )
+                          ],
+                        ),
+                        Text('0000   ****   ****    0000 ', style: TextStyle(color: Colors.white, fontSize: 20), textAlign: TextAlign.center,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Your Name', style: TextStyle(color: Colors.white, fontSize: 20)),
+                            Text(DateFormat.yMMMd().format(DateTime.now()))
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text('swipe left ', style: Theme.of(context).textTheme.subtitle, textAlign: TextAlign.start,),
-                  ),
-                ],
-              ),
-              // for list payment card
-              SizedBox(height: 20),
-              Container(
-                height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
-                width: double.infinity,
-                color: Colors.white.withOpacity(0.1),
-                child: 
-                _isLoading
-                ?
-                Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
-                :
-                ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: listPackage.length,
-                  itemBuilder: (ctx, index) => PaymentPackage(
-                    id: listPackage[index].id,
-                    package: listPackage[index].package,
-                    amount: listPackage[index].amount,
-                    price: listPackage[index].price,
-                    status: false,
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Text('Purchase Package ', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 20),
+                      child: Text('swipe left ', style: Theme.of(context).textTheme.subtitle, textAlign: TextAlign.start,),
+                    ),
+                  ],
+                ),
+                // for list payment card
+                SizedBox(height: 20),
+                Container(
+                  height: orientation == Orientation.portrait ? mediaSize.height * 0.3 : mediaSize.height * 0.5,
+                  width: double.infinity,
+                  color: Colors.white.withOpacity(0.3),
+                  child: 
+                  _isLoading
+                  ?
+                  Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+                  :
+                  ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: listPackage.length,
+                    itemBuilder: (ctx, index) => PaymentPackage(
+                      id: listPackage[index].id,
+                      package: listPackage[index].package,
+                      amount: listPackage[index].amount,
+                      price: listPackage[index].price,
+                      status: false,
+                    )
                   )
+                ),
+                Center(child: Icon(Icons.more_horiz, color: Colors.grey, size: 50)),
+                Center(
+                  child: Text(
+                    'Currency fluctuation, bank or convenience fee and  applicable  taxes charge by both the seller and payment gateway may increase your final amount.\n Check payment gateway terms and conditions. \n \n By tapping Buy, you accept the following terms of service \n', 
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                    ),
                 )
-              ),
-              Center(child: Icon(Icons.more_horiz, color: Colors.grey, size: 50)),
-              Center(
-                child: Text(
-                  'Currency fluctuation, bank or convenience fee and  applicable  taxes charge by both the seller and payment gateway may increase your final amount.\n Check payment gateway terms and conditions. \n \n By tapping Buy, you accept the following terms of service \n', 
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
-                  ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-      
+      )
     );
   }
 }
