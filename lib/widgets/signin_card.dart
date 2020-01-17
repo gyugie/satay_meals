@@ -131,7 +131,10 @@ class _SignInCardState extends State<SignInCard> {
                     focusColor: Colors.white,
                   ),
                   validator: (value){
-                    if(value.isEmpty && value.length < 5){
+                    if(value.isEmpty ){
+                      return 'Password is required';
+                    }
+                    if(value.length < 5){
                       return 'Password is too short';
                     }
                   },
