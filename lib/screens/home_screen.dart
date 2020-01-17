@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             Future.delayed(Duration(seconds: 3), (){
               setState(() {
                 _isLoading = false;
-                animationTransition();
+                // animationTransition();
               });
             });
          }).catchError( (err){

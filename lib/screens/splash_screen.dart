@@ -7,6 +7,10 @@ import '../screens/home_screen.dart';
 import '../providers/auth.dart';
 
 class SplashScreen extends StatefulWidget {
+  bool checkSession;
+
+  SplashScreen({this.checkSession = false});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -15,23 +19,23 @@ class _SplashScreenState extends State<SplashScreen> {
   var _isInit = true;
   
   void checkingUserSession() async {
-    Future.delayed(Duration(seconds:  3), (){
+   await Future.delayed(Duration(seconds:  3), (){
       final isAuth = Provider.of<Auth>(context).isAuth;
+      print(isAuth);
         if(isAuth){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         } 
-        // else {
-        //   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthScreen()));
-        //   Provider.of<Auth>(context).logout();
-        //   Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-        // }
+        else {
+          Provider.of<Auth>(context).logout();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => AuthScreen()));
+        }
     });
   }
 
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
-    if(_isInit){
+    if(_isInit && widget.checkSession){
       checkingUserSession();
     }
 
