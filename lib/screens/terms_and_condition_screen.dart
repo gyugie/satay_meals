@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import 'package:shimmer/shimmer.dart';
 
 import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';

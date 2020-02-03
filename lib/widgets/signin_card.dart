@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../widgets/verification_card.dart';

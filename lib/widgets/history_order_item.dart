@@ -126,11 +126,12 @@ class _HistoryItemState extends State<HistoryItem> {
                               if(selectedValue == FilterOptions.Complain)
                                 CustomNotif.alertComplainOrder(context, Icons.cancel, "Complain this order?", 'please call +60 11-1220 3708 to complain your order\n Are you sure want to cancel this order', widget.orderId);
                               if(selectedValue == FilterOptions.Tracking)
-                              Navigator.push(
-                                context, 
-                                MaterialPageRoute(
-                                  builder: (context) => TrackingOrderScreen(orderID: widget.orderId)
-                                ));
+                              print('object');
+                              // Navigator.push(
+                              //   context, 
+                              //   MaterialPageRoute(
+                              //     builder: (context) => TrackingOrderScreen(orderID: widget.orderId)
+                              //   ));
                             },
                             icon: Icon(
                               Icons.more_vert,

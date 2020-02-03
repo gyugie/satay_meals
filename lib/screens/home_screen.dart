@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:satay_meals/screens/history_order_screen.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../utils/firebase_notification.dart';
 import '../widgets/custom_notification.dart';

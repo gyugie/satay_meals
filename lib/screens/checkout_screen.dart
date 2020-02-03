@@ -348,21 +348,25 @@ class _CheckoutScreenState extends State<CheckoutScreen>
               children: <Widget>[
                 Container(
                   height: deviceSize.height * 0.40,
-                  color: Colors.black.withOpacity(0.8),
-                  child: GoogleMap(
-                    onMapCreated: _onMapCreated,
-                    initialCameraPosition: _kGooglePlex,
-                    myLocationEnabled: true,
-                    myLocationButtonEnabled: true,
-                    // TODO(iskakaushik): Remove this when collection literals makes it to stable.
-                    // https://github.com/flutter/flutter/issues/28312
-                    // ignore: prefer_collection_literals
-                    markers: Set<Marker>.of(markers.values),
-                    onTap: (val){
-                      _addMarker(val.latitude, val.longitude, false, null);
-                    },
-                  ),
+                  child: Center(child:  Text('Maps Soon!')),
                 ),
+                // Container(
+                //   height: deviceSize.height * 0.40,
+                //   color: Colors.black.withOpacity(0.8),
+                //   child: GoogleMap(
+                //     onMapCreated: _onMapCreated,
+                //     initialCameraPosition: _kGooglePlex,
+                //     myLocationEnabled: true,
+                //     myLocationButtonEnabled: true,
+                //     // TODO(iskakaushik): Remove this when collection literals makes it to stable.
+                //     // https://github.com/flutter/flutter/issues/28312
+                //     // ignore: prefer_collection_literals
+                //     markers: Set<Marker>.of(markers.values),
+                //     onTap: (val){
+                //       _addMarker(val.latitude, val.longitude, false, null);
+                //     },
+                //   ),
+                // ),
                 isKeyboardShowing
                 ?
                 Container()

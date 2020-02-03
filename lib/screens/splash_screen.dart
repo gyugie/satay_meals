@@ -21,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void checkingUserSession() async {
    await Future.delayed(Duration(seconds:  3), (){
       final isAuth = Provider.of<Auth>(context).isAuth;
-      print(isAuth);
         if(isAuth){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
         } 
