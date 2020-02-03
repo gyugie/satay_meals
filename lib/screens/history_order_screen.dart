@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-import 'package:shimmer/shimmer.dart';
 
 import '../providers/http_exception.dart';
 import '../widgets/custom_notification.dart';
@@ -32,10 +31,10 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
   Future<void> _loadHistoryOrder() async {
      try{
       await Provider.of<ItemOrders>(context).getHistoryOrders();
+      animationTransition();
       Future.delayed(Duration(seconds: 3), (){
         setState(() {
           _isLoading = false;
-          animationTransition();
         });
       });
      } catch (err) {
