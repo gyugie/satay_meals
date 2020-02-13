@@ -30,8 +30,8 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
 
   Future<void> _loadHistoryOrder() async {
      try{
-      await Provider.of<ItemOrders>(context).getHistoryOrders();
       animationTransition();
+      await Provider.of<ItemOrders>(context).getHistoryOrders();
       Future.delayed(Duration(seconds: 3), (){
         setState(() {
           _isLoading = false;
@@ -76,7 +76,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('History Oder', style: Theme.of(context).textTheme.title),
+        title: Text('History Order', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
