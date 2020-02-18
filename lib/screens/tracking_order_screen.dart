@@ -70,6 +70,8 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> with TickerPr
               'room'      : response['data']['room']
             });
 
+           
+
             if(widget.orderID != '0'){
               setState(() {
                 latitudeFromString = _riderPositionTemp[_riderPositionTemp.length - 1 ]['latitude'];
