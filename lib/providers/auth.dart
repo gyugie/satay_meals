@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 import './http_exception.dart';
 import 'package:location/location.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 
 class Auth with ChangeNotifier{
@@ -18,6 +19,7 @@ class Auth with ChangeNotifier{
   String _firebaseToken;
   Map<String, double> currentLocation = {};
   Location location = new Location();
+  final GoogleSignIn googleSignIn         = GoogleSignIn();
   var baseAPI       = 'https://adminbe.sw1975.com.my/index.php';
   final headersAPI  = {
                       "Accept": "application/json",
@@ -82,7 +84,8 @@ class Auth with ChangeNotifier{
     });
   }
 
-  Future<void> signUp(String username, String email, String password, int phone) async {
+  Future<void> signUp(String username, String email, String password, String phone, String googleUid ) async {
+  
     try{
       final response = await http.post(
           baseAPI + '/API_Consumer/register', 
@@ -91,12 +94,13 @@ class Auth with ChangeNotifier{
             'username': username,
             'password': password,
             'email'   : email,
-            'phone'   : phone.toString()
+            'phone'   : phone,
+            'google'  : googleUid
           },
         );
 
       final responseData = json.decode(response.body);
-      
+      print(responseData);
       if(responseData['success'] == false){
         throw HttpException(responseData['message']);
       }
@@ -223,6 +227,12 @@ class Auth with ChangeNotifier{
     final timeExpired = _expiredToken.difference(DateTime.now()).inSeconds;
     _timer = Timer(Duration(seconds: timeExpired), logout);
   }
+
+  void signOutGoogle() async{
+    await googleSignIn.signOut();
+
+    print("User Sign Out");
+}
 
   Future<void> changePassword(String oldPassword, String newPassword) async {
 

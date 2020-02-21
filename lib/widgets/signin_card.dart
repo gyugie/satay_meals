@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:satay_meals/screens/FirstScreen.dart';
 
 import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
@@ -17,12 +20,49 @@ class SignInCard extends StatefulWidget {
 }
 
 class _SignInCardState extends State<SignInCard> {
-  final GlobalKey<FormState> _formSignin   = GlobalKey();
-  var _isLoading                = false;
+  final GlobalKey<FormState> _formSignin  = GlobalKey();
+  final FirebaseAuth _auth                = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn         = GoogleSignIn();
+  var _isLoading                          = false;
   Map<String, String> _authData = {
     'usernmae':'',
     'password':''
   };
+
+  String googleUid;
+  String googleName;
+  String googleEmail;
+  String googleImageUrl;
+
+  Future<String> signInWithGoogle() async {
+    
+    final GoogleSignInAccount googleSignInAccount               = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final AuthCredential credential                             = GoogleAuthProvider.getCredential(
+                                                                  accessToken: googleSignInAuthentication.accessToken,
+                                                                  idToken: googleSignInAuthentication.idToken,
+                                                                );
+
+    final FirebaseUser authResult = await _auth.signInWithCredential(credential);
+
+    assert(authResult.email != null);
+    assert(authResult.displayName != null);
+    assert(authResult.photoUrl != null);
+    assert(!authResult.isAnonymous);
+    assert(await authResult.getIdToken() != null);
+   
+    setState(() {
+      googleUid       = authResult.uid;
+      googleName      = authResult.displayName;
+      googleEmail     = authResult.email;
+      googleImageUrl  = authResult.photoUrl;
+    });
+
+    final FirebaseUser currentUser = await _auth.currentUser();
+    assert(authResult.uid == currentUser.uid);
+
+    return 'signInWithGoogle succeeded: $authResult';
+  }
 
   Future<void> _submitLogin() async {
     if(!_formSignin.currentState.validate()){
@@ -163,10 +203,12 @@ class _SignInCardState extends State<SignInCard> {
                 ),
 
                 SizedBox(height: 20),
+                _signInButton(),
+                SizedBox(height: 30),
                 Text('Satay warrior v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
                 // Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
-                // SizedBox(height: 30),
+
 
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -190,6 +232,47 @@ class _SignInCardState extends State<SignInCard> {
         ],
       )
       )
+    );
+  }
+
+  Widget _signInButton() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        signInWithGoogle().whenComplete(() {
+              
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return FirstScreen( uid: googleUid, name: googleName,email: googleEmail,imageUrl: googleImageUrl);
+              },
+            ),
+          );
+        });
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.green),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(image: AssetImage("assets/images/google_logo.png"), height: 15.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

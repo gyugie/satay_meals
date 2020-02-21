@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../providers/auth.dart';
@@ -15,13 +18,21 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formSignup  = GlobalKey();
   final _passwordController               = TextEditingController();
+  final FirebaseAuth _auth                = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn         = GoogleSignIn();
   var _isLoading                          = false;
+  bool _isGoogleSignUp                    = false;
    Map<String, String> _newUser          = {
                                               'username': '',
                                               'email':'',
                                               'password':'',
-                                              'phone':''
+                                              'phone':'',
+                                              'google':''
                                             };
+  String googleUid;
+  String googleName;
+  String googleEmail;
+  String googleImageUrl;
 
  Future<void> _submitSignup() async {
    if(!_formSignup.currentState.validate()){
@@ -33,20 +44,60 @@ class _SignUpState extends State<SignUp> {
      _isLoading = true;
    });
 
+   _submitPayload();
+
+ }
+
+ Future<void> _submitPayload() async {
+//  print(_newUser['username']);
    try{
-      await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], int.parse(_newUser['phone']));
+      await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], _newUser['phone'], _newUser['google']);
         CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
          widget.switchScreen(0);
    } on HttpException catch (err) {
-      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authentication Failed', err.toString(), true);
+        CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authentication Failed', err.toString(), true);
    } catch (err){
-      CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
+     print(err);
+        CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
    }
 
-   setState(() {
+    setState(() {
      _isLoading = false;
+     _isGoogleSignUp= false;
    });
  }
+
+ Future<String> signUpWithGoogle() async {
+    // Provider.of<Auth>(context, listen: false).signOutGoogle();
+    final GoogleSignInAccount googleSignInAccount               = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    final AuthCredential credential                             = GoogleAuthProvider.getCredential(
+                                                                  accessToken: googleSignInAuthentication.accessToken,
+                                                                  idToken: googleSignInAuthentication.idToken,
+                                                                );
+
+    final FirebaseUser authResult = await _auth.signInWithCredential(credential);
+
+    assert(authResult.email != null);
+    assert(authResult.displayName != null);
+    assert(authResult.photoUrl != null);
+    assert(!authResult.isAnonymous);
+    assert(await authResult.getIdToken() != null);
+  
+    setState(() {
+      _newUser['google']      = authResult.uid;
+      _newUser['username']    = authResult.displayName;
+      _newUser['email']       = authResult.email;
+      _newUser['password']    = '';
+      _isGoogleSignUp         = true;
+    });
+
+    if(!_isGoogleSignUp){
+      _submitPayload();
+    }
+
+   
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +290,12 @@ class _SignUpState extends State<SignUp> {
               ),
 
                 SizedBox(height: 20),
+                
+                _isGoogleSignUp
+                 ?
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                :
+                _signUpGoogle()
 
                 // Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
@@ -261,6 +318,41 @@ class _SignUpState extends State<SignUp> {
                 // )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _signUpGoogle() {
+    return OutlineButton(
+      splashColor: Colors.grey,
+      onPressed: () {
+        signUpWithGoogle().whenComplete(() {
+           
+           _submitPayload();
+        });
+      },
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      highlightElevation: 0,
+      borderSide: BorderSide(color: Colors.green),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(image: AssetImage("assets/images/google_logo.png"), height: 15.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
