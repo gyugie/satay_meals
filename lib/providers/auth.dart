@@ -138,6 +138,7 @@ class Auth with ChangeNotifier{
          
 
       final responseData = json.decode(response.body);
+      print(responseData);
       if(responseData['verified'] == false ){
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
@@ -230,6 +231,8 @@ class Auth with ChangeNotifier{
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('userData');
+    
+    signOutGoogle();
 
   }
 
@@ -245,7 +248,6 @@ class Auth with ChangeNotifier{
   void signOutGoogle() async{
     await googleSignIn.signOut();
 
-    print("User Sign Out");
 }
 
   Future<void> changePassword(String oldPassword, String newPassword) async {

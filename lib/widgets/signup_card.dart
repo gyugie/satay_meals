@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:async';
+import 'dart:convert' show json;
+import "package:http/http.dart" as http;
 
 import '../widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
@@ -20,6 +23,12 @@ class _SignUpState extends State<SignUp> {
   final _passwordController               = TextEditingController();
   final FirebaseAuth _auth                = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn         = GoogleSignIn();
+  GoogleSignIn _googleSignIn              = GoogleSignIn(
+                                              scopes: <String>[
+                                                'email',
+                                                'https://www.googleapis.com/auth/contacts.readonly',
+                                              ],
+                                            );
   var _isLoading                          = false;
   bool _isGoogleSignUp                    = false;
    Map<String, String> _newUser          = {
@@ -33,6 +42,84 @@ class _SignUpState extends State<SignUp> {
   String googleName;
   String googleEmail;
   String googleImageUrl;
+
+  GoogleSignInAccount _currentUser;
+  String _contactText;
+
+  @override
+  void initState() {
+    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        _handleGetContact();
+      }
+    });
+    _googleSignIn.signInSilently();
+  }
+
+  Future<void> _handleGetContact() async {
+    setState(() {
+      _contactText = "Loading contact info...";
+    });
+   
+    final http.Response response = await http.get(
+      'https://people.googleapis.com/v1/people/me/connections'
+      '?requestMask.includeField=person.names',
+      headers: await _currentUser.authHeaders,
+    );
+    // 102986602844238104126
+       print(_currentUser);
+ 
+    if (response.statusCode != 200) {
+      setState(() {
+        _contactText = "People API gave a ${response.statusCode} "
+            "response. Check logs for details.";
+      });
+      print('People API ${response.statusCode} response: ${response.body}');
+      return;
+    }
+    final Map<String, dynamic> data = json.decode(response.body);
+    final String namedContact = _pickFirstNamedContact(data);
+    setState(() {
+      if (namedContact != null) {
+        _contactText = "I see you know $namedContact!";
+      } else {
+        _contactText = "No contacts to display.";
+      }
+    });
+  }
+
+  String _pickFirstNamedContact(Map<String, dynamic> data) {
+    final List<dynamic> connections = data['connections'];
+    final Map<String, dynamic> contact = connections?.firstWhere(
+      (dynamic contact) => contact['names'] != null,
+      orElse: () => null,
+    );
+    if (contact != null) {
+      final Map<String, dynamic> name = contact['names'].firstWhere(
+        (dynamic name) => name['displayName'] != null,
+        orElse: () => null,
+      );
+      if (name != null) {
+        return name['displayName'];
+      }
+    }
+    return null;
+  }
+
+  Future<void> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
+
 
  Future<void> _submitSignup() async {
    if(!_formSignup.currentState.validate()){
@@ -90,7 +177,7 @@ class _SignUpState extends State<SignUp> {
       _newUser['password']    = '';
       _isGoogleSignUp         = true;
     });
-
+      print(_newUser['email']);
     if(!_isGoogleSignUp){
       _submitPayload();
     }
@@ -100,6 +187,7 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    // _handleSignOut();
     return Container(
       decoration: new BoxDecoration(
         color: Colors.grey.withOpacity(0.6),
@@ -311,10 +399,11 @@ class _SignUpState extends State<SignUp> {
     return OutlineButton(
       splashColor: Colors.grey,
       onPressed: () {
-        signUpWithGoogle().whenComplete(() {
+        _handleSignIn();
+        // signUpWithGoogle().whenComplete(() {
            
-           _submitPayload();
-        });
+        //    _submitPayload();
+        // });
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
