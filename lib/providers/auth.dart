@@ -100,7 +100,7 @@ class Auth with ChangeNotifier{
         );
 
       final responseData = json.decode(response.body);
-      print(responseData);
+    
       if(responseData['success'] == false){
         throw HttpException(responseData['message']);
       }
@@ -110,21 +110,34 @@ class Auth with ChangeNotifier{
     }
   }
 
-  Future<void> login(String username, String password) async {
+  Future<void> login(String username, String password, String googleUid, bool isGoogle) async {
 
       try{
-        final response = await http.post(
-          baseAPI + '/API_Account/login', 
-          headers: headersAPI,
-          body: {
-            'username': username,
-            'password': password,
-            'token_firebase': _firebaseToken
-          },
-        );
+        var response;
+        
+        if(isGoogle){
+          response = await http.post(
+            baseAPI + '/API_Account/loginGoogle', 
+            headers: headersAPI,
+            body: {
+              'uid': googleUid,
+              'token_firebase': _firebaseToken
+            },
+          );
+        } else {
+          response = await http.post(
+            baseAPI + '/API_Account/login', 
+            headers: headersAPI,
+            body: {
+              'username': username,
+              'password': password,
+              'token_firebase': _firebaseToken
+            },
+          );
+        }
+         
 
       final responseData = json.decode(response.body);
-
       if(responseData['verified'] == false ){
         _userId = responseData['data']['id'];
         _role   = responseData['data']['type']; 
@@ -163,6 +176,7 @@ class Auth with ChangeNotifier{
       }
 
   }
+
 
   Future<void> tryToAutoLogin() async {
     final prefs         = await SharedPreferences.getInstance();

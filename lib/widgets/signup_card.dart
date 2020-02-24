@@ -49,7 +49,7 @@ class _SignUpState extends State<SignUp> {
  }
 
  Future<void> _submitPayload() async {
-//  print(_newUser['username']);
+
    try{
       await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], _newUser['phone'], _newUser['google']);
         CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
@@ -68,7 +68,6 @@ class _SignUpState extends State<SignUp> {
  }
 
  Future<String> signUpWithGoogle() async {
-    // Provider.of<Auth>(context, listen: false).signOutGoogle();
     final GoogleSignInAccount googleSignInAccount               = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
     final AuthCredential credential                             = GoogleAuthProvider.getCredential(
@@ -301,21 +300,6 @@ class _SignUpState extends State<SignUp> {
                 
                 // SizedBox(height: 30),
 
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //   children: <Widget>[
-                //      RaisedButton(
-                //       shape: new RoundedRectangleBorder(
-                //         borderRadius: new BorderRadius.circular(18.0),
-                //       ),
-                //       color: Colors.blue[900],
-                //       child: Text("Signup With Facebook",
-                //           style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-                //         ),
-                //       onPressed: () {},
-                //     ),
-                //   ],
-                // )
             ],
           ),
         ),

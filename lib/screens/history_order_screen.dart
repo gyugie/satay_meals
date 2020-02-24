@@ -92,6 +92,12 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
           child: 
           !_isLoading 
           ? 
+            historyOrders.length == 0
+            ?
+            Center(
+              child: Image.asset('assets/images/cartempty.png', height: 100),
+            )
+            :
             ListView.builder(
               itemCount: historyOrders.length,
               itemBuilder: (ctx, index) => FadeTransition(
@@ -110,12 +116,6 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
               )
             )
           :
-            historyOrders.length == 0
-            ?
-            Center(
-              child: Image.asset('assets/images/cartempty.png', height: 100),
-            )
-            :
           // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
           Center(
             child: FadeTransition(

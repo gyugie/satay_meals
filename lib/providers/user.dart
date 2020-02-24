@@ -14,8 +14,8 @@ class UserTemp {
   final String email;
   final String phone;
   final String address;
-  final int facebookId;
-  final int googleId;
+  final String facebookId;
+  final String googleId;
   final String joinDate;
   final String image;
   final String latitude;
@@ -110,10 +110,10 @@ class User with ChangeNotifier {
         email       : responseData['data']['email'],
         phone       : responseData['data']['phone'] != null ? responseData['data']['phone'] : null,
         address     : responseData['data']['address'],
-        facebookId  : responseData['data']['id_facebook'] != null ? int.parse(responseData['data']['id_facebook']) : null,
-        googleId    : responseData['data']['id_google'] != null ? int.parse(responseData['data']['id_google']) : null,
+        facebookId  : responseData['data']['id_facebook'] != null ? responseData['data']['id_facebook'] : null,
+        googleId    : responseData['data']['id_google'] != null ? responseData['data']['id_google'] : null,
         joinDate    : responseData['data']['join_date'],
-        image       : responseData['data']['image'],
+        image       : responseData['data']['image'] != null ? responseData['data']['image'] : null,
         latitude    : responseData['data']['lat'],
         longitude   : responseData['data']['lng'],
         postalCode  : responseData['data']['post_code'],

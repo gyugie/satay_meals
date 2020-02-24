@@ -24,9 +24,11 @@ class _SignInCardState extends State<SignInCard> {
   final FirebaseAuth _auth                = FirebaseAuth.instance;
   final GoogleSignIn googleSignIn         = GoogleSignIn();
   var _isLoading                          = false;
+  var _isGoogleSign                       = false;
   Map<String, String> _authData = {
     'usernmae':'',
-    'password':''
+    'password':'',
+    'uid'     : ''
   };
 
   String googleUid;
@@ -34,7 +36,7 @@ class _SignInCardState extends State<SignInCard> {
   String googleEmail;
   String googleImageUrl;
 
-  Future<String> signInWithGoogle() async {
+  Future<String> _signInWithGoogle() async {
     
     final GoogleSignInAccount googleSignInAccount               = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
@@ -52,29 +54,33 @@ class _SignInCardState extends State<SignInCard> {
     assert(await authResult.getIdToken() != null);
    
     setState(() {
-      googleUid       = authResult.uid;
-      googleName      = authResult.displayName;
-      googleEmail     = authResult.email;
-      googleImageUrl  = authResult.photoUrl;
+      _authData['uid']      = authResult.uid;
+      _isGoogleSign         = true;
     });
 
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(authResult.uid == currentUser.uid);
+    _submitLogin(true);
 
-    return 'signInWithGoogle succeeded: $authResult';
+    // final FirebaseUser currentUser = await _auth.currentUser();
+    // assert(authResult.uid == currentUser.uid);
+
+    // return 'signInWithGoogle succeeded: $authResult';
   }
 
-  Future<void> _submitLogin() async {
-    if(!_formSignin.currentState.validate()){
-      return;
+  Future<void> _submitLogin(bool isGoogleSignIn) async {
+    if(!isGoogleSignIn){
+      if(!_formSignin.currentState.validate()){
+        return;
+      }
+
+      _formSignin.currentState.save();
+      
+        setState(() {
+          _isLoading = true;
+        });
     }
-    _formSignin.currentState.save();
-    setState(() {
-      _isLoading = true;
-    });
 
     try{
-      await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password']);
+      await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password'], _authData['uid'], isGoogleSignIn);
 
     } on HttpException catch (err){
       if(err.toString().contains('Account is not active')){
@@ -88,10 +94,11 @@ class _SignInCardState extends State<SignInCard> {
 
      setState(() {
       _isLoading = false;
+      _isGoogleSign = false;
     });
 
-    
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,41 +203,27 @@ class _SignInCardState extends State<SignInCard> {
                   child: Text("Login".toUpperCase(),
                       style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                  onPressed: _submitLogin,
-                  // (){
-                  //   Provider.of<Auth>(context).getLocation();
-                  // }
+                  onPressed: (){
+                    _submitLogin(false);
+                  },
                 ),
 
                 SizedBox(height: 20),
+
+                _isGoogleSign
+                ?
+                CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                :
                 _signInButton(),
                 SizedBox(height: 30),
                 Text('Satay warrior v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
                 // Text('____________    OR    ____________', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
-
-
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                //   children: <Widget>[
-                //      RaisedButton(
-                //       shape: new RoundedRectangleBorder(
-                //         borderRadius: new BorderRadius.circular(18.0),
-                //       ),
-                //       color: Colors.blue[900],
-                //       child: Text("Login With Facebook",
-                //           style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
-                //         ),
-                //       onPressed: () {},
-                //     ),
-                //   ],
-                // )
               ],
             ),
           ),
-          
-        ],
-      )
+          ],
+        )
       )
     );
   }
@@ -238,18 +231,7 @@ class _SignInCardState extends State<SignInCard> {
   Widget _signInButton() {
     return OutlineButton(
       splashColor: Colors.grey,
-      onPressed: () {
-        signInWithGoogle().whenComplete(() {
-              
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return FirstScreen( uid: googleUid, name: googleName,email: googleEmail,imageUrl: googleImageUrl);
-              },
-            ),
-          );
-        });
-      },
+      onPressed: _signInWithGoogle,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
       borderSide: BorderSide(color: Colors.green),

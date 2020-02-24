@@ -106,7 +106,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
     final responseData = json.decode(response.body);
     if(responseData['success'] == false){
       throw HttpException(responseData['message']);
-    }print(responseData);
+    }
 
   } catch (err){
     throw err;
@@ -114,6 +114,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
 }
 
 Future<void> getHistoryOrders() async {
+  print('${_authToken} id ${_userId}');
   try{
     headersAPI['token'] = _authToken;
     final List<HistoryOrder> loadedHistoryOrders  = [];
@@ -125,11 +126,13 @@ Future<void> getHistoryOrders() async {
         'id' : _userId
       }
     );
-
+  
     final responseData  = json.decode(response.body);
+    
     if(responseData['success'] == false){
       throw HttpException(responseData['message']);
     }
+    
     _historyOrders = [];
     for(int i = 0; i < responseData['data'].length; i++){
       loadedHistoryOrders.add(HistoryOrder(
@@ -146,8 +149,9 @@ Future<void> getHistoryOrders() async {
       notifyListeners();
     }
 
-
+    
   } catch (err){
+    
     throw err;
   }
 
