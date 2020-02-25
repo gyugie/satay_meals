@@ -17,7 +17,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin{
   TabController _tabController;
   AuthMode _authMode  = AuthMode.Signin;
-  var _flexForCard    = 2;
+  var _flexForCard    = 3;
   var _isInit         = true;
 
   @override
@@ -33,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     if(number == 0){
       setState(() {
         _authMode     = AuthMode.Signup;
-        _flexForCard  = 2;
+        _flexForCard  = 3;
          _tabController.index = 0;
       });
     } else {
@@ -153,11 +153,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                       )
                     ),
                   ),
-              
+          
                 ],
               ),
             ),
-          )
+            
+          ),
+          
+         
+        
         ],
       ),  
     );

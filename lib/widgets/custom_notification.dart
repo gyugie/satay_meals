@@ -163,7 +163,7 @@ static void alertVerification(BuildContext context, IconData icon, String title,
               child: Text('OK!', style: TextStyle(color: Colors.green)),
               onPressed: (){
                 Navigator.pop(context);
-                Navigator.pop(context, true);
+                 Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
                 
               },
             )

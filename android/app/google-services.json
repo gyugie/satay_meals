@@ -8,9 +8,83 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1026100339635:android:a1d9f510dced72491a61c6",
+        "android_client_info": {
+          "package_name": "com.example.rider_satay_meals"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1026100339635:android:e4de8f61e523876d1a61c6",
         "android_client_info": {
           "package_name": "com.example.satay_meals"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026100339635-daje3r2na2dk74dqu5g5ans7rt086eg3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.satay_meals",
+            "certificate_hash": "c95276fbf4853d37ffb1775c4bc05505b8bf0e0e"
+          }
+        },
+        {
+          "client_id": "1026100339635-dt8ffb43dig88tueifi0cosghhdujdq9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.satay_meals",
+            "certificate_hash": "475808d4f9deb93b9b7c120bf2e7f902f558ae79"
+          }
+        },
+        {
+          "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026100339635:android:9564690210e7894d1a61c6",
+        "android_client_info": {
+          "package_name": "com.example.vendor_satay_meals"
         }
       },
       "oauth_client": [

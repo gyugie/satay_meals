@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/screens/auth_screen.dart';
+import 'package:satay_meals/screens/splash_screen.dart';
 import 'package:satay_meals/widgets/custom_notification.dart';
 import '../providers/http_exception.dart';
 import '../providers/auth.dart';
@@ -33,8 +35,14 @@ class _VerificationCardState extends State<VerificationCard> {
             child: Text('OK!', style: TextStyle(color: Colors.red)),
             onPressed: (){
               Navigator.pop(context);
-               Navigator.pop(context, true);
-               
+              Navigator.pop(context, true);
+              Navigator.of(context).push(
+                new MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return new SplashScreen();
+                    }
+                )
+              );
             },
           )
           :

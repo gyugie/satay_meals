@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1026100339635",
+    "firebase_url": "https://satay-warrior-1576208514213.firebaseio.com",
+    "project_id": "satay-warrior-1576208514213",
+    "storage_bucket": "satay-warrior-1576208514213.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026100339635:android:e4de8f61e523876d1a61c6",
+        "android_client_info": {
+          "package_name": "com.example.satay_meals"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1026100339635-n1gm0hnbgc6k7inuf7s353je88e3lqop.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

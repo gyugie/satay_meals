@@ -111,7 +111,7 @@ class Auth with ChangeNotifier{
   }
 
   Future<void> login(String username, String password, String googleUid, bool isGoogle) async {
-
+    print(googleUid);
       try{
         var response;
         
@@ -246,8 +246,7 @@ class Auth with ChangeNotifier{
   }
 
   void signOutGoogle() async{
-    await googleSignIn.signOut();
-
+    await googleSignIn.disconnect();
 }
 
   Future<void> changePassword(String oldPassword, String newPassword) async {
