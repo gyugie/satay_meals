@@ -80,7 +80,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.black.withOpacity(0.5)
+         canvasColor: Colors.black,
        ),
        child: DrawerSide(),
       ),

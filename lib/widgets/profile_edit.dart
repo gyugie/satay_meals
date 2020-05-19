@@ -336,7 +336,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                   // controller: firstNameController,
                                   style: new TextStyle(color: Colors.white),
                                   decoration: new InputDecoration(
-                                    labelText: 'Frist Name *', 
+                                    labelText: 'First Name *', 
                                     labelStyle: TextStyle(color: Colors.white, fontSize: 16),
                                     errorBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(color: Colors.orange),

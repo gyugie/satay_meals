@@ -66,7 +66,7 @@ class _TopupScreenState extends State<TopupScreen>   with TickerProviderStateMix
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.black.withOpacity(0.5)
+         canvasColor: Colors.black,
        ),
        child: DrawerSide(),
       ),

@@ -65,7 +65,7 @@ class _TopupPendingScreenState extends State<TopupPendingScreen> with TickerProv
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.black.withOpacity(0.5)
+         canvasColor: Colors.black,
        ),
        child: DrawerSide(),
       ),

@@ -73,7 +73,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.black.withOpacity(0.5)
+         canvasColor: Colors.black,
        ),
        child: DrawerSide(),
       ),
@@ -107,7 +107,6 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
           )
         )
         : 
-        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
        FadeTransition(
           opacity: animation,
           child: Center(

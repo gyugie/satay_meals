@@ -4,8 +4,6 @@ import 'dart:convert';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 
-
-
 import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
 import '../providers/http_exception.dart';
@@ -75,7 +73,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
-         canvasColor: Colors.black.withOpacity(0.5)
+         canvasColor: Colors.black,
        ),
        child: DrawerSide(),
       ),
