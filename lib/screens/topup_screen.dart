@@ -80,7 +80,7 @@ class _TopupScreenState extends State<TopupScreen>   with TickerProviderStateMix
               children: <Widget>[
                 Container(
                   padding: EdgeInsets.only(left: 20, top: 20),
-                  child: Text('Your Ballance', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
+                  child: Text('Your Balance', style: Theme.of(context).textTheme.title, textAlign: TextAlign.start,),
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
