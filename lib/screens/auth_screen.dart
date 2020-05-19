@@ -94,9 +94,10 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                  Flexible(
                    child:  Container(
                     padding: EdgeInsets.symmetric(horizontal: 30.0),
-                    child: Image.asset('assets/images/SWlogo.png',scale: 1.5,)
+                    child: Image.asset('assets/images/logo_one_step_delivery.jpg',scale: 1.5,)
                   ),
                  ),
+                 SizedBox(height: 10),
                  Flexible(
                    flex: deviceSize.width > 600 ? 2 : 1,
                    child: Container(
