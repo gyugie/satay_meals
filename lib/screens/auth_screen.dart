@@ -115,7 +115,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                             width: 5.0,
                           ),
                           borderRadius: BorderRadius.circular(50),
-                          color: Colors.green
+                          color: Colors.orange[700]
                         ),
                         controller: _tabController,
                         onTap: (index){

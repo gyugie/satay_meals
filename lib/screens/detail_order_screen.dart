@@ -137,7 +137,7 @@ class _DetailOrderState extends State<DetailOrder> with TickerProviderStateMixin
       body: 
         _isLoading 
         ?
-        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700])))
        FadeTransition(
           opacity: animation,
           child: Center(

@@ -162,7 +162,7 @@ class _SignInCardState extends State<SignInCard> {
                   style: TextStyle(color: Colors.white),
                   decoration: new InputDecoration(
                     enabledBorder: UnderlineInputBorder(      
-                      borderSide: BorderSide(color: Colors.green),   
+                      borderSide: BorderSide(color: Colors.orange[700]),   
                       ), 
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
@@ -199,7 +199,7 @@ class _SignInCardState extends State<SignInCard> {
                   obscureText: true,
                   decoration: new InputDecoration(
                     enabledBorder: UnderlineInputBorder(      
-                      borderSide: BorderSide(color: Colors.green),   
+                      borderSide: BorderSide(color: Colors.orange[700]),   
                       ), 
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white)
@@ -235,13 +235,13 @@ class _SignInCardState extends State<SignInCard> {
                 SizedBox(height: 20),
                 _isLoading 
                 ?
-                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                 :
                 RaisedButton(
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(18.0),
                   ),
-                  color: Colors.green,
+                  color: Colors.orange[700],
                   child: Text("Login".toUpperCase(),
                       style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -261,7 +261,7 @@ class _SignInCardState extends State<SignInCard> {
                   children: <Widget>[
                     _isGoogleSignin
                     ?
-                      CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                      CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                     :
                     _googleButton(),
 
@@ -290,7 +290,7 @@ class _SignInCardState extends State<SignInCard> {
       onPressed: _handleSignIn,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.green),
+      borderSide: BorderSide(color: Colors.orange[700]),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
         child: Row(
@@ -322,7 +322,7 @@ class _SignInCardState extends State<SignInCard> {
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.green),
+      borderSide: BorderSide(color: Colors.orange[700]),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
         child: Row(

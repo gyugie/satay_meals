@@ -50,7 +50,7 @@ class ProductItem extends StatelessWidget {
                 SizedBox(
                   width: 150,
                   child: FlatButton(
-                    color: Colors.green,
+                    color: Colors.orange[700],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -87,7 +87,7 @@ class ProductItem extends StatelessWidget {
                 SizedBox(
                   width: 150,
                   child: FlatButton(
-                    color: Colors.green,
+                    color: Colors.orange[700],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

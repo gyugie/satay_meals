@@ -147,7 +147,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green)
+                    borderSide: BorderSide(color: Colors.orange[700])
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -179,7 +179,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green)
+                    borderSide: BorderSide(color: Colors.orange[700])
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -212,7 +212,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green)
+                    borderSide: BorderSide(color: Colors.orange[700])
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -245,7 +245,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green)
+                    borderSide: BorderSide(color: Colors.orange[700])
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -277,7 +277,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.white),
                 decoration: new InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.green)
+                    borderSide: BorderSide(color: Colors.orange[700])
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.white),
@@ -306,13 +306,13 @@ class _SignUpState extends State<SignUp> {
 
               SizedBox(height: 20),
               _isLoading ?
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
               :
               RaisedButton(
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                 ),
-                color: Colors.green,
+                color: Colors.orange[700],
                 child: Text("Register".toUpperCase(),
                     style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
                   ),
@@ -330,7 +330,7 @@ class _SignUpState extends State<SignUp> {
                 children: <Widget>[
                   _isGoogleSignUp
                   ?
-                    CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                    CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                   :
                   _signUpGoogle(),
                   SizedBox(height: 20),
@@ -357,7 +357,7 @@ class _SignUpState extends State<SignUp> {
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.green),
+      borderSide: BorderSide(color: Colors.orange[700]),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
         child: Row(
@@ -388,7 +388,7 @@ class _SignUpState extends State<SignUp> {
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       highlightElevation: 0,
-      borderSide: BorderSide(color: Colors.green),
+      borderSide: BorderSide(color: Colors.orange[700]),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 3, 0, 3),
         child: Row(

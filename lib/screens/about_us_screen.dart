@@ -68,7 +68,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
     final deviceSize  = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-      iconTheme: new IconThemeData(color: Colors.green),
+      iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('About Us', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(

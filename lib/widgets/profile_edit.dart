@@ -251,13 +251,13 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
         title: Text('Edit Profile', style: Theme.of(context).textTheme.title),
         elevation: 0.0,
         backgroundColor: Colors.black.withOpacity(0.03),
-        iconTheme: new IconThemeData(color: Colors.green),
+        iconTheme: new IconThemeData(color: Colors.orange[700]),
       ),
       backgroundColor: Theme.of(context).primaryColor,
       body: 
       _isLoading
       ?
-      // Center( child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)), )
+      // Center( child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700])), )
       FadeTransition(
           opacity: animation,
           child: Center(
@@ -342,7 +342,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                       borderSide: BorderSide(color: Colors.orange),
                                     ),
                                     enabledBorder: UnderlineInputBorder(      
-                                      borderSide: BorderSide(color: Colors.green),   
+                                      borderSide: BorderSide(color: Colors.orange[700]),   
                                     ),  
                                     errorStyle: TextStyle(color: Colors.orange),
                                   ),
@@ -385,7 +385,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                       borderSide: BorderSide(color: Colors.orange),
                                     ),
                                     enabledBorder: UnderlineInputBorder(      
-                                      borderSide: BorderSide(color: Colors.green),   
+                                      borderSide: BorderSide(color: Colors.orange[700]),   
                                     ),  
                                     errorStyle: TextStyle(color: Colors.orange),
                                   ),
@@ -429,7 +429,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                 borderSide: BorderSide(color: Colors.orange),
                               ),
                               enabledBorder: UnderlineInputBorder(      
-                                borderSide: BorderSide(color: Colors.green),   
+                                borderSide: BorderSide(color: Colors.orange[700]),   
                               ),  
                               errorStyle: TextStyle(color: Colors.orange),
                             ),
@@ -483,7 +483,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                     ),
                                     underline: Container(
                                       height: 1,
-                                      color: _validationState == null ? Colors.orange : Colors.green,
+                                      color: _validationState == null ? Colors.orange : Colors.orange[700],
                                     ),
                                     value: _selectedState,
                                     onChanged: (value) {
@@ -529,7 +529,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                               ?
                               Align(
                                 alignment: Alignment.center,
-                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                               )
                               :
                               Container(
@@ -555,7 +555,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                     ),
                                     underline: Container(
                                       height: 1,
-                                      color: _validationCity == null ? Colors.orange : Colors.green,
+                                      color: _validationCity == null ? Colors.orange : Colors.orange[700],
                                     ),
                                     onChanged: (UserCity value) {
                                       setState(() {
@@ -628,7 +628,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
                                 enabledBorder: UnderlineInputBorder(      
-                                  borderSide: BorderSide(color: Colors.green),   
+                                  borderSide: BorderSide(color: Colors.orange[700]),   
                                 ),  
                                 errorStyle: TextStyle(color: Colors.orange),
                               ),
@@ -682,7 +682,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
                                 borderSide: BorderSide(color: Colors.orange),
                               ),
                               enabledBorder: UnderlineInputBorder(      
-                                borderSide: BorderSide(color: Colors.green),   
+                                borderSide: BorderSide(color: Colors.orange[700]),   
                               ),  
                               errorStyle: TextStyle(color: Colors.orange),
                             ),
@@ -729,7 +729,7 @@ class _ProfileEditState extends State<ProfileEdit>  with TickerProviderStateMixi
        ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save, color: Colors.white),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.orange[700],
         onPressed:  (){
           // _loadDataState();
           // _loadCurrentProfile();

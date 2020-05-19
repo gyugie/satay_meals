@@ -397,7 +397,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                                   Divider(color: Colors.grey[100]),
                                   _isLoading
                                   ?
-                                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                                   :
                                   Text('${userAddress}'),
                                 ],
@@ -509,7 +509,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             width: deviceSize.width * 0.9,
             child: FloatingActionButton.extended(
 
-              backgroundColor: _disabledButton ? Colors.grey : Colors.green,
+              backgroundColor: _disabledButton ? Colors.grey : Colors.orange[700],
               icon: Icon(Icons.attach_money, color: Colors.white,),
               label: Text('Buy', style: Theme.of(context).textTheme.headline),
               onPressed: _disabledButton ? null : (){
@@ -602,7 +602,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                   minWidth: MediaQuery.of(context).size.width * 0.9,
                   height: 45,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                  buttonColor: Colors.green,
+                  buttonColor: Colors.orange[700],
                   child: RaisedButton(
                     child: Text("Confirm", style: Theme.of(context).textTheme.title),
                     onPressed: () async {
@@ -656,13 +656,13 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             shape: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0)),
             title: Container(
-              child: Icon(icon, size: 100, color: warning ? Colors.red : Colors.green),
+              child: Icon(icon, size: 100, color: warning ? Colors.red : Colors.orange[700]),
             ),
             content:Container(
               height: 150,
               child: Column(
                 children: <Widget>[
-                  Text(title, style: TextStyle(color: warning ? Colors.red : Colors.green, fontSize: 24)),
+                  Text(title, style: TextStyle(color: warning ? Colors.red : Colors.orange[700], fontSize: 24)),
                   SizedBox(height: 20),
                   Text(messages, style: TextStyle(color: Colors.grey, fontSize: 16), textAlign: TextAlign.center,),
                 ],
@@ -670,7 +670,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Close', style: TextStyle(color: warning ? Colors.red : Colors.green)),
+                child: Text('Close', style: TextStyle(color: warning ? Colors.red : Colors.orange[700])),
                 onPressed: (){
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();

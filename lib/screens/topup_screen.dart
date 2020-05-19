@@ -61,7 +61,7 @@ class _TopupScreenState extends State<TopupScreen>   with TickerProviderStateMix
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: new IconThemeData(color: Colors.green),
+        iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('Top Up', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
@@ -145,7 +145,7 @@ class _TopupScreenState extends State<TopupScreen>   with TickerProviderStateMix
                   child: 
                   _isLoading
                   ?
-                  Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+                  Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700])))
                   :
                   ListView.builder(
                     scrollDirection: Axis.horizontal,

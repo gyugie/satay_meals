@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
     return Scaffold(
       appBar: AppBar(
-        iconTheme: new IconThemeData(color: Colors.green),
+        iconTheme: new IconThemeData(color: Colors.orange[700]),
         actions: <Widget>[
             userRole == 'consumer' || userRole == 'vendor' 
             ? 
@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       
       RefreshIndicator(
         key: _refreshIndicatorKey,
-        color: Colors.green,
+        color: Colors.orange[700],
         onRefresh: _loadDataHome,
         child: 
                 !_isLoading 

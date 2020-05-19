@@ -43,7 +43,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
   final myWallet    = Provider.of<User>(context, listen: false).myWallet;
     return Scaffold(
       appBar: AppBar(
-         iconTheme: new IconThemeData(color: Colors.green),
+         iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('Order', style: Theme.of(context).textTheme.headline),
         actions: <Widget>[
              userRole == 'consumer' || userRole == 'vendor' 
@@ -76,7 +76,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
             opacity: cartItem.item.length > 0 ? 1.0 : 0.0,
             duration: Duration(milliseconds: 1000),
             child: FloatingActionButton.extended(
-              backgroundColor: Colors.green,
+              backgroundColor: Colors.orange[700],
               label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
               onPressed: cartItem.item.length < 1 ? null : (){
                 Navigator.of(context).pushNamed(CheckoutScreen.routeName);

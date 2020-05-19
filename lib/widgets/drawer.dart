@@ -28,7 +28,7 @@ class DrawerSide extends StatelessWidget {
             UserAccountsDrawerHeader(
               accountName: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.title),
               accountEmail: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
-              currentAccountPicture: Image.asset('assets/images/SWlogo.png', fit: BoxFit.fitHeight),
+              currentAccountPicture: Image.asset('assets/images/logo_one_step_delivery.jpg', fit: BoxFit.fitWidth),
               decoration: BoxDecoration(color: Colors.black),
             ),
             if(authData.role == 'consumer')

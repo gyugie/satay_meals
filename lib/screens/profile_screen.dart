@@ -72,7 +72,7 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
         title: Text('Profile', style: Theme.of(context).textTheme.title),
         elevation: 0.0,
         backgroundColor: Colors.black.withOpacity(0.03),
-        iconTheme: new IconThemeData(color: Colors.green),
+        iconTheme: new IconThemeData(color: Colors.orange[700]),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
@@ -123,7 +123,7 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
                   child: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.subtitle)
                 ),
                 SizedBox(height: 20),
-                Divider(color: Colors.green),
+                Divider(color: Colors.orange[700]),
                 Container(
                   height: deviceSize.height * 0.52,
                   child: SingleChildScrollView(
@@ -133,7 +133,7 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
                           leading: Icon(Icons.email, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.lock, color: Colors.grey),
                           title: Text('******', style: Theme.of(context).textTheme.subtitle),
@@ -144,32 +144,32 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
                             },
                           ),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.phone, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.phone != null) ? _user.phone.toString() : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.account_balance, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.stateName != null) ? _user.stateName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.business, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.cityName != null) ? _user.cityName : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.pin_drop, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.address != '') ? _user.address : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.voicemail, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.postalCode != null) ? _user.postalCode : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
                         ),
-                        Divider(color: Colors.green),
+                        Divider(color: Colors.orange[700]),
                         ListTile(
                           leading: Icon(Icons.insert_invitation, color: Colors.grey),
                           title: Text('${_user == null ? '-' : (_user.joinDate != null) ? _user.joinDate : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
@@ -186,7 +186,7 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.edit, color: Colors.white),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.orange[700],
         onPressed: (){
           Navigator.of(context).pushNamed(ProfileEdit.routeName);
         },
@@ -299,7 +299,7 @@ class _UserProfileState extends State<UserProfile> with TickerProviderStateMixin
                         Navigator.pop(context);
                       }),
                   new FlatButton(
-                      child: const Text('SAVE', style: TextStyle(color: Colors.green)),
+                      child: const Text('SAVE', style: TextStyle(color: Colors.orangeAccent)),
                       onPressed: () {
                         _submitChangePassword();
                       

@@ -36,13 +36,13 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
             shape: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.0)),
             title: Container(
-              child: Icon(icon, size: 100, color: warning ? Colors.red : Colors.green),
+              child: Icon(icon, size: 100, color: warning ? Colors.red : Colors.orange[700]),
             ),
             content:Container(
               height: 150,
               child: Column(
                 children: <Widget>[
-                  Text(title, style: TextStyle(color: warning ? Colors.red : Colors.green, fontSize: 24)),
+                  Text(title, style: TextStyle(color: warning ? Colors.red : Colors.orange[700], fontSize: 24)),
                   SizedBox(height: 20),
                   Text(messages, style: TextStyle(color: Colors.grey, fontSize: 16), textAlign: TextAlign.center,),
                 ],
@@ -50,7 +50,7 @@ static void alertDialogWithIcon(BuildContext context, IconData icon, String titl
             ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Close', style: TextStyle(color: warning ? Colors.red : Colors.green)),
+                child: Text('Close', style: TextStyle(color: warning ? Colors.red : Colors.orange[700])),
                 onPressed: (){
                   Navigator.of(context).pop();
                   if(doublePop){
@@ -82,13 +82,13 @@ static void alertDialogUserIsNotActive(BuildContext context, IconData icon, Stri
           shape: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.0)),
           title: Container(
-            child: Icon(icon, size: 100, color: !isVerification ? Colors.red : Colors.green),
+            child: Icon(icon, size: 100, color: !isVerification ? Colors.red : Colors.orange[700]),
           ),
           content:Container(
             height: 150,
             child: Column(
               children: <Widget>[
-                Text(title, style: TextStyle(color: !isVerification ? Colors.red : Colors.green, fontSize: 24)),
+                Text(title, style: TextStyle(color: !isVerification ? Colors.red : Colors.orange[700], fontSize: 24)),
                 SizedBox(height: 20),
                 Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
               ],
@@ -98,7 +98,7 @@ static void alertDialogUserIsNotActive(BuildContext context, IconData icon, Stri
             isVerification
             ?
               FlatButton(
-              child: Text('Verification now!', style: TextStyle(color: Colors.green)),
+              child: Text('Verification now!', style: TextStyle(color: Colors.orange[700])),
               onPressed: (){
                 Navigator.pop(context);
                 Navigator.push(
@@ -140,13 +140,13 @@ static void alertVerification(BuildContext context, IconData icon, String title,
           shape: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16.0)),
           title: Container(
-            child: Icon(icon, size: 100, color: !isSuccess ? Colors.red : Colors.green),
+            child: Icon(icon, size: 100, color: !isSuccess ? Colors.red : Colors.orange[700]),
           ),
           content:Container(
             height: 150,
             child: Column(
               children: <Widget>[
-                Text(title, style: TextStyle(color: !isSuccess ? Colors.red : Colors.green, fontSize: 24)),
+                Text(title, style: TextStyle(color: !isSuccess ? Colors.red : Colors.orange[700], fontSize: 24)),
                 SizedBox(height: 20),
                 Text(messages, style: TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center,),
               ],
@@ -160,7 +160,7 @@ static void alertVerification(BuildContext context, IconData icon, String title,
             isSuccess 
             ?
             FlatButton(
-              child: Text('OK!', style: TextStyle(color: Colors.green)),
+              child: Text('OK!', style: TextStyle(color: Colors.orange[700])),
               onPressed: (){
                 Navigator.pop(context);
                  Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
@@ -219,7 +219,7 @@ static void alertComplainOrder(BuildContext context, IconData icon, String title
             ),
             
             FlatButton(
-              child: Text('No', style: TextStyle(color: Colors.green)),
+              child: Text('No', style: TextStyle(color: Colors.orange[700])),
               onPressed: (){
                 Navigator.of(context).pop();
               },

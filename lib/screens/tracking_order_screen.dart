@@ -168,7 +168,7 @@ class _TrackingOrderScreenState extends State<TrackingOrderScreen> with TickerPr
             print('closes ${widget.orderID}');
           },
         ),
-        iconTheme: new IconThemeData(color: Colors.green),
+        iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('Tracking Your Order', style: Theme.of(context).textTheme.title),
       ),
       backgroundColor: Theme.of(context).primaryColor,

@@ -6,7 +6,7 @@ class PaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         iconTheme: new IconThemeData(color: Colors.green),
+         iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('Confirm Payment', style: Theme.of(context).textTheme.headline),
       ),
       body: Container(

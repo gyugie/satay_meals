@@ -53,7 +53,7 @@ class _HistoryItemState extends State<HistoryItem> {
           setLabelColors = Colors.orange;
         break;
       case 'Deliveried':
-          setLabelColors = Colors.green;
+          setLabelColors = Colors.orange[700];
         break;
       case 'Delivering':
           setLabelColors = Colors.deepOrange;

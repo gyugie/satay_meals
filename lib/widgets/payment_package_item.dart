@@ -63,7 +63,7 @@ class PaymentPackage extends StatelessWidget {
                 SizedBox(
                   width: 110,
                   child: FlatButton(
-                    color: Colors.green,
+                    color: Colors.orange[700],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),

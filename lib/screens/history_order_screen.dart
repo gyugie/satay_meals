@@ -116,7 +116,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
               )
             )
           :
-          // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)))
+          // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700])))
           Center(
             child: FadeTransition(
                 opacity: animation,

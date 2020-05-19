@@ -52,12 +52,10 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-                height: deviceSize.height * 0.4,
-                width: deviceSize.width * 0.6,
-                child: Image.asset('assets/images/SWlogo.png', fit: BoxFit.fitWidth),
+                height: deviceSize.height,
+                width: deviceSize.width,
+                child: Image.asset('assets/images/one_step_delivery_potrait.png', fit: BoxFit.fitHeight),
             ),
-            Text('Satay Warior 1975', style: Theme.of(context).textTheme.title)
-
           ],
         )
       )

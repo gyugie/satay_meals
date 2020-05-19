@@ -86,7 +86,7 @@ class _VerificationCardState extends State<VerificationCard> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text('Account Setup', style: TextStyle(
-            color: Colors.green[200], 
+            color: Colors.orange[700], 
             fontSize: 20,
           ),
         ),
@@ -102,7 +102,7 @@ class _VerificationCardState extends State<VerificationCard> {
               children: <Widget>[
                 Text('Enter your verification code', style: 
                   TextStyle(
-                    color: Colors.green[200], 
+                    color: Colors.orange[700], 
                     fontSize: 24, 
                     fontWeight: FontWeight.bold)
                   ),
@@ -145,7 +145,7 @@ class _VerificationCardState extends State<VerificationCard> {
                 ),
                 SizedBox(height: 20),
                 Text('Please enter the verification code that You received \n on your email', style: TextStyle(
-                  color: Colors.green[200], 
+                  color: Colors.orange[700], 
                   fontSize: 14,
                   fontWeight: FontWeight.bold
                   ),
@@ -159,7 +159,7 @@ class _VerificationCardState extends State<VerificationCard> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.9,
                   child: FlatButton(
-                    color: Colors.green[300],
+                    color: Colors.orange[700],
                     textColor: Colors.white,
                     disabledColor: Colors.grey,
                     disabledTextColor: Colors.black,

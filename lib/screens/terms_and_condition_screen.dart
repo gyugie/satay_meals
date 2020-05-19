@@ -68,7 +68,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
     final deviceSize  = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-         iconTheme: new IconThemeData(color: Colors.green),
+         iconTheme: new IconThemeData(color: Colors.orange[700]),
         title: Text('Terms And Conditions', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
@@ -106,7 +106,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
           )
         )
         :  
-        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green)) )
+        // Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700])) )
         FadeTransition(
           opacity: animation,
           child: Center(
