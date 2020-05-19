@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as dom;
 
 import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
@@ -64,7 +66,6 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
   @override
   Widget build(BuildContext context) {
     final deviceSize  = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
       iconTheme: new IconThemeData(color: Colors.green),
@@ -82,9 +83,27 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
         ? 
         FadeTransition(
           opacity: animation,
-          child: Container(
+          child: SingleChildScrollView(
+            child: Container(
             padding: EdgeInsets.all(20),
-            child: Text(_aboutUs, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
+            child:  Html(
+                data: _aboutUs,
+                defaultTextStyle: TextStyle(color: Colors.white),
+                
+                padding: EdgeInsets.all(8.0),
+                onLinkTap: (url) {
+                  print("Opening $url...");
+                },
+                customRender: (node, children) {
+                  if (node is dom.Element) {
+                    switch (node.localName) {
+                      case "custom_tag": // using this, you can handle custom tags in your HTML 
+                        return Column(children: children);
+                    }
+                  }
+                },
+              ),
+           )
           )
         )
         : 

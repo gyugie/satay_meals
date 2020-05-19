@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:html/dom.dart' as dom;
+
+
 
 import '../widgets/custom_notification.dart';
 import '../widgets/drawer.dart';
@@ -16,10 +20,10 @@ class TermsAndConditionScreen extends StatefulWidget {
 class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with TickerProviderStateMixin  {
   var _isInit       = true;
   var _isLoading    = false;
-  var _termsAndCondition;
+  String _termsAndCondition;
   AnimationController controller;
   Animation<double> animation;
-
+  
   void animationTransition(){
     controller = AnimationController(
     duration: const Duration(seconds: 1), vsync: this);
@@ -60,14 +64,14 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
     _isInit = false;
     super.didChangeDependencies();
   }  
+
   @override
   Widget build(BuildContext context) {
     final deviceSize  = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
          iconTheme: new IconThemeData(color: Colors.green),
-        title: Text('Terms And Condition', style: Theme.of(context).textTheme.title),
+        title: Text('Terms And Conditions', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
@@ -81,9 +85,26 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
         ? 
         FadeTransition(
           opacity: animation,
-          child: Container(
+          child: SingleChildScrollView(
+            child: Container(
             padding: EdgeInsets.all(20),
-            child: Text(_termsAndCondition, style: Theme.of(context).textTheme.body1, textAlign: TextAlign.justify,)
+            child:  Html(
+                data: _termsAndCondition,
+                defaultTextStyle: TextStyle(color: Colors.white),
+                padding: EdgeInsets.all(8.0),
+                onLinkTap: (url) {
+                  print("Opening $url...");
+                },
+                customRender: (node, children) {
+                  if (node is dom.Element) {
+                    switch (node.localName) {
+                      case "custom_tag": // using this, you can handle custom tags in your HTML 
+                        return Column(children: children);
+                    }
+                  }
+                },
+              ),
+           )
           )
         )
         :  
