@@ -42,10 +42,6 @@ class _SignInCardState extends State<SignInCard> {
     'uid'     : ''
   };
 
-  String googleUid;
-  String googleName;
-  String googleEmail;
-  String googleImageUrl;
 
   @override
   void initState() {
@@ -119,27 +115,34 @@ class _SignInCardState extends State<SignInCard> {
       await Provider.of<Auth>(context, listen: false).login(_authData['username'], _authData['password'], _authData['uid'], isGoogleSignIn);
 
     } on HttpException catch (err){
+        setState(() {
+        _isLoading = false;
+        _isGoogleSignin = false;
+      });
       if(err.toString().contains('Account is not active')){
          CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'User Is Not Active', err.toString(), true);
       } else {
          CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'Authenticated failed!', err.toString(), false);
          await Provider.of<Auth>(context).signOutGoogle();
       }
+    
     } catch (err) {
         CustomNotif.alertDialogUserIsNotActive(context, Icons.error_outline, 'Something is wrong!', err.toString(), false);
         await Provider.of<Auth>(context).signOutGoogle();
+         
     }
 
-     setState(() {
-      _isLoading = false;
-      _isGoogleSignin = false;
-    });
-
+    setState(() {
+        _isLoading = false;
+        _isGoogleSignin = false;
+      });
+  
   }
 
 
   @override
   Widget build(BuildContext context) {
+  
     return Container(
       height: 900,
       decoration: new BoxDecoration(
@@ -230,8 +233,9 @@ class _SignInCardState extends State<SignInCard> {
                 ),
 
                 SizedBox(height: 20),
-                _isLoading ?
-                CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
+                _isLoading 
+                ?
+                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
                 :
                 RaisedButton(
                   shape: new RoundedRectangleBorder(
@@ -255,7 +259,7 @@ class _SignInCardState extends State<SignInCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    _isLoading
+                    _isGoogleSignin
                     ?
                       CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.green))
                     :

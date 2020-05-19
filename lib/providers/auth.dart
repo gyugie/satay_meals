@@ -100,7 +100,6 @@ class Auth with ChangeNotifier{
         );
 
       final responseData = json.decode(response.body);
-    
       if(responseData['success'] == false){
         throw HttpException(responseData['message']);
       }

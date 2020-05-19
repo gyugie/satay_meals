@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:provider/provider.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:provider/provider.dart';
 
 class RealTimeNotificaiton {
   final String title;
@@ -29,19 +27,19 @@ final notifications = FlutterLocalNotificationsPlugin();
     _firebaseMessaging.configure(  
       onMessage: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
-        // print("onMessage: ${results}");
+        print("onMessage: ${results}");
         showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
         
       },  
       
       onLaunch: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
-        // print("onLaunch: $results");
+        print("onLaunch: $results");
        
       },  
       onResume: (Map<String, dynamic> notification) async {  
         final results = json.decode(notification['data']['data']);
-        //  print("onResume: ${results}");
+         print("onResume: ${results}");
         showOngoingNotification(notifications, title:  notification["notification"]["title"], body:  notification["notification"]["body"]);
         
       },  

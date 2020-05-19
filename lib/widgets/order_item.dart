@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+
 import '../providers/cart_item.dart';
 
 class OrderItem extends StatefulWidget {
@@ -84,6 +86,9 @@ class _OrderItemState extends State<OrderItem> {
                   controller: _quantityController,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    new LengthLimitingTextInputFormatter(2),// for mobile 
+                  ],
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,
@@ -91,7 +96,7 @@ class _OrderItemState extends State<OrderItem> {
                     border: InputBorder.none
                   ),
                   onChanged: (value){
-                    if(value.contains('-') || value.contains('.') || value.contains(',')){
+                    if(value.contains('-') || value.contains('.') || value.contains(',') ){
                       setState(() {
                         _quantityController.text = '';
                       });
@@ -99,8 +104,13 @@ class _OrderItemState extends State<OrderItem> {
                     if(value.isEmpty || value == '' ){
                       foods.removingSingleItem(widget.id);
                     }
-
-                    foods.addItem(widget.id, widget.name, widget.price, int.parse(value));
+                    
+                    if(value != '0'){
+                      if(value == '00'){
+                        return;
+                      }
+                        foods.addItem(widget.id, widget.name, widget.price, int.parse(value));
+                    }
                   },
                 ),
               ),
@@ -109,7 +119,7 @@ class _OrderItemState extends State<OrderItem> {
               icon: Icon(Icons.add),
               onPressed: (){
                 var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
-                var addValue        = int.parse(_quantityValue) + 1; 
+                var addValue        = _quantityValue.length < 3 ? int.parse(_quantityValue) + 1 : int.parse(_quantityValue) ; 
                 setState(() {
                   _quantityController.text = addValue.toString();
                 });

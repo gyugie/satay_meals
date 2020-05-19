@@ -113,14 +113,15 @@ class _SignUpState extends State<SignUp> {
    try{
       await Provider.of<Auth>(context, listen: false).signUp(_newUser['username'], _newUser['email'], _newUser['password'], _newUser['phone'], _newUser['google']);
             CustomNotif.alertDialogWithIcon(context, Icons.check_circle_outline, 'Register success...', 'You have account for login now', false);
-            await _googleSignIn.disconnect();
-            widget.switchScreen(0);
+     
+   
+      widget.switchScreen(0);
    } on HttpException catch (err) {
         CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'Authentication Failed', err.toString(), true);
    } catch (err){
         CustomNotif.alertDialogWithIcon(context, Icons.error_outline, 'An error occured!', err.toString(), true);
    }
-
+    await _googleSignIn.disconnect();
     setState(() {
      _isLoading = false;
      _isGoogleSignUp= false;

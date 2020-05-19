@@ -112,7 +112,7 @@ static void alertDialogUserIsNotActive(BuildContext context, IconData icon, Stri
             FlatButton(
               child: Text('Close', style: TextStyle(color: Colors.orange)),
               onPressed: (){
-                Navigator.of(context).pop();
+                Navigator.pop(context);
               },
             ),
 

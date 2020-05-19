@@ -26,16 +26,11 @@ class DrawerSide extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.black,
-                image: DecorationImage(
-                  image: AssetImage('assets/images/SWlogo.png')
-                )
-              ),
               accountName: Text('${_user == null ? '-' : (_user.username == '') ? 'not set' : _user.username }', style: Theme.of(context).textTheme.title),
               accountEmail: Text('${_user == null ? '-' : (_user.email != '') ? _user.email : 'not set'  }', style: Theme.of(context).textTheme.subtitle),
+              currentAccountPicture: Image.asset('assets/images/SWlogo.png', fit: BoxFit.fitHeight),
+              decoration: BoxDecoration(color: Colors.black),
             ),
-
             if(authData.role == 'consumer')
             _menuForConsumer(context),      
             ListTile(

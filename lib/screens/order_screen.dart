@@ -79,6 +79,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
               backgroundColor: Colors.green,
               label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
               onPressed: cartItem.item.length < 1 ? null : (){
+                print('count ${cartItem.item.length}');
                 Navigator.of(context).pushNamed(CheckoutScreen.routeName);
                     // Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PlaceMarkerPage( )));
               },
