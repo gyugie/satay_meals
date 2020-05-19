@@ -59,8 +59,8 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/images/SWlogo.png"
-  image_path_android: "assets/images/SWlogo.png"
+  image_path_ios: "assets/images/logo_one_step_delivery.jpg"
+  image_path_android: "assets/images/logo_one_step_delivery.jpg"
   
 
 

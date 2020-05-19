@@ -15,7 +15,7 @@
 
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="Satay Warrior"
+        android:label="Consumer"
         android:icon="@mipmap/ic_launcher">
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyB-ed7fvN577q8h7s7srJVqoTKO_srddAo"/>
