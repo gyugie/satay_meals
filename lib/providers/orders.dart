@@ -117,7 +117,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
 }
 
 Future<void> getHistoryOrders() async {
-  print('${_authToken} id ${_userId}');
+  
   try{
     headersAPI['token'] = _authToken;
     final List<HistoryOrder> loadedHistoryOrders  = [];
