@@ -69,7 +69,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   /**************************************************
    *                GOOGLE MAPS INIT        
    *************************************************/
-  static final LatLng center = const LatLng( -6.914744, 107.609810);
+  
+  static final LatLng center = const LatLng(3.1412, 101.68653);
   GoogleMapController controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   MarkerId selectedMarker;
