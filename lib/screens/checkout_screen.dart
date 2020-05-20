@@ -43,7 +43,9 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   static Map<String, double> userLocation;
   var _disabledButton                               = false;
   TextEditingController _phoneController            = new TextEditingController();
+  TextEditingController _notesController            = new TextEditingController();
   String _userPhone                                 = '';
+  String _userNotes                                 = '';
   String userAddress;
   AnimationController controllerAnimation;
   Animation<double> animation;
@@ -405,6 +407,34 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                               )
                             )
                           ),
+                          
+                          Card(
+                            child: Container(
+                              width: double.infinity,
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  new Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('Notes', style: Theme.of(context).textTheme.title),
+                                      SizedBox(
+                                        width: 70,
+                                        height: 20,
+                                        child: FlatButton(
+                                          child: Text('Edit', style: Theme.of(context).textTheme.title),
+                                          onPressed: _showDialogNotes,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Divider(color: Colors.grey[100]),
+                                  Text(_userNotes),
+                                ],
+                              )
+                            )
+                          ),
 
                           Card(
                             child: Container(
@@ -523,6 +553,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                     '', 
                     userLocation['latitude'].toString(), 
                     userLocation['longitude'].toString(),
+                    _userNotes,
                     _userPhone,
                     myWallet, 
                     itemCart.getTotal,
@@ -542,6 +573,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     String address, 
     String latitude,
     String longitude,
+    String notes,
     String phone,
     double myWallet, 
     double totalPayment,
@@ -615,7 +647,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                           try{
 
                           //processing order
-                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, userAddress, latitude, longitude, phone, totalPayment.toStringAsFixed(2), items);
+                          await Provider.of<ItemOrders>(context, listen: false).addOrder(userId, userAddress, latitude, longitude, notes, phone, totalPayment.toStringAsFixed(2), items);
                           _alertDialogWithIcon(context, Icons.check_circle_outline, 'Confirmation', 'Congratulation payment success', false);
 
 
@@ -732,6 +764,50 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       }
     );
   }
+
+   Widget _showDialogNotes()  {
+      showDialog<String>(
+        context: context,
+        builder: (context){
+          return  AlertDialog(
+          contentPadding: const EdgeInsets.all(16.0),
+          content: new Row(
+            children: <Widget>[
+              new Expanded(
+                child: new TextField(
+                  controller: _notesController,
+                  autofocus: true,
+                  style: new TextStyle(color: Colors.white),
+                  decoration: new InputDecoration(
+                      labelText: 'Notes', 
+                      hintText: '',
+                      labelStyle: TextStyle(color: Colors.white, fontSize: 20)
+                  ),
+                  maxLines: 3,
+                ),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            new FlatButton(
+                child: const Text('CANCEL', style: TextStyle(color: Colors.orange)),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+            new FlatButton(
+                child: const Text('Ok', style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _userNotes = _notesController.text;
+                    });
+                })
+          ],
+        );
+      }
+    );
+  }
+
 
   Widget _buildTitle(BuildContext context) {
     var horizontalTitleAlignment =

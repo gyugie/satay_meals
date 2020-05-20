@@ -12,6 +12,7 @@ class Order{
   final String latitude;
   final String longitude;
   final int phone;
+  final String notes;
   final int post_code;
   final int city;
   final int state;
@@ -23,6 +24,7 @@ class Order{
    @required this.address,
    @required this.latitude, 
    @required this.longitude, 
+   this.notes, 
    @required this.phone, 
     this.post_code, 
     this.city, 
@@ -76,8 +78,8 @@ List<HistoryOrder> get history {
   return [..._historyOrders];
 }
 
-Future<void> addOrder(String consumerId, String address, String latitude, String longitude, String phone, String total, List<Item> items ) async {
-
+Future<void> addOrder(String consumerId, String address, String latitude, String longitude, String notes, String phone, String total, List<Item> items ) async {
+ 
   try{
     headersAPI['token'] = _authToken;
     final response = await http.post( 
@@ -89,6 +91,7 @@ Future<void> addOrder(String consumerId, String address, String latitude, String
         'address': address,
         'lat': latitude,
         'lng': longitude,
+        'notes': notes,
         'phone': phone,
         'post_code': '',
         'city': '',
@@ -132,7 +135,6 @@ Future<void> getHistoryOrders() async {
     if(responseData['success'] == false){
       throw HttpException(responseData['message']);
     }
-    
     _historyOrders = [];
     for(int i = 0; i < responseData['data'].length; i++){
       loadedHistoryOrders.add(HistoryOrder(

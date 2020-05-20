@@ -60,6 +60,7 @@ class _DetailOrderState extends State<DetailOrder> with TickerProviderStateMixin
                 consumerId  : '',
                 address     : responseData['data']['address'],
                 phone       : int.parse(responseData['data']['phone']),
+                notes       : responseData['data']['notes'],
                 latitude    : responseData['data']['operator_lat'],
                 longitude   : responseData['data']['operator_lng'],
                 total       : double.parse(responseData['data']['total']),
@@ -176,6 +177,9 @@ class _DetailOrderState extends State<DetailOrder> with TickerProviderStateMixin
                             SizedBox(height: 15),
                             Text('Phone Number :', style: Theme.of(context).textTheme.title),
                             Text('  ${_detail != null ? _detail.phone : ''}', style: Theme.of(context).textTheme.body1),
+                            SizedBox(height: 15),
+                            Text('Notes :', style: Theme.of(context).textTheme.title),
+                            Text('  ${_detail != null ? _detail.notes : ''}', style: Theme.of(context).textTheme.body1),
                           ],
                         ),
                       )
