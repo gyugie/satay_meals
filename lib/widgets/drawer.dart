@@ -76,14 +76,14 @@ class DrawerSide extends StatelessWidget {
             ),
         ListTile(
               leading: Icon(Icons.redeem, color: Colors.white),
-              title: Text('Pending Top Up', style: Theme.of(context).textTheme.body1),
+              title: Text('Top Up Pending', style: Theme.of(context).textTheme.body1),
               onTap: (){
                 Navigator.of(context).pushReplacementNamed(TopupPendingScreen.routeName);
               },
             ),
         ListTile(
               leading: Icon(Icons.replay_10, color: Colors.white),
-              title: Text('History Orders', style: Theme.of(context).textTheme.body1),
+              title: Text('Orders History', style: Theme.of(context).textTheme.body1),
               onTap: (){
                 Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
               },

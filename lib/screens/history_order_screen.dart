@@ -76,7 +76,7 @@ class _HistoryOrdersScreenState extends State<HistoryOrdersScreen>  with TickerP
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('History Order', style: Theme.of(context).textTheme.title),
+        title: Text('Order History', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(

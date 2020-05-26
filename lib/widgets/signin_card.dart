@@ -252,7 +252,7 @@ class _SignInCardState extends State<SignInCard> {
 
                 SizedBox(height: 20),
 
-                Text('Or SignIn With', style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text('Or Sign In With', style: TextStyle(fontSize: 16, color: Colors.white)),
                 
                 SizedBox(height: 20),
 
@@ -273,7 +273,7 @@ class _SignInCardState extends State<SignInCard> {
 
                 SizedBox(height: 50),
                 
-                Text('One Step Delivery v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text('One Stop Delivery v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
 
               ],
             ),

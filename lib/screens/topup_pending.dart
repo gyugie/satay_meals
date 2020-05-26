@@ -61,7 +61,7 @@ class _TopupPendingScreenState extends State<TopupPendingScreen> with TickerProv
     return Scaffold(
       appBar: AppBar(
          iconTheme: new IconThemeData(color: Colors.orange[700]),
-        title: Text('Topup Pending', style: Theme.of(context).textTheme.title),
+        title: Text('Top Up Pending', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
