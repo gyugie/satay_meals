@@ -69,7 +69,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
     return Scaffold(
       appBar: AppBar(
          iconTheme: new IconThemeData(color: Colors.orange[700]),
-        title: Text('Terms And Conditions', style: Theme.of(context).textTheme.title),
+        title: Text('Terms and Conditions', style: Theme.of(context).textTheme.title),
       ),
       drawer: Theme(
        data: Theme.of(context).copyWith(
@@ -113,7 +113,7 @@ class _TermsAndConditionScreenState extends State<TermsAndConditionScreen>  with
             child: Container(
               height: deviceSize.height * 0.8,
               width: deviceSize.width * 0.8,
-              child: Image.asset('assets/images/sate.gif'),
+              child: Image.asset('assets/images/cart.gif'),
             ),
           )
         )

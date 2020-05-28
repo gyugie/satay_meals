@@ -113,7 +113,7 @@ class _AboutUsScreenState extends State<AboutUsScreen>  with TickerProviderState
           child: Container(
             height: deviceSize.height * 0.8,
             width: deviceSize.width * 0.8,
-            child: Image.asset('assets/images/sate.gif'),
+            child: Image.asset('assets/images/cart.gif'),
           ),
         )
        )

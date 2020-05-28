@@ -62,7 +62,7 @@ class DrawerSide extends StatelessWidget {
             ),
         ListTile(
               leading: Icon(Icons.restaurant, color: Colors.white),
-              title: Text('Buy Satay', style: Theme.of(context).textTheme.body1),
+              title: Text('Purchase', style: Theme.of(context).textTheme.body1),
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => HomeScreen()));
               },

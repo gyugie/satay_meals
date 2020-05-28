@@ -94,7 +94,7 @@ class _HistoryItemState extends State<HistoryItem> {
                       color: setLabelColors,
                     ),
                     child: Center(
-                      child: Text('${widget.statusOrder}', style: Theme.of(context).textTheme.body1),
+                      child: Text('${widget.statusOrder == 'Cancelled' ? 'Canceled' : widget.statusOrder}', style: Theme.of(context).textTheme.body1),
                     ),
                   ),
                   Container(
