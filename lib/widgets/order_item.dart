@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +11,7 @@ class OrderItem extends StatefulWidget {
   final String name;
   final double price;
   final double priceOperator;
+  final int minOrder;
   final String imageUrl;
 
   OrderItem(
@@ -16,6 +19,7 @@ class OrderItem extends StatefulWidget {
     this.name,
     this.price,
     this.priceOperator,
+    this.minOrder,
     this.imageUrl
   );
 
@@ -25,6 +29,7 @@ class OrderItem extends StatefulWidget {
 
 class _OrderItemState extends State<OrderItem> {
   final _quantityController   = TextEditingController();
+    
 
   @override
   void initState() {
@@ -38,12 +43,14 @@ class _OrderItemState extends State<OrderItem> {
     // Clean up the controller when the widget is removed from the widget tree.
     // This also removes the _printLatestValue listener.
     _quantityController.dispose();
+    // _timer.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final foods = Provider.of<CartItem>(context);
+    
     return Card(
       child: Center(
       child: ListTile(
@@ -92,25 +99,33 @@ class _OrderItemState extends State<OrderItem> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,
-                    hintText: '0',
+                    hintText: widget.minOrder.toString(),
                     border: InputBorder.none
                   ),
+                  onTap: (){
+                    setState(() {
+                        _quantityController.text = widget.minOrder.toString();
+                    });
+
+                    foods.addItem(widget.id, widget.name, widget.price, int.parse(_quantityController.text), widget.minOrder);
+                  },
                   onChanged: (value){
                     if(value.contains('-') || value.contains('.') || value.contains(',') ){
                       setState(() {
                         _quantityController.text = '';
                       });
                     }
-                    if(value.isEmpty || value == '' ){
+                    
+                    if(value.isEmpty || value == ''){
                       foods.removingSingleItem(widget.id);
                     }
-                    
                     if(value != '0'){
                       if(value == '00'){
                         return;
                       }
-                        foods.addItem(widget.id, widget.name, widget.price, int.parse(value));
+                      foods.addItem(widget.id, widget.name, widget.price, int.parse(value), widget.minOrder);
                     }
+
                   },
                 ),
               ),
@@ -120,10 +135,8 @@ class _OrderItemState extends State<OrderItem> {
               onPressed: (){
                 var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
                 var addValue        = _quantityValue.length < 3 ? int.parse(_quantityValue) + 1 : int.parse(_quantityValue) ; 
-                setState(() {
-                  _quantityController.text = addValue.toString();
-                });
-               foods.addItem(widget.id, widget.name, widget.price, addValue);
+               
+               foods.addItem(widget.id, widget.name, widget.price, addValue, widget.minOrder);
               },
             )
           ],

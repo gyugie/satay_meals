@@ -5,9 +5,10 @@ class Item {
   final String name;
   final double price;
   final double subTotal;
+  final int minOrder;
   final int quantity;
 
-  Item({ this.productId, this.name, this.price, this.quantity, this.subTotal});
+  Item({ this.productId, this.name, this.price, this.quantity, this.subTotal, this.minOrder});
 }
 
 class CartItem with ChangeNotifier {
@@ -29,7 +30,7 @@ class CartItem with ChangeNotifier {
 //
 // Adding item & update item if axist item
 //
-  void addItem(String foodId, String foodName, double foodPrice, int quantity){
+  void addItem(String foodId, String foodName, double foodPrice, int quantity, int minOrder){
     if(!_items.containsKey(foodId)){
 
       _items.putIfAbsent(
@@ -38,6 +39,7 @@ class CartItem with ChangeNotifier {
             name: foodName,
             price: foodPrice,
             quantity: quantity,
+            minOrder: minOrder,
             subTotal: quantity * foodPrice
           ));
 
@@ -49,6 +51,7 @@ class CartItem with ChangeNotifier {
             name: existingItem.name,
             price: existingItem.price,
             quantity: quantity,
+            minOrder: minOrder,
             subTotal: quantity * foodPrice
           ));
          

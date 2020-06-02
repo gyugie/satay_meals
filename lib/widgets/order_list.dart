@@ -15,6 +15,7 @@ class OrderList extends StatelessWidget {
         products[index].name,
         products[index].price,
         products[index].priceOperator,
+        products[index].minOrder,
         products[index].imageUrl
       ),
     );

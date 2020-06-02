@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:satay_meals/widgets/custom_notification.dart';
 import '../screens/checkout_screen.dart';
 import '../widgets/order_list.dart';
 import '../providers/cart_item.dart';
 import '../providers/user.dart';
 import '../providers/auth.dart';
+
+class FailValidationQty {
+  String name;
+  int qtyOrder;
+  int minOrder;
+
+  FailValidationQty({this.name, this.minOrder, this.qtyOrder});
+}
 
 class OrderScreen extends StatefulWidget {
   static const routeName = '/order-screen';
@@ -16,6 +25,54 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
   var _isInit = true;
   AnimationController controller;
   Animation<double> animation;
+
+  List<FailValidationQty> _failValidationQty = [];
+
+  _onCheckingMinOrder(BuildContext context){
+      final itemCart    = Provider.of<CartItem>(context);
+      setState(() {
+        _failValidationQty = [];
+      });
+
+      for(int i = 0; i < itemCart.item.length; i++){
+        if(itemCart.item.values.toList()[i].quantity < itemCart.item.values.toList()[i].minOrder){
+          _failValidationQty.add(
+            FailValidationQty(
+              name: itemCart.item.values.toList()[i].name,
+              qtyOrder: itemCart.item.values.toList()[i].quantity,
+              minOrder: itemCart.item.values.toList()[i].minOrder
+            )
+          );
+        }
+      }
+
+      if(_failValidationQty.length > 0){
+        showDialog(
+           context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Please use minimal qty', style: TextStyle(color: Colors.red )),
+              content: Container(
+                height: 100,
+                child: ListView.builder(
+                    itemCount: _failValidationQty.length,
+                    itemBuilder: (ctx, index){
+                      return Text('${_failValidationQty[index].name} minimal order ${_failValidationQty[index].minOrder} qty');
+                    }
+                  )
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Close', style: TextStyle(color: Colors.orange)),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            )
+          );
+      } else {
+        Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+      }
+
+  }
 
   void initState(){
     super.initState();
@@ -79,7 +136,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
               backgroundColor: Colors.orange[700],
               label: Text('Checkout RM ${cartItem.getTotal.toStringAsFixed(2)}', style: Theme.of(context).textTheme.title),
               onPressed: cartItem.item.length < 1 ? null : (){
-                Navigator.of(context).pushNamed(CheckoutScreen.routeName);
+                _onCheckingMinOrder(context);
               },
             ),
           )
