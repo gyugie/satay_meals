@@ -68,6 +68,8 @@ class User with ChangeNotifier {
   final String _userId;
   final String _userRole;
   double _myWallet = 0.0;
+  double _limitRm = 0.0;
+
   Map<String, UserTemp> _userProfile = {};
   Dio dio = new Dio();
 
@@ -131,7 +133,6 @@ class User with ChangeNotifier {
 
   Future<void> updateUserProfile(String fileName, String path, String username,String firstName, String lastName, String address, String latitude, String longitude, String postalCode, String cityId, String stateId, String phone) async {
     try{
-      print(phone);
         dio.options.headers= {"token" : _authToken};
         FormData formData = new FormData.from({
                 'id'          : _userId,
@@ -180,6 +181,31 @@ class User with ChangeNotifier {
   double get myWallet {
     return _myWallet;
   }  
+
+  double get limitRm {
+    return _limitRm;
+  }  
+
+  Future<void> getLimitRm() async {
+    try{
+      headersAPI['token'] = _authToken;
+      final response = await http.get(
+        baseAPI + '/API_Consumer/LimitRm',
+        headers: headersAPI,
+       );
+
+        final responseData = json.decode(response.body);
+        if(responseData['success'] == false){
+          throw HttpException(responseData['message']);
+        }
+        
+        _limitRm = double.parse(responseData['data']['limit_rm']);
+        notifyListeners();
+    }catch (err){
+      throw err;
+    }
+   
+  }
 
   Future<void> getMyWallet() async {
    

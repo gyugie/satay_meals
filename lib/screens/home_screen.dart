@@ -65,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
      Future.wait([
            Provider.of<Products>(context).fetchFoods(),
            Provider.of<User>(context).getMyWallet(),
+           Provider.of<User>(context).getLimitRm(),
            Provider.of<User>(context).fetchUserProfile()
          ]).then( (List value) {
             Future.delayed(Duration(seconds: 3), (){

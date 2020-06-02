@@ -29,7 +29,8 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
   List<FailValidationQty> _failValidationQty = [];
 
   _onCheckingMinOrder(BuildContext context){
-      final itemCart    = Provider.of<CartItem>(context);
+      final itemCart = Provider.of<CartItem>(context);
+      final limitRM = Provider.of<User>(context).limitRm;
       setState(() {
         _failValidationQty = [];
       });
@@ -68,6 +69,8 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
               ],
             )
           );
+      } else if(limitRM > double.parse(itemCart.getTotal.toStringAsFixed(2)) ){
+        CustomNotif.alertDialogWithIcon(context, Icons.info_outline,'use minimal RM', 'your total purchase RM ${itemCart.getTotal} minimal purchase RM ${limitRM}', true);
       } else {
         Navigator.of(context).pushNamed(CheckoutScreen.routeName);
       }

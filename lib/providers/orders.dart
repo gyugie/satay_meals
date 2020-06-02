@@ -56,9 +56,6 @@ class HistoryOrder with ChangeNotifier {
     this.rider,
   });
 }
-
-
-
 class ItemOrders with ChangeNotifier {
 final String _authToken;
 final String _role;
