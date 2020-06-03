@@ -54,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
                 height: deviceSize.height,
                 width: deviceSize.width,
-                child: Image.asset('assets/images/one_step_delivery_potrait.png', fit: BoxFit.fitHeight),
+                child: Image.asset('assets/images/1Stop_Consumer_Splash_Screen.png', fit: BoxFit.fitHeight),
             ),
           ],
         )

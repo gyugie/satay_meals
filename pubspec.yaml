@@ -59,8 +59,8 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path_ios: "assets/images/logo_one_step_delivery.jpg"
-  image_path_android: "assets/images/logo_one_step_delivery.jpg"
+  image_path_ios: "assets/images/1Stop_Consumer_favicon.png"
+  image_path_android: "assets/images/1Stop_Consumer_favicon.png"
   
 
 
@@ -77,7 +77,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/images/SWlogo.png
+  #  - assets/images/SWlogo.png
    - assets/images/fb-logo.png
    - assets/images/world.jpeg
    - assets/images/satay-vector.png
@@ -86,8 +86,10 @@ flutter:
    - assets/images/driver.png
    - assets/images/cart.gif
    - assets/images/google_logo.png
-   - assets/images/logo_one_step_delivery.jpg
-   - assets/images/one_step_delivery_potrait.png
+  #  - assets/images/logo_one_step_delivery.jpg
+  #  - assets/images/one_step_delivery_potrait.png
+   - assets/images/1Stop_Consumer_favicon.png
+   - assets/images/1Stop_Consumer_Splash_Screen.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
