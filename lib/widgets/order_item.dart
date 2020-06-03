@@ -99,7 +99,7 @@ class _OrderItemState extends State<OrderItem> {
                   style: TextStyle(color: Colors.white, fontSize: 20),
                   decoration: InputDecoration(
                     filled: true,
-                    hintText: widget.minOrder.toString(),
+                    hintText: '0',
                     border: InputBorder.none
                   ),
                   onTap: (){
@@ -135,7 +135,9 @@ class _OrderItemState extends State<OrderItem> {
               onPressed: (){
                 var _quantityValue  = _quantityController.text != '' ? _quantityController.text : '0';
                 var addValue        = _quantityValue.length < 3 ? int.parse(_quantityValue) + 1 : int.parse(_quantityValue) ; 
-               
+                setState(() {
+                  _quantityController.text = addValue.toString();
+                });
                foods.addItem(widget.id, widget.name, widget.price, addValue, widget.minOrder);
               },
             )
