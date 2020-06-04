@@ -273,7 +273,7 @@ class _SignInCardState extends State<SignInCard> {
 
                 SizedBox(height: 50),
                 
-                Text('One Stop Delivery v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
+                Text('1Stop Delivery v1.0', style: TextStyle(fontSize: 16, color: Colors.white)),
 
               ],
             ),
