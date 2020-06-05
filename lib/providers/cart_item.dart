@@ -78,6 +78,7 @@ class CartItem with ChangeNotifier {
           name: existingItem.name,
           price: existingItem.price,
           quantity: existingItem.quantity - 1,
+          minOrder: existingItem.minOrder,
           subTotal: (existingItem.quantity - 1) * existingItem.price
         ));
       } else {

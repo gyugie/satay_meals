@@ -34,7 +34,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
       setState(() {
         _failValidationQty = [];
       });
-
+     
       for(int i = 0; i < itemCart.item.length; i++){
         if(itemCart.item.values.toList()[i].quantity < itemCart.item.values.toList()[i].minOrder){
           _failValidationQty.add(
@@ -52,14 +52,12 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
            context: context,
             builder: (ctx) => AlertDialog(
               title: Text('Please use minimal qty', style: TextStyle(color: Colors.red )),
-              content: Container(
-                height: 100,
-                child: ListView.builder(
-                    itemCount: _failValidationQty.length,
-                    itemBuilder: (ctx, index){
-                      return Text('${_failValidationQty[index].name} minimal order ${_failValidationQty[index].minOrder} qty');
-                    }
-                  )
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: _failValidationQty.map((FailValidationQty value) => Text('${value.name} minimal order ${value.minOrder} qty')).toList(),
+                )
               ),
               actions: <Widget>[
                 FlatButton(
