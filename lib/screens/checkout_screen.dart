@@ -353,8 +353,11 @@ class _CheckoutScreenState extends State<CheckoutScreen>
                 ?
                 Container(
                   height: deviceSize.height * 0.40,
+                  width: deviceSize.width,
                   color: Colors.black.withOpacity(0.8),
-                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
+                  child: Center(
+                    child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
+                  )
                 )
                 :
                 Container(
