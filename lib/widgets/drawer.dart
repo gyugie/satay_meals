@@ -83,7 +83,7 @@ class DrawerSide extends StatelessWidget {
             ),
         ListTile(
               leading: Icon(Icons.replay_10, color: Colors.white),
-              title: Text('Orders History', style: Theme.of(context).textTheme.body1),
+              title: Text('Order History', style: Theme.of(context).textTheme.body1),
               onTap: (){
                 Navigator.of(context).pushReplacementNamed(HistoryOrdersScreen.routeName);
               },
@@ -102,16 +102,6 @@ class DrawerSide extends StatelessWidget {
                  Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
               },
             ),
-//         ListTile(
-//             leading: Icon(Icons.info_outline, color: Colors.white),
-//             title: Text('Notificaiton', style: Theme.of(context).textTheme.body1),
-//             onTap: (){
-//                Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => FirebaseNotificationScreen()));
-// // Navigator.push(
-// //         context,
-// //         MaterialPageRoute(builder: (context) => LocalNotificationWidget()));
-//             },
-//           ),
         ],
     );
   }
