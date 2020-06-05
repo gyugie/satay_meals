@@ -333,8 +333,8 @@ class _SignUpState extends State<SignUp> {
                     CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
                   :
                   _signUpGoogle(),
-                  SizedBox(height: 20),
-                  _logout(),
+                  // SizedBox(height: 20),
+                  // _logout(),
                 ],
               ),
 

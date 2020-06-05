@@ -51,12 +51,12 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
         showDialog(
            context: context,
             builder: (ctx) => AlertDialog(
-              title: Text('Please use minimal qty', style: TextStyle(color: Colors.red )),
+              title: Text('Please order minimum quantity', style: TextStyle(color: Colors.red )),
               content: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: _failValidationQty.map((FailValidationQty value) => Text('${value.name} minimal order ${value.minOrder} qty')).toList(),
+                  children: _failValidationQty.map((FailValidationQty value) => Text('Minimum quantity for ${value.name} is ${value.minOrder}')).toList(),
                 )
               ),
               actions: <Widget>[
@@ -68,7 +68,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
             )
           );
       } else if(limitRM > double.parse(itemCart.getTotal.toStringAsFixed(2)) ){
-        CustomNotif.alertDialogWithIcon(context, Icons.info_outline,'use minimal RM', 'your total purchase RM ${itemCart.getTotal.toStringAsFixed(2)} minimal purchase RM ${limitRM}', true);
+        CustomNotif.alertDialogWithIcon(context, Icons.info_outline,'Use minimal RM', 'Minimum order amount less than RM  ${limitRM} Current total purchase RM ${itemCart.getTotal.toStringAsFixed(2)}', true);
       } else {
         Navigator.of(context).pushNamed(CheckoutScreen.routeName);
       }
@@ -108,7 +108,13 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
             ? 
             Padding(
               padding: EdgeInsets.all(15),
-              child: Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.account_balance_wallet, color: Colors.white),
+                  SizedBox(width: 5),
+                  Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
+                ],
+              )
             )
             :
             null

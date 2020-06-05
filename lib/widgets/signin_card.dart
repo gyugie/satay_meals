@@ -265,9 +265,9 @@ class _SignInCardState extends State<SignInCard> {
                     :
                     _googleButton(),
 
-                    SizedBox(height: 20),
+                    // SizedBox(height: 20),
                     
-                    _buttonFacebook()
+                    // _buttonFacebook()
                   ],
                 ),
 

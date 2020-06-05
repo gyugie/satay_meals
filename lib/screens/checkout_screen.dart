@@ -83,7 +83,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   }
 
   static  CameraPosition _kGooglePlex = CameraPosition(
-    target: (userLocation['latitude'] != null && userLocation['longitude'] != null) ? LatLng(userLocation['latitude'], userLocation['longitude']) : LatLng(center.latitude, center.latitude),
+    target: (userLocation != null) ? LatLng(userLocation['latitude'], userLocation['longitude']) : LatLng(center.latitude, center.latitude),
     zoom: 10,
   );
 
@@ -244,6 +244,7 @@ class _CheckoutScreenState extends State<CheckoutScreen>
       await Provider.of<User>(context).getLocation().then((value){
         setState(() {
             userLocation = value;
+            _isLoading = false;
           });
           _addMarker(userLocation['latitude'], userLocation['longitude'], false, null);
         });
@@ -281,14 +282,6 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     final recomendationAddress  = Provider.of<MapsAutocomplete>(context).recomendAddress;
     final bool isKeyboardShowing= MediaQuery.of(context).viewInsets.vertical > 0;
 
-    
-      //  CameraPosition _kGooglePlex = CameraPosition(
-      //     target: LatLng(userLocation['latitude'], userLocation['longitude']),
-      //     zoom: 10,
-      //   );
-    print('wewew${userLocation}');
-    print(userLocation['latitude']);
-    print(userLocation['longitude']);
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
@@ -356,10 +349,14 @@ class _CheckoutScreenState extends State<CheckoutScreen>
             height: deviceSize.height,
             child: Column(
               children: <Widget>[
-                // Container(
-                //   height: deviceSize.height * 0.40,
-                //   child: Center(child:  Text('Maps Soon!')),
-                // ),
+                _isLoading
+                ?
+                Container(
+                  height: deviceSize.height * 0.40,
+                  color: Colors.black.withOpacity(0.8),
+                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.orange[700]))
+                )
+                :
                 Container(
                   height: deviceSize.height * 0.40,
                   color: Colors.black.withOpacity(0.8),

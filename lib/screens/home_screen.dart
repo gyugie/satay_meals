@@ -105,7 +105,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ? 
             Padding(
               padding: EdgeInsets.all(15),
-              child: Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
+              child: Row(
+                children: <Widget>[
+                  Icon(Icons.account_balance_wallet, color: Colors.white),
+                  SizedBox(width: 5),
+                  Text('RM ${myWallet.toStringAsFixed(2)}', style: Theme.of(context).textTheme.headline),
+                ],
+              )
             )
             :
             null
