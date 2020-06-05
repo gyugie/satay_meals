@@ -68,7 +68,7 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
             )
           );
       } else if(limitRM > double.parse(itemCart.getTotal.toStringAsFixed(2)) ){
-        CustomNotif.alertDialogWithIcon(context, Icons.info_outline,'use minimal RM', 'your total purchase RM ${itemCart.getTotal} minimal purchase RM ${limitRM}', true);
+        CustomNotif.alertDialogWithIcon(context, Icons.info_outline,'use minimal RM', 'your total purchase RM ${itemCart.getTotal.toStringAsFixed(2)} minimal purchase RM ${limitRM}', true);
       } else {
         Navigator.of(context).pushNamed(CheckoutScreen.routeName);
       }

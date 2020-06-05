@@ -71,7 +71,6 @@ class _CheckoutScreenState extends State<CheckoutScreen>
   /**************************************************
    *                GOOGLE MAPS INIT        
    *************************************************/
-  
   static final LatLng center = const LatLng(3.1412, 101.68653);
   GoogleMapController controller;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -83,8 +82,8 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     this.controller = controller;
   }
 
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(center.latitude, center.longitude),
+  static  CameraPosition _kGooglePlex = CameraPosition(
+    target: (userLocation['latitude'] != null && userLocation['longitude'] != null) ? LatLng(userLocation['latitude'], userLocation['longitude']) : LatLng(center.latitude, center.latitude),
     zoom: 10,
   );
 
@@ -282,6 +281,14 @@ class _CheckoutScreenState extends State<CheckoutScreen>
     final recomendationAddress  = Provider.of<MapsAutocomplete>(context).recomendAddress;
     final bool isKeyboardShowing= MediaQuery.of(context).viewInsets.vertical > 0;
 
+    
+      //  CameraPosition _kGooglePlex = CameraPosition(
+      //     target: LatLng(userLocation['latitude'], userLocation['longitude']),
+      //     zoom: 10,
+      //   );
+    print('wewew${userLocation}');
+    print(userLocation['latitude']);
+    print(userLocation['longitude']);
     if(itemLength < 5){
       _setHeigtItemList = 0.1;
     } else if (itemLength <= 10) {
